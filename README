@@ -39,6 +39,10 @@ Tutorial for who doesn't have time
 
       R('tag/(?P<tag>[-\w]+)')->controller('Test')->action('p_tag')->on('GET');
 
+      Ruby on Rails-style route patterns work too, with a default pattern of [a-zA-Z0-9_-]+:
+
+      R('tag/:tag')->controller('Test')->action('p_tag')->on('GET');
+
    6. Write a class that extends C
 
       class Test extends C{}
