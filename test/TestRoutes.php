@@ -43,6 +43,13 @@ class TestRoutes extends PHPUnit_Framework_TestCase {
         $this->nicedog->add_url('', "Class", "method");
         $this->assertEquals("/^\.(?P<format>[a-zA-Z0-9]+)$/", $this->nicedog->routes[0][0]);
     }
+
+		public function testResources() {
+			Route::resources('Form');
+			$this->assertEquals(count($this->nicedog->routes), 5);
+		}
+
+
 }
 
 ?>
