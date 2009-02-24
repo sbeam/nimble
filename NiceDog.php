@@ -128,7 +128,7 @@ class NiceDog {
 					$rule .= '\.(?P<format>[a-zA-Z0-9]+)';
 					$has_format = true;
 				}
-        $rule = preg_replace('/:([a-zA-Z0-9_]+)/', '(?P<\1>[a-zA-Z0-9_-]+)', $rule);
+                                $rule = preg_replace('/:([a-zA-Z0-9_]+)(?!:)/', '(?P<\1>[a-zA-Z0-9_-]+)', $rule);
         $this->routes[] = array('/^' . str_replace('/','\/',$rule) . '$/', $klass, $klass_method, $http_method, $has_format);
     }
     
@@ -136,11 +136,7 @@ class NiceDog {
     public function dispatch()
     {
         foreach($this->routes as $rule=>$conf) {
-						/* if a vaild _method is passed in a post set it to the REQUEST_METHOD so that we can route for DELETE and PUT methods */
-						if(isset($_POST['_method']) && !empty($_POST['_method']) && in_array(Route::$allowed_methods, strtoupper($_POST['_method']))){
-							$_SERVER['REQUEST_METHOD'] = strtoupper($_POST['_method']);
-						}
-						/* test to see if its a valid route */
+						if(isset($_POST['_method']) && !empty($_POST['_method']) && in_array(Route::$allowed_methods, strtoupper($_POST['_method']))){$_SERVER['REQUEST_METHOD'] = strtoupper($_POST['_method']);}
             if (preg_match($conf[0], $this->url, $matches) && $_SERVER['REQUEST_METHOD'] == $conf[3]){
                 $matches = $this->parse_urls_args($matches);//Only declared variables in url regex
                 $klass = new $conf[1]();
@@ -202,6 +198,7 @@ class Route
     var $controller;    
     var $action;
     var $http_method = 'GET';
+		var $http_format = '';
     function __construct($pattern){
         $this->pattern = $pattern;
         return $this;
