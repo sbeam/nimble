@@ -163,10 +163,17 @@ class NiceDog {
  * Thanks to:  Rafael S. Souza <rafael.ssouza [__at__] gmail.com>
  */
  
-function R($pattern){
-       return new Route($pattern);
+function R($pattern)
+{
+    if (count($args = func_get_args()) == 4)
+    {
+        return new Route($args[0])->controller($args[1])->action($args[2])->on($args[3]);
+    } else {
+        return new Route($pattern);
+    }
 }
-class Route{
+class Route
+{
     var $pattern;
     var $controller;    
     var $action;
