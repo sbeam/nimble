@@ -135,7 +135,8 @@ class NiceDog {
     public function dispatch()
     {
         foreach($this->routes as $rule=>$conf) {
-            if (preg_match($conf[0], $this->url, $matches) and $_SERVER['REQUEST_METHOD'] == $conf[3]){
+						if(isset($_POST['_method']) && !empty($_POST['_method']) && in_array(Route::$allowed_methods, strtoupper($_POST['_method']))){$_SERVER['REQUEST_METHOD'] = strtoupper($_POST['_method']);}
+            if (preg_match($conf[0], $this->url, $matches) && $_SERVER['REQUEST_METHOD'] == $conf[3]){
                 $matches = $this->parse_urls_args($matches);//Only declared variables in url regex
                 $klass = new $conf[1]();
                 ob_start();
@@ -191,6 +192,7 @@ function R($pattern)
 }
 class Route
 {
+		static $allowed_methods = array("GET", "POST", "PUT", "DELETE");
     var $pattern;
     var $controller;    
     var $action;
@@ -218,7 +220,11 @@ class Route
     }
     
     function bind(){
-        $router = NiceDog::getInstance()->add_url($this->pattern,$this->controller,$this->action,$this->http_method);
+				if(in_array(strtoupper($this->http_method), self::$allowed_methods)){
+					$router = NiceDog::getInstance()->add_url($this->pattern, $this->controller, $this->action, strtoupper($this->http_method));
+				}else{
+					die('Invalid Http Method');
+				}  
     }
 }
 
