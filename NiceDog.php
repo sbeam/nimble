@@ -241,6 +241,18 @@ class Route
 					throw new NiceDogExecption('Invalid Request');
 				}  
     }
+    /* build the default routes for a controller pass it the prefix ex. Form for FormController */
+    public static function resources($controller_prefix) {
+	$controller = ucwords($controller_prefix) . 'Controller';
+	$controller_prefix = strtolower($controller_prefix);
+	$r = new Route($controller_prefix . 's');
+	$r->controller($controller)->action('index')->on('GET');
+	$actions = array('create' => 'POST', 'update' => 'PUT', 'delete' => 'DELETE', 'show' => 'GET');
+	foreach($actions as $action=>$method){
+		$r = new Route($controller_prefix . '/:id');
+		$r->controller($controller)->action($action)->on($method);
+	}
+     }
 }
 
 
