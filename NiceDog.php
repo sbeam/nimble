@@ -28,6 +28,12 @@ THE SOFTWARE.
 define('__DEBUG__',true);
 
 /*
+ * Exception
+ */
+class NiceDogExecption extends Exception {}
+
+
+/*
  * Controller
  */
 class C {
@@ -106,7 +112,7 @@ class NiceDog {
     function __construct()
     {
         if (isset($_GET['url']))
-            $this->url =trim( $_GET['url'], '/');
+            $this->url =trim($_GET['url'], '/');
         else $this->url = '';
     }
       
@@ -128,16 +134,17 @@ class NiceDog {
 					$rule .= '\.(?P<format>[a-zA-Z0-9]+)';
 					$has_format = true;
 				}
-                                $rule = preg_replace('/:([a-zA-Z0-9_]+)(?!:)/', '(?P<\1>[a-zA-Z0-9_-]+)', $rule);
+        $rule = preg_replace('/:([a-zA-Z0-9_]+)(?!:)/', '(?P<\1>[a-zA-Z0-9_-]+)', $rule);
         $this->routes[] = array('/^' . str_replace('/','\/',$rule) . '$/', $klass, $klass_method, $http_method, $has_format);
     }
     
     /* Process requests and dispatch */
     public function dispatch()
-    {
+    {	
         foreach($this->routes as $rule=>$conf) {
 						/* if a vaild _method is passed in a post set it to the REQUEST_METHOD so that we can route for DELETE and PUT methods */
 						if(isset($_POST['_method']) && !empty($_POST['_method']) && in_array(strtoupper($_POST['_method']), Route::$allowed_methods)){
+							if(strtoupper($conf[3]) != strtoupper($_POST['_method'])){throw new NiceDogException('Invalid Request');}
 							$_SERVER['REQUEST_METHOD'] = strtoupper($_POST['_method']);
 						}
 						/* test to see if its a valid route */
@@ -160,6 +167,9 @@ class NiceDog {
                 exit();//Argh! Its not pretty, but usefull...
             }    
         }
+				if(empty($_SERVER['REQUEST_METHOD'])){
+					throw new NiceDogExecption('No Request Paramater');
+				}
         call_user_func(array('r404' , $_SERVER['REQUEST_METHOD']));  
     }   
     
@@ -228,10 +238,11 @@ class Route
 				if(in_array(strtoupper($this->http_method), self::$allowed_methods)){
 					$router = NiceDog::getInstance()->add_url($this->pattern, $this->controller, $this->action, strtoupper($this->http_method));
 				}else{
-					die('Invalid Http Method');
+					throw new NiceDogExecption('Invalid Request');
 				}  
     }
 }
+
 
 /*
  * Run application
