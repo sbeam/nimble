@@ -136,7 +136,11 @@ class NiceDog {
     public function dispatch()
     {
         foreach($this->routes as $rule=>$conf) {
-						if(isset($_POST['_method']) && !empty($_POST['_method']) && in_array(Route::$allowed_methods, strtoupper($_POST['_method']))){$_SERVER['REQUEST_METHOD'] = strtoupper($_POST['_method']);}
+						/* if a vaild _method is passed in a post set it to the REQUEST_METHOD so that we can route for DELETE and PUT methods */
+						if(isset($_POST['_method']) && !empty($_POST['_method']) && in_array(Route::$allowed_methods, strtoupper($_POST['_method']))){
+							$_SERVER['REQUEST_METHOD'] = strtoupper($_POST['_method']);
+						}
+						/* test to see if its a valid route */
             if (preg_match($conf[0], $this->url, $matches) && $_SERVER['REQUEST_METHOD'] == $conf[3]){
                 $matches = $this->parse_urls_args($matches);//Only declared variables in url regex
                 $klass = new $conf[1]();
