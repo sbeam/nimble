@@ -59,7 +59,7 @@ PHP works nice for templating, so lets use it!
 
 public function p_tag($tag){
     $this->tag = $tag; 
-    $this->render('views/index.php');
+    echo $this->render('views/index.php');
 }
 
 Base layout
@@ -79,6 +79,7 @@ License
 The MIT License
 
 Copyright (c) 2007 Tiago Bastos
+Copyright (c) 2009 John Bintz
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
