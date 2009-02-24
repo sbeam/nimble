@@ -137,7 +137,7 @@ class NiceDog {
     {
         foreach($this->routes as $rule=>$conf) {
 						/* if a vaild _method is passed in a post set it to the REQUEST_METHOD so that we can route for DELETE and PUT methods */
-						if(isset($_POST['_method']) && !empty($_POST['_method']) && in_array(Route::$allowed_methods, strtoupper($_POST['_method']))){
+						if(isset($_POST['_method']) && !empty($_POST['_method']) && in_array(strtoupper($_POST['_method']), Route::$allowed_methods)){
 							$_SERVER['REQUEST_METHOD'] = strtoupper($_POST['_method']);
 						}
 						/* test to see if its a valid route */
