@@ -167,8 +167,7 @@ function R($pattern)
 {
     if (count($args = func_get_args()) == 4)
     {
-        $r = new Route($args[0]);
-        $r->controller($args[1])->action($args[2])->on($args[3]);
+        return new Route($args[0])->controller($args[1])->action($args[2])->on($args[3]);
     } else {
         return new Route($pattern);
     }
