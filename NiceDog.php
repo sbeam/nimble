@@ -31,9 +31,16 @@ define('__DEBUG__',true);
  * Controller
  */
 class C {
-    var $layout = true;
+    var $http_format;
+		var $layout = true;
     var $layout_tamplate = 'views/layout.php';
     var $headers;
+
+		/* set the incoming http format default is html */
+		public function __construct(){
+			$this->http_format = 'html';
+		}
+		
     
     /* Render function return php rendered in a variable */
     public function render($file)
@@ -92,10 +99,10 @@ class C {
 /*
  * Application core
  */
+
 class NiceDog {
     var $routes = array();
     static private $instance = NULL ;
-   
     function __construct()
     {
         if (isset($_GET['url']))
@@ -114,9 +121,14 @@ class NiceDog {
        }   
 
     /* Add url to routes */
-    public function add_url($rule, $klass, $klass_method, $http_method = 'GET')
+    public function add_url($rule, $klass, $klass_method, $http_method = 'GET', $http_format = '')
     {
-        $this->routes[] = array('/^' . str_replace('/','\/',$rule) . '$/', $klass,$klass_method,$http_method);
+				$has_format = false;
+				if(preg_match('/\.[a-zA-Z0-9]+$/', $this->url)) {
+					$rule .= '\.(?P<format>[a-zA-Z0-9]+)';
+					$has_format = true;
+				}
+        $this->routes[] = array('/^' . str_replace('/','\/',$rule) . '$/', $klass, $klass_method, $http_method, $has_format);
     }
     
     /* Process requests and dispatch */
@@ -127,9 +139,12 @@ class NiceDog {
                 $matches = $this->parse_urls_args($matches);//Only declared variables in url regex
                 $klass = new $conf[1]();
                 ob_start();
-                call_user_func_array(array($klass , $conf[2]),$matches);  
+								if($conf[4]) {
+									$klass->http_format = array_pop($matches);
+								}
+                call_user_func_array(array($klass , $conf[2]), $matches);  
                 $out = ob_get_contents();
-                ob_end_clean();  
+               	ob_end_clean();  
                 if (count($klass->headers)>0){
                     foreach($klass->headers as $header){
                         header($header);
@@ -169,6 +184,7 @@ function R($pattern)
     {
         $r = new Route($args[0]);
         $r->controller($args[1])->action($args[2])->on($args[3]);
+				return $r;
     } else {
         return new Route($pattern);
     }
@@ -179,6 +195,7 @@ class Route
     var $controller;    
     var $action;
     var $http_method = 'GET';
+		var $http_format = '';
     function __construct($pattern){
         $this->pattern = $pattern;
         return $this;
@@ -199,9 +216,14 @@ class Route
         $this->bind();
         return $this;
     }
+
+		function format($http_format){
+			$this->http_format = $http_format;
+			return $this;
+		}
     
     function bind(){
-        $router = NiceDog::getInstance()->add_url($this->pattern,$this->controller,$this->action,$this->http_method);
+        $router = NiceDog::getInstance()->add_url($this->pattern,$this->controller,$this->action,$this->http_method, $this->http_format);
     }
 }
 
