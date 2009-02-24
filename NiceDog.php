@@ -128,7 +128,7 @@ class NiceDog {
 					$rule .= '\.(?P<format>[a-zA-Z0-9]+)';
 					$has_format = true;
 				}
-        $rule = preg_replace('/:([a-zA-Z0-9_]+)/', '(?P<\1>[a-zA-Z0-9_-]+)', $rule);
+                                $rule = preg_replace('/:([a-zA-Z0-9_]+)(?!:)/', '(?P<\1>[a-zA-Z0-9_-]+)', $rule);
         $this->routes[] = array('/^' . str_replace('/','\/',$rule) . '$/', $klass, $klass_method, $http_method, $has_format);
     }
     
@@ -202,6 +202,7 @@ class Route
     var $controller;    
     var $action;
     var $http_method = 'GET';
+		var $http_format = '';
     function __construct($pattern){
         $this->pattern = $pattern;
         return $this;

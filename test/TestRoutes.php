@@ -29,7 +29,7 @@ class TestRoutes extends PHPUnit_Framework_TestCase {
             array("view/:i-d", "view/(?P<i>{$pattern})-d"),
             array("view/:id/action", "view/(?P<id>{$pattern})/action"),
             array("view/:id/action/:id2", "view/(?P<id>{$pattern})/action/(?P<id2>{$pattern})"),
-            array(":id:id2", "(?P<id>{$pattern})(?P<id2>{$pattern})")
+            array(":id:id2", "(?P<i>{$pattern})d(?P<id2>{$pattern})")
         );
     }
 
