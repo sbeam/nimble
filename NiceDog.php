@@ -202,7 +202,6 @@ class Route
     var $controller;    
     var $action;
     var $http_method = 'GET';
-		var $http_format = '';
     function __construct($pattern){
         $this->pattern = $pattern;
         return $this;
