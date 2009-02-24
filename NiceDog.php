@@ -121,7 +121,7 @@ class NiceDog {
        }   
 
     /* Add url to routes */
-    public function add_url($rule, $klass, $klass_method, $http_method = 'GET', $http_format = '')
+    public function add_url($rule, $klass, $klass_method, $http_method = 'GET')
     {
 				$has_format = false;
 				if(preg_match('/\.[a-zA-Z0-9]+$/', $this->url)) {
@@ -216,14 +216,9 @@ class Route
         $this->bind();
         return $this;
     }
-
-		function format($http_format){
-			$this->http_format = $http_format;
-			return $this;
-		}
     
     function bind(){
-        $router = NiceDog::getInstance()->add_url($this->pattern,$this->controller,$this->action,$this->http_method, $this->http_format);
+        $router = NiceDog::getInstance()->add_url($this->pattern,$this->controller,$this->action,$this->http_method);
     }
 }
 
