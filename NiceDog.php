@@ -3,6 +3,7 @@
 The MIT License
 
 Copyright (c) 2007 Tiago Bastos
+Copyright (c) 2009 John Bintz
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -43,6 +44,12 @@ class C {
            $this->content = $this->open_template($file); 
            return $this->open_template($this->layout_tamplate); 
         }
+    }
+
+    /* Render partial function */
+    public function render_partial($file)
+    {
+        return $this->open_template($file);
     }
     
     /* Open template to render and return php rendered in a variable using ob_start/ob_end_clean */
