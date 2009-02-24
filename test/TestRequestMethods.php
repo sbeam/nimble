@@ -23,6 +23,11 @@ class TestRequests extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($this->nicedog->routes[0][3], $_POST['_method']);
 	}
 
+	public function testInvalidMethod() {
+		$_POST['_method'] = 'OWNAGE';
+ 		R('test/:id')->controller('Class')->action('method')->on('PUT');
+		$this->assertNotEquals($this->nicedog->routes[0][3], $_POST['_method']);
+	}
 	
 }
 
