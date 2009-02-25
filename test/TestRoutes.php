@@ -7,6 +7,7 @@ class TestRoutes extends PHPUnit_Framework_TestCase {
     public function setUp() {
         $this->nicedog = NiceDog::getInstance();
         $this->nicedog->routes = array();
+				$this->url = '';
     }
 
     /**
@@ -15,6 +16,7 @@ class TestRoutes extends PHPUnit_Framework_TestCase {
     public function testRubyOnRailsRoutes($ror_route, $expected_pattern) {
         $this->nicedog->add_url($ror_route, "Class", "method");
         $this->assertEquals("/^" . str_replace('/', '\/', $expected_pattern) . "$/", $this->nicedog->routes[0][0]);
+				
     }
 
     public function providerRubyOnRailsRoutes() {
@@ -48,6 +50,30 @@ class TestRoutes extends PHPUnit_Framework_TestCase {
 			Route::resources('Form');
 			$this->assertEquals(count($this->nicedog->routes), 5);
 		}
+		
+		public function testUrlFor() {
+			$this->nicedog->routes = array();
+			$this->nicedog->uri = '';
+			$this->nicedog->url = '/class/1';
+			$this->nicedog->add_url('/class/:method', "Class", "Method");
+			$this->assertEquals('/class/1', UrlBuilder::url_for('Class', 'Method', array(1)));
+		}
+		
+		public function testUrlForFailsWrongParams() {
+			$this->nicedog->routes = array();
+			$this->nicedog->uri = '';
+			$this->nicedog->url = '/class/1';
+			$this->nicedog->add_url('/class/:method', "Class", "Method");
+			try{
+				$this->assertEquals('/class/1', UrlBuilder::url_for('Class', 'Method', array(1, 2)));
+			}catch(NiceDogExecption $e) {
+				$this->assertEquals('Invalid Number of Params expected: ' . 1 . ' Given: ' . 2, $e->getMessage());
+			}
+		}
+		
+		
+		
+		
 
 
 }

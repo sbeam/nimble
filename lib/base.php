@@ -12,7 +12,9 @@ class NiceDog {
         if (isset($_GET['url']))
             $this->url =trim($_GET['url'], '/');
         else $this->url = '';
-				$this->uri = str_replace(basename($_SERVER['PHP_SELF']), '', $_SERVER['PHP_SELF']);
+				if(!isset($this->uri)) {
+					$this->uri = str_replace(basename($_SERVER['PHP_SELF']), '', $_SERVER['PHP_SELF']);
+				}
     }
       
     /* Singleton */
@@ -28,13 +30,15 @@ class NiceDog {
     /* Add url to routes */
     public function add_url($rule, $klass, $klass_method, $http_method = 'GET')
     {
+						
+				/*parse format */
 				$has_format = false;
 				if(preg_match('/\.[a-zA-Z0-9]+$/', $this->url)) {
 					$rule .= '\.(?P<format>[a-zA-Z0-9]+)';
 					$has_format = true;
-				}
+				}		
         $rule = preg_replace('/:([a-zA-Z0-9_]+)(?!:)/', '(?P<\1>[a-zA-Z0-9_-]+)', $rule);
-        $this->routes[] = array('/^' . str_replace('/','\/',$rule) . '$/', $klass, $klass_method, $http_method, $has_format);
+        $this->routes[] = array('/^' . str_replace('/','\/',$rule) . '$/', $klass, $klass_method, $http_method);
     }
     
     /* Process requests and dispatch */
@@ -45,11 +49,13 @@ class NiceDog {
 						if(isset($_POST['_method']) && !empty($_POST['_method']) && in_array(strtoupper($_POST['_method']), Route::$allowed_methods)){
 							$_SERVER['REQUEST_METHOD'] = strtoupper($_POST['_method']);
 						}
+						
 						/* test to see if its a valid route */
             if (preg_match($conf[0], $this->url, $matches) && $_SERVER['REQUEST_METHOD'] == $conf[3]){
                 $matches = $this->parse_urls_args($matches);//Only declared variables in url regex
                 $klass = new $conf[1]();
-								if($conf[4]) {
+
+								if($has_format) {
 									$klass->http_format = array_pop($matches);
 								}else{
 									$klass->http_format = 'html';
