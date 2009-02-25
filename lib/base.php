@@ -38,7 +38,7 @@ class NiceDog {
 					$has_format = true;
 				}		
         $rule = preg_replace('/:([a-zA-Z0-9_]+)(?!:)/', '(?P<\1>[a-zA-Z0-9_-]+)', $rule);
-        $this->routes[] = array('/^' . str_replace('/','\/',$rule) . '$/', $klass, $klass_method, $http_method);
+        $this->routes[] = array('/^' . str_replace('/','\/',$rule) . '$/', $klass, $klass_method, $http_method, $has_format);
     }
     
     /* Process requests and dispatch */
@@ -55,7 +55,7 @@ class NiceDog {
                 $matches = $this->parse_urls_args($matches);//Only declared variables in url regex
                 $klass = new $conf[1]();
 
-								if($has_format) {
+								if($conf[4]) {
 									$klass->http_format = array_pop($matches);
 								}else{
 									$klass->http_format = 'html';
