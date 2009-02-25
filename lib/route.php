@@ -1,4 +1,8 @@
 <?php
+require_once(dirname(__FILE__) . '/route/helper.php');
+require_once(dirname(__FILE__) . '/route/url_builder.php');
+
+
 class Route
 {
 		static $allowed_methods = array("GET", "POST", "PUT", "DELETE");

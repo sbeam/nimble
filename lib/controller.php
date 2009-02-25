@@ -1,4 +1,8 @@
 <?php
+/* create an alias so its backward compatable */
+
+class C extends Controller{}
+
 class Controller {
     var $http_format;
 		var $layout = true;
