@@ -1,0 +1,11 @@
+<?php
+/* Dumps out a list of the routes for your application
+	niceroutes <path to index.php>
+*/
+
+	$_GET['url'] = 'dgfojsagosgowrgh8uruogabfworugvfsvgsfhv';
+	$_SERVER['REQUEST_METHOD'] = "GET";
+	require_once(dirname(__FILE__) . '/' . $argv[1]);	
+	echo UrlBuilder::dumpRoutes(true);
+	exit();
+?>

@@ -32,7 +32,7 @@
 					throw new NiceDogExecption('Invalid Number of Params expected: ' . count($matches[0]) . ' Given: ' . count($params));
 				}
 				//replace the regular expression syntax with the params
-				return self::uri() . preg_replace(array_fill(0, count($params), $route_regex), $params, $pattern, 1); 
+				return str_replace('//', '/', self::uri() . preg_replace(array_fill(0, count($params), $route_regex), $params, $pattern, 1)); 
 			}else{
 				return $pattern;
 			}
@@ -49,6 +49,20 @@
 				}
 			}
 			throw new NiceDogException('Invalid Controller / Method Pair');
+		}
+		
+		public static function dumpRoutes($cmi=false) {
+			$klass = NiceDog::getInstance();
+			$out = array();
+			foreach($klass->routes as $route) {
+				$pattern = self::clean_route($route[0]);
+				$pattern = empty($pattern) ? 'root path' : $pattern;
+				array_push($out, "Controller: {$route[1]} Action: {$route[2]} Method: {$route[3]} Pattern: " . $pattern);
+			}
+			$return = "\n";
+			$return .= join("\n", $out);
+			$return .= "\n";
+			return $cmi ? $return : htmlspecialchars($return);
 		}
 		
 		
