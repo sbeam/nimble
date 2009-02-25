@@ -12,6 +12,7 @@ class NiceDog {
         if (isset($_GET['url']))
             $this->url =trim($_GET['url'], '/');
         else $this->url = '';
+				$this->uri = str_replace(basename($_SERVER['PHP_SELF']), '', $_SERVER['PHP_SELF']);
     }
       
     /* Singleton */

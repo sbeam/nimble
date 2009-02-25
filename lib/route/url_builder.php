@@ -15,6 +15,11 @@
 		public static function clean_route($route) {
 			return str_replace('$/', '', str_replace('/^', '', str_replace('\/','/', $route)));
 		}
+		
+		public static function uri() {
+			$klass = NiceDog::getINstance();
+			return $klass->uri;
+		}
 
 		/* This method does all the heavy lifting for figuring out how to format the route back into something useable by a browser */
 		public static function build_url($route, $params=array()) {
@@ -27,7 +32,7 @@
 					throw new NiceDogExecption('Invalid Number of Params expected: ' . count($matches[0]) . ' Given: ' . count($params));
 				}
 				//replace the regular expression syntax with the params
-				return preg_replace(array_fill(0, count($params), $route_regex), $params, $pattern, 1); 
+				return self::uri() . preg_replace(array_fill(0, count($params), $route_regex), $params, $pattern, 1); 
 			}else{
 				return $pattern;
 			}
