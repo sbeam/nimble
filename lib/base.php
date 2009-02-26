@@ -61,7 +61,11 @@ class NiceDog {
 									$klass->http_format = 'html';
 								}
                 ob_start();
-                call_user_func_array(array($klass , $conf[2]), $matches);  
+								//call before filters
+								call_user_func(array($klass, "run_before_filters"), $conf[2]);
+                call_user_func_array(array($klass , $conf[2]), $matches); 
+								//call before filters
+								call_user_func(array($klass, "run_after_filters"), $conf[2]); 
                 $out = ob_get_contents();
                	ob_end_clean();  
                 if (count($klass->headers)>0){
