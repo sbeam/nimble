@@ -1,88 +1,14 @@
-Nice Dog
+See wiki for documentation
 
-Nice Dog is a nano web framework for PHP, like web.py for Python, Sinatra or Camping for Ruby
-Minimal
+http://wiki.github.com/jetviper21/nimble
 
-require 'NiceDog.php';
-R('')->controller('test')->action('index')->on('GET');
-class Test extends C{
-    public function index(){
-        echo 'Hello';
-    }
-}
-run();
-
-But Why?
-
-If you want to build a small site or software and do not need a BIG framework with a lot of features, you can use Nice Dog. Nice Dog do not have any ORM or big features like Cake, Rails or Django have, but it is smaller, easier and faster!
-
-Just 2 files
-
-Get beta2.2 here .htaccess and NiceDog.php *Routes Fixed
-Easy to deploy
-
-Just drop the files into a folder in your Apache server!
-Nice Urls
-
-R('')->controller('test')->action('index')->on('GET');
-
-Tutorial for who doesn't have time
-
-   1. Get the files
-   2. Put in your directory, like /var/www/htdocs/, no yaml, xml, *ml
-   3. Create a index.php
-   4. Just
-
-      require('NiceDog.php')
-
-   5. Make urls like this, define the url, class, method and HTTP method:
-
-      R('tag/(?P<tag>[-\w]+)')->controller('Test')->action('p_tag')->on('GET');
-
-      Ruby on Rails-style route patterns work too, with a default pattern of [a-zA-Z0-9_-]+:
-
-      R('tag/:tag')->controller('Test')->action('p_tag')->on('GET');
-
-   6. Write a class that extends C
-
-      class Test extends C{}
-
-   7. Write a method p_tag
-
-      public function p_tag($tag){ echo $tag; }
-
-   8. And
-
-      run()
-
-   9. Open in your browser: http://localhost/tag/dog
-
-Templates
-
-PHP works nice for templating, so lets use it!
-
-public function p_tag($tag){
-    $this->tag = $tag; 
-    echo $this->render('views/index.php');
-}
-
-Base layout
-views/layout.php
-
-<h1>My firs example</h1>
-<?=$content?>
-
-*To change base layout do this: $this->layout="MyLayout.php"
-Template
-views/index.php
-
-<span><?=$tag?></span>
 
 License
 
 The MIT License
 
 Copyright (c) 2007 Tiago Bastos
+Copyright (c) 2009 Scott Davis
 Copyright (c) 2009 John Bintz
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -106,3 +32,4 @@ THE SOFTWARE.
 Contribute
 
 Nice Dog created by Tiago Bastos under MIT license
+Nimble created by Scott Davis and John Bincz under MIT license
