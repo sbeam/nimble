@@ -56,9 +56,9 @@ class Nimble {
                 $klass = new $conf[1]();
 
 								if($conf[4]) {
-									$klass->http_format = array_pop($matches);
+									$klass->format = array_pop($matches);
 								}else{
-									$klass->http_format = 'html';
+									$klass->format = 'html';
 								}
                 ob_start();
 								//call before filters
@@ -95,6 +95,24 @@ class Nimble {
         }
         return $new_matches;
     }
+
+		/* 
+			Call this method to load plugins it can be called globaly or at the controller level if called in a controller the view also has access
+			ex. Nimble::plugins('active_php', 'form_helpers')
+			loads requires the init.php in each plugin directory
+		*/
+		public static function plugins() {
+			$args = func_get_args();
+			if(count($args) == 0) {return false;}
+			foreach($args as $plugin) {
+				$file = dirname(__FILE__) . '/../plugins/' . $plugin . '/init.php';
+				if(file_exists($file)) {
+					require_once($file);
+				}
+			}
+		}
+
+
 }
 
 ?>

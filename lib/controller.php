@@ -4,7 +4,7 @@
 class C extends Controller{}
 
 class Controller {
-    var $http_format;
+    var $format;
 		var $layout = true;
     var $layout_tamplate = 'views/layout.php';
     var $headers;
@@ -63,8 +63,8 @@ class Controller {
 		}
 		
 		/* returns the html format */
-		public function html_format() {
-			return $this->html_format;
+		public function format() {
+			return $this->format;
 		}
 		
     
