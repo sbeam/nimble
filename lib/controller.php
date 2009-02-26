@@ -55,6 +55,10 @@ class Controller {
 						call_user_func(array($this, $fmethod));
 					}
 				}
+				/* process the method if its global */
+				if(!array_key_exists('except', $options) && !array_key_exists('only', $options)) {
+					call_user_func(array($this, $fmethod));
+				}
 			}
 		}
 		
