@@ -4,7 +4,7 @@ require_once(dirname(__FILE__) . '/exception.php');
 require_once(dirname(__FILE__) . '/helper.php');
 require_once(dirname(__FILE__) . '/route.php');
 
-class NiceDog {
+class Nimble {
     var $routes = array();
     static private $instance = NULL ;
     function __construct()
@@ -22,7 +22,7 @@ class NiceDog {
       {
         if(self::$instance == NULL)
         {
-                self::$instance = new NiceDog();
+                self::$instance = new Nimble();
         }
              return self::$instance;
        }   
@@ -78,7 +78,7 @@ class NiceDog {
             }    
         }
 				if(empty($_SERVER['REQUEST_METHOD'])){
-					throw new NiceDogExecption('No Request Paramater');
+					throw new NimbleExecption('No Request Paramater');
 				}
         call_user_func(array('r404' , $_SERVER['REQUEST_METHOD']));  
     }   

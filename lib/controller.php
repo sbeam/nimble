@@ -39,7 +39,7 @@ class Controller {
 		}
 		
 		/* This method processes the filters and calls the methods 
-			 Note the methods being called should be public protected methods in the child class
+			 Note the methods being called should be protected methods in the child class
 		*/
 		private function process_filters($method, $filters) {
 			foreach($filters as $fmethod=>$options) {

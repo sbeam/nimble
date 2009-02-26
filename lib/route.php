@@ -34,9 +34,9 @@ class Route
     
     function bind(){
 				if(in_array(strtoupper($this->http_method), self::$allowed_methods)){
-					$router = NiceDog::getInstance()->add_url($this->pattern, $this->controller, $this->action, strtoupper($this->http_method));
+					$router = Nimble::getInstance()->add_url($this->pattern, $this->controller, $this->action, strtoupper($this->http_method));
 				}else{
-					throw new NiceDogExecption('Invalid Request');
+					throw new NimbleExecption('Invalid Request');
 				}  
     }
     /* build the default routes for a controller pass it the prefix ex. Form for FormController */

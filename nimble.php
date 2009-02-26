@@ -34,8 +34,8 @@ require_once(dirname(__FILE__) . '/lib/base.php');
 function Run()
 {
     try {
-        NiceDog::getInstance()->dispatch();
-    } catch (NiceDogException $e) {
+        Nimble::getInstance()->dispatch();
+    } catch (NimbleException $e) {
         if (__DEBUG__==true) {
         ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"

@@ -1,4 +1,4 @@
 <?php
-	class NiceDogExecption extends Exception {}
+	class NimbleExecption extends Exception {}
 
 ?>

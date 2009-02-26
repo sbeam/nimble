@@ -17,7 +17,7 @@
 		}
 		
 		public static function uri() {
-			$klass = NiceDog::getINstance();
+			$klass = Nimble::getINstance();
 			return $klass->uri;
 		}
 
@@ -29,7 +29,7 @@
 			if(!empty($params) && preg_match_all($route_regex, $pattern, $matches)){
 				//test if we have the right number of params
 				if (count($matches[0]) != count($params)) {
-					throw new NiceDogExecption('Invalid Number of Params expected: ' . count($matches[0]) . ' Given: ' . count($params));
+					throw new NimbleExecption('Invalid Number of Params expected: ' . count($matches[0]) . ' Given: ' . count($params));
 				}
 				//replace the regular expression syntax with the params
 				return str_replace('//', '/', self::uri() . preg_replace(array_fill(0, count($params), $route_regex), $params, $pattern, 1)); 
@@ -42,17 +42,17 @@
 		 	@params string $controller, string $action, array $params
 		*/
 		public static function url_for($controller, $action, $params=array()){
-			$klass = NiceDog::getInstance();
+			$klass = Nimble::getInstance();
 			foreach($klass->routes as $route) {
 				if(strtolower($route[1]) == strtolower($controller) && strtolower($route[2]) == strtolower($action)) {
 					return self::build_url($route, $params);
 				}
 			}
-			throw new NiceDogException('Invalid Controller / Method Pair');
+			throw new NimbleException('Invalid Controller / Method Pair');
 		}
 		
 		public static function dumpRoutes($cmi=false) {
-			$klass = NiceDog::getInstance();
+			$klass = Nimble::getInstance();
 			$out = array();
 			foreach($klass->routes as $route) {
 				$pattern = self::clean_route($route[0]);
