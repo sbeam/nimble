@@ -57,10 +57,6 @@ class Controller {
 					}
 					unset($options['except']);
 				}
-				/* for any methods that are not in the sub array except or only */
-				foreach($options as $options_method) {
-					call_user_func(array($this, $options_method));
-				}
 			}
 		}
 		
