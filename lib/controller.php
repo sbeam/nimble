@@ -48,14 +48,12 @@ class Controller {
 					if(in_array($method, $options['only'])) {
 						call_user_func(array($this, $fmethod));
 					}
-					unset($options['only']);
 				}
 				/* process the except methods */
 				if(array_key_exists('except', $options)) {
 					if(!in_array($method, $options['except'])) {
 						call_user_func(array($this, $fmethod));
 					}
-					unset($options['except']);
 				}
 			}
 		}
