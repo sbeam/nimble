@@ -6,6 +6,8 @@ require_once(dirname(__FILE__) . '/route.php');
 
 class Nimble {
     var $routes = array();
+		var $config = array();
+		var $plugins = array();
     static private $instance = NULL ;
     function __construct()
     {
@@ -15,6 +17,7 @@ class Nimble {
 				if(!isset($this->uri)) {
 					$this->uri = str_replace(basename($_SERVER['PHP_SELF']), '', $_SERVER['PHP_SELF']);
 				}
+				$this->load_plugins();
     }
       
     /* Singleton */
@@ -54,7 +57,7 @@ class Nimble {
             if (preg_match($conf[0], $this->url, $matches) && $_SERVER['REQUEST_METHOD'] == $conf[3]){
                 $matches = $this->parse_urls_args($matches);//Only declared variables in url regex
                 $klass = new $conf[1]();
-
+								
 								if($conf[4]) {
 									$klass->format = array_pop($matches);
 								}else{
@@ -100,17 +103,46 @@ class Nimble {
 			Call this method to load plugins it can be called globaly or at the controller level if called in a controller the view also has access
 			ex. Nimble::plugins('active_php', 'form_helpers')
 			loads requires the init.php in each plugin directory
+			a custom plugin directory can also be set via the config array
 		*/
 		public static function plugins() {
 			$args = func_get_args();
 			if(count($args) == 0) {return false;}
-			foreach($args as $plugin) {
+			$klass = self::getInstance();
+			$klass->plugins = $args;
+		}
+		
+		/* private method to load the plugins before any real execuption starts we do this to prevent developer error */
+		private function load_plugins() {
+			if(count($this->plugins) == 0){return false;}
+			self::require_plugins($this->plugins);	
+		}
+		
+		/* moved to static function so we can call this from the controller level */
+		public static function require_plugins($array) {
+			$klass = self::getInstance();
+			foreach($array as $plugin) {
+				if(array_key_exists('plugins_path', $klass->config)){
+					$file = $klass->config['plugins_path'] . '/' . $plugin . '/init.php';
+					if(file_exists($file)) {
+						require_once($file);
+						continue;
+					}
+				}
 				$file = dirname(__FILE__) . '/../plugins/' . $plugin . '/init.php';
 				if(file_exists($file)) {
 					require_once($file);
 				}
 			}
 		}
+		
+		/* static method to set config options */
+		public static function set_config($config, $value) {
+			$klass = self::getInstance();
+			$klass->config[$config] = $value;
+		}
+		
+		
 
 
 }

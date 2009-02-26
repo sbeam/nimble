@@ -14,6 +14,16 @@ class Controller {
 			$this->http_format = 'html';
 		}
 		
+		
+		
+		/* load a plugin for this controller and its view */
+		
+		public function load_plugins() {
+			$args = func_get_args();
+			if(count($args) ==0){return false;}
+			Nimble::require_plugins($args);
+		}
+		
 		/* Method that invokes the before filters 
 			 Before Filters run before the action in the controller
 		*/

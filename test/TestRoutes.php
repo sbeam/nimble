@@ -1,7 +1,7 @@
 <?php
 
 require_once('PHPUnit/Framework.php');
-require_once('../Nimble.php');
+require_once('../nimble.php');
 
 class TestRoutes extends PHPUnit_Framework_TestCase {
     public function setUp() {
