@@ -1,12 +1,12 @@
 <?php
 
 require_once('PHPUnit/Framework.php');
-require_once('../NiceDog.php');
+require_once('../Nimble.php');
 
 class TestRoutes extends PHPUnit_Framework_TestCase {
     public function setUp() {
-        $this->nicedog = NiceDog::getInstance();
-        $this->nicedog->routes = array();
+        $this->Nimble = Nimble::getInstance();
+        $this->Nimble->routes = array();
 				$this->url = '';
     }
 
@@ -14,8 +14,8 @@ class TestRoutes extends PHPUnit_Framework_TestCase {
      * @dataProvider providerRubyOnRailsRoutes
      */
     public function testRubyOnRailsRoutes($ror_route, $expected_pattern) {
-        $this->nicedog->add_url($ror_route, "Class", "method");
-        $this->assertEquals("/^" . str_replace('/', '\/', $expected_pattern) . "$/", $this->nicedog->routes[0][0]);
+        $this->Nimble->add_url($ror_route, "Class", "method");
+        $this->assertEquals("/^" . str_replace('/', '\/', $expected_pattern) . "$/", $this->Nimble->routes[0][0]);
 				
     }
 
@@ -36,37 +36,37 @@ class TestRoutes extends PHPUnit_Framework_TestCase {
     }
 
     public function testFormatRoutes() {
-        $this->nicedog->url = "test";
-        $this->nicedog->add_url('', "Class", "method");
-        $this->assertEquals("/^$/", $this->nicedog->routes[0][0]);
+        $this->Nimble->url = "test";
+        $this->Nimble->add_url('', "Class", "method");
+        $this->assertEquals("/^$/", $this->Nimble->routes[0][0]);
 
-        $this->nicedog->routes = array();
-        $this->nicedog->url = "test.xml";
-        $this->nicedog->add_url('', "Class", "method");
-        $this->assertEquals("/^\.(?P<format>[a-zA-Z0-9]+)$/", $this->nicedog->routes[0][0]);
+        $this->Nimble->routes = array();
+        $this->Nimble->url = "test.xml";
+        $this->Nimble->add_url('', "Class", "method");
+        $this->assertEquals("/^\.(?P<format>[a-zA-Z0-9]+)$/", $this->Nimble->routes[0][0]);
     }
 
 		public function testResources() {
 			Route::resources('Form');
-			$this->assertEquals(count($this->nicedog->routes), 5);
+			$this->assertEquals(count($this->Nimble->routes), 5);
 		}
 		
 		public function testUrlFor() {
-			$this->nicedog->routes = array();
-			$this->nicedog->uri = '';
-			$this->nicedog->url = '/class/1';
-			$this->nicedog->add_url('/class/:method', "Class", "Method");
+			$this->Nimble->routes = array();
+			$this->Nimble->uri = '';
+			$this->Nimble->url = '/class/1';
+			$this->Nimble->add_url('/class/:method', "Class", "Method");
 			$this->assertEquals('/class/1', UrlBuilder::url_for('Class', 'Method', array(1)));
 		}
 		
 		public function testUrlForFailsWrongParams() {
-			$this->nicedog->routes = array();
-			$this->nicedog->uri = '';
-			$this->nicedog->url = '/class/1';
-			$this->nicedog->add_url('/class/:method', "Class", "Method");
+			$this->Nimble->routes = array();
+			$this->Nimble->uri = '';
+			$this->Nimble->url = '/class/1';
+			$this->Nimble->add_url('/class/:method', "Class", "Method");
 			try{
 				$this->assertEquals('/class/1', UrlBuilder::url_for('Class', 'Method', array(1, 2)));
-			}catch(NiceDogExecption $e) {
+			}catch(NimbleExecption $e) {
 				$this->assertEquals('Invalid Number of Params expected: ' . 1 . ' Given: ' . 2, $e->getMessage());
 			}
 		}
