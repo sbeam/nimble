@@ -36,7 +36,6 @@ class TestRequests extends PHPUnit_Framework_TestCase {
 		$_POST['_method'] = 'OWNAGE';
 			try{
  				R('test/:id')->controller('Class')->action('method')->on('PUTff');
-				echo "this should fail1";
 			}catch(NimbleExecption $e) {
 				$this->assertEquals('Invalid Request', $e->getMessage());
 			}
@@ -46,7 +45,6 @@ class TestRequests extends PHPUnit_Framework_TestCase {
 		$_POST['_method'] = 'PUT';
 			try{
  				R('test/:id')->controller('Class')->action('method')->on('PUTff');
-				echo "this should fail2";
 			}catch(NimbleExecption $e) {
 				$this->assertEquals('Invalid Request', $e->getMessage());
 			}

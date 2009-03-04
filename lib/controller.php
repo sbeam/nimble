@@ -82,10 +82,10 @@ class Controller {
     public function render($file)
     {
         if ($this->layout==false){
-            return $this->open_template($file); 
+            echo $this->open_template($file); 
         } else {
            $this->content = $this->open_template($file); 
-           return $this->open_template($this->layout_tamplate); 
+           echo $this->open_template($this->layout_tamplate); 
         }
     }
 
@@ -125,9 +125,12 @@ class Controller {
     */
     public function redirect($url,$now=false)
     {
-        if(!$now)
-        $this->header("Location: {$url}");
-        else header("Location: {$url}");
+        if(!$now) {
+        	$this->header("Location: {$url}");
+        }else{
+	 				header("Location: {$url}");
+					exit();
+				}
     }
 
 		public function redirect_to($url) {
