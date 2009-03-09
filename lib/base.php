@@ -162,16 +162,14 @@ class Nimble
         $klass = self::getInstance();
         foreach($array as $plugin) {
             if(array_key_exists('plugins_path', $klass->config)) {
-                $file = $klass->config['plugins_path'] . '/' . $plugin . '/init.php';
+                $file = $klass->config['plugins_path'] . $plugin . '/init.php';
                 if(file_exists($file)) {
-                    require_once($file);
-                    continue;
-                }
+									require_once($file);
+                	continue;
+								}
             }
             $file = dirname(__FILE__) . '/../plugins/' . $plugin . '/init.php';
-            if(file_exists($file)) {
-                require_once($file);
-            }
+            require_once($file);
         }
     }
 

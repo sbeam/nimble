@@ -1,4 +1,10 @@
 <?php
+
+
+	/*
+		@package UrlBuilder
+	*/
+
 	class UrlBuilder {
 		
 		
@@ -10,7 +16,7 @@
     }
 		/*
 			Cleans all the regex cruft out of the URL expression
-			@params string $route
+			@param string $route
 		*/
 		public static function clean_route($route) {
 			return str_replace('$/', '', str_replace('/^', '', str_replace('\/','/', $route)));
@@ -21,7 +27,11 @@
 			return $klass->uri;
 		}
 
-		/* This method does all the heavy lifting for figuring out how to format the route back into something useable by a browser */
+		/* 
+			This method does all the heavy lifting for figuring out how to format the route back into something useable by a browser 
+			@param string $route the route path
+			@param string $params array of params in the order they occure in the url
+		*/
 		public static function build_url($route, $params=array()) {
 			$route_regex = '/\(\?P<[\w]+>[^\)]+\)/'; // matches (?P<foo>[a-zA-Z0-9]+) etc.
 			$pattern = $route[0]; // in not typing $route[0] over and over making it a local var
@@ -39,7 +49,7 @@
 		}
 		
 		/*
-		 	@params string $controller, string $action, array $params
+		 	@param string $controller, string $action, array $params
 		*/
 		public static function url_for($controller, $action, $params=array()){
 			$klass = Nimble::getInstance();
@@ -50,8 +60,11 @@
 			}
 			throw new NimbleException('Invalid Controller / Method Pair');
 		}
-		
-		public static function dumpRoutes($cmi=false) {
+		/*
+			dumps the routes to a human readable format
+			@param boolean $cli
+		*/
+		public static function dumpRoutes($cli=false) {
 			$klass = Nimble::getInstance();
 			$out = array();
 			foreach($klass->routes as $route) {
@@ -62,7 +75,7 @@
 			$return = "\n";
 			$return .= join("\n", $out);
 			$return .= "\n";
-			return $cmi ? $return : htmlspecialchars($return);
+			return $cli ? $return : htmlspecialchars($return);
 		}
 		
 		
