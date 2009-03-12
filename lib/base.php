@@ -59,6 +59,8 @@ class Nimble
 
     /**
      * Match the HTTP request's URL and HTTP method against the stored routes and, if a match is found, call the appropriate controller's method.
+     * If the client you're using doesn't support sending HTTP requests with methods
+     * other than GET or POST, set $_POST['_method'] to the actual HTTP method you wish to use.
      */
     public function dispatch()
     {	

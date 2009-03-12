@@ -1,4 +1,6 @@
 <?php
-	class NimbleExecption extends Exception {}
-
+  /**
+   * NimbleException is the type of exception thrown by Nimble.
+   */
+  class NimbleExecption extends Exception {}
 ?>
