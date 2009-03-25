@@ -86,8 +86,8 @@ class Nimble
                 // call methods on controller class
                 call_user_func_array(array($klass , $conf[2]), $matches);
 				
-				if(!$klass->has_rendered) {
-					$klass->render(join(DIRECTORY_SEPARATOR ,array($this->config['view_path', $klass, $con[2] . '.php')));
+				if(!$klass->has_rendered && isset($this->config['view_path'])) {
+					$klass->render(join(DIRECTORY_SEPARATOR ,array($this->config['view_path'], $klass, $con[2] . '.php')));
 				}
 				
                 // call after filters
