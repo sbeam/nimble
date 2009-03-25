@@ -20,6 +20,14 @@ class TestRender extends PHPUnit_Framework_TestCase {
 		$this->assertTrue($this->Nimble->klass->has_rendered);
 	}
 	
+	public function testmanualRender() {
+		$this->Nimble->url = "";
+		$this->Nimble->add_url('', "MyTestController", "test2");	
+		$this->Nimble->dispatch(true);
+		$this->assertTrue($this->Nimble->klass->has_rendered);
+	
+	}
+	
 
 }
 
@@ -32,6 +40,10 @@ class MyTestController extends Controller {
 	
 	public function test() {
 		
+	}
+	
+	public function test2() {
+		$this->render(join(DIRECTORY_SEPARATOR, array(dirname(__FILE__), 'views', 'mytest', 'test.php')));
 	}
 }
 
