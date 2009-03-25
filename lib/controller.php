@@ -145,7 +145,7 @@ class Controller {
                 }
             require($name);
         } else {
-            throw new NiceDogException('View ['.$name.'] Not Found');
+            throw new Exception('View ['.$name.'] Not Found');
         }
         $out = ob_get_contents();
         ob_end_clean();
