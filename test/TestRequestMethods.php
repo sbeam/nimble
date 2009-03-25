@@ -31,34 +31,29 @@ class TestRequests extends PHPUnit_Framework_TestCase {
  		R('test/:id')->controller('Class')->action('method')->on('PUT');
 		$this->assertEquals($this->Nimble->routes[0][3], $_POST['_method']);
 	}
-
+	/**
+	* @expectedException NimbleExecption
+	*/
 	public function testInvalidMethod() {
 		$_POST['_method'] = 'OWNAGE';
-			try{
- 				R('test/:id')->controller('Class')->action('method')->on('PUTff');
-			}catch(NimbleExecption $e) {
-				$this->assertEquals('Invalid Request', $e->getMessage());
-			}
+ 		R('test/:id')->controller('Class')->action('method')->on('PUTff');
 	}
-	
+	/**
+	* @expectedException NimbleExecption
+	*/	
 	public function testInvalidMethodAgain() {
 		$_POST['_method'] = 'PUT';
-			try{
- 				R('test/:id')->controller('Class')->action('method')->on('PUTff');
-			}catch(NimbleExecption $e) {
-				$this->assertEquals('Invalid Request', $e->getMessage());
-			}
+ 		R('test/:id')->controller('Class')->action('method')->on('PUTff');
+
 	}
-	
+	/**
+	* @expectedException NimbleExecption
+	*/	
 	public function testInvalidMethodAgainWithPoo() {
 		$_POST['_method'] = 'Poo';
 		$this->Nimble->url = 'test/1';
-			try{
- 				R('test/:id')->controller('Class')->action('method')->on('PUT');
-				$this->Nimble->dispatch();
-			}catch(NimbleExecption $e) {
-				$this->assertEquals('No Request Paramater', $e->getMessage());
-			}
+ 		R('test/:id')->controller('Class')->action('method')->on('PUT');
+		$this->Nimble->dispatch();
 	}
 	
 }

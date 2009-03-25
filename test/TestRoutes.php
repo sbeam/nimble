@@ -59,16 +59,15 @@ class TestRoutes extends PHPUnit_Framework_TestCase {
 			$this->assertEquals('/class/1', UrlBuilder::url_for('Class', 'Method', array(1)));
 		}
 		
+		/**
+		* @expectedException NimbleExecption
+		*/
 		public function testUrlForFailsWrongParams() {
 			$this->Nimble->routes = array();
 			$this->Nimble->uri = '';
 			$this->Nimble->url = '/class/1';
 			$this->Nimble->add_url('/class/:method', "Class", "Method");
-			try{
-				$this->assertEquals('/class/1', UrlBuilder::url_for('Class', 'Method', array(1, 2)));
-			}catch(NimbleExecption $e) {
-				$this->assertEquals('Invalid Number of Params expected: ' . 1 . ' Given: ' . 2, $e->getMessage());
-			}
+			$this->assertEquals('/class/1', UrlBuilder::url_for('Class', 'Method', array(1, 2)));
 		}
 		
 		
