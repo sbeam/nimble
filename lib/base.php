@@ -30,7 +30,7 @@ class Nimble
      * Get the global Nimble object instance.
      * @return Nimble The global Nimble reference.
      */
-    public function getInstance()
+    public static function getInstance()
     {
         if(self::$instance == NULL) {
             self::$instance = new Nimble();
@@ -85,7 +85,11 @@ class Nimble
 
                 // call methods on controller class
                 call_user_func_array(array($klass , $conf[2]), $matches);
-
+				
+				if(!$klass->has_rendered) {
+					$klass->render(join(DIRECTORY_SEPARATOR ,array($this->config['view_path', $klass, $con[2] . '.php')));
+				}
+				
                 // call after filters
                 call_user_func(array($klass, "run_after_filters"), $conf[2]);
 
