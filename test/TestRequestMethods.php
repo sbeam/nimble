@@ -10,7 +10,7 @@ class r404 {
 	function PUT(){}
 }
 
-class TestRequests extends PHPUnit_Framework_TestCase {
+class TestRequestMethods extends PHPUnit_Framework_TestCase {
 	
 	public function setUp() {
 			$_POST['_method'] = 'GET';
