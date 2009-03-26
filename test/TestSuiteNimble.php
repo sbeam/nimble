@@ -8,6 +8,7 @@ foreach (glob("*.php") as $file) {
 	}
 }
 
+// test suite
 class TestNimble {
 	public static function suite() {
 		global $classes_loaded;
