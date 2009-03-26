@@ -30,7 +30,7 @@ class Nimble
      * Get the global Nimble object instance.
      * @return Nimble The global Nimble reference.
      */
-    public function getInstance()
+    public static function getInstance()
     {
         if(self::$instance == NULL) {
             self::$instance = new Nimble();
@@ -41,8 +41,8 @@ class Nimble
     /**
      * Add a URL and associated controller class, method, and HTTP method to the routing table.
      * @param string $url The URL pattern for this rule.
-     * @param string $klass The name of the controller class to instantiate when this rule matches.
-     * @param string $klass_method The name of the method on the instantiated controller class.
+     * @param string $this->klass The name of the controller class to instantiate when this rule matches.
+     * @param string $this->klass_method The name of the method on the instantiated controller class.
      * @param string $http_method The HTTP method this request responds to.
      */
     public function add_url($rule, $klass, $klass_method, $http_method = 'GET')
@@ -62,7 +62,7 @@ class Nimble
      * If the client you're using doesn't support sending HTTP requests with methods
      * other than GET or POST, set $_POST['_method'] to the actual HTTP method you wish to use.
      */
-    public function dispatch()
+    public function dispatch($test=false)
     {	
         foreach($this->routes as $rule=>$conf) {
             // if a vaild _method is passed in a post set it to the REQUEST_METHOD so that we can route for DELETE and PUT methods
@@ -74,37 +74,51 @@ class Nimble
             if (preg_match($conf[0], $this->url, $matches) && $_SERVER['REQUEST_METHOD'] == $conf[3]){
                 // Only declared variables in URL regex
                 $matches = $this->parse_urls_args($matches);
-                $klass = new $conf[1]();
+                $this->klass = new $conf[1]();
 
-                $klass->format = ($conf[4]) ? array_pop($matches) : 'html';
+                $this->klass->format = ($conf[4]) ? array_pop($matches) : 'html';
 
                 ob_start();
 
                 // call before filters
-                call_user_func(array($klass, "run_before_filters"), $conf[2]);
+                call_user_func(array($this->klass, "run_before_filters"), $conf[2]);
 
                 // call methods on controller class
-                call_user_func_array(array($klass , $conf[2]), $matches);
-
+                call_user_func_array(array($this->klass , $conf[2]), $matches);
+				
+				if(!$this->klass->has_rendered && isset($this->config['view_path'])) {
+					/**
+					* Add inflector for this type of code from now on
+					*/
+					$dir = preg_replace('/Controller/', '', $conf[1]);
+					$dir = strtolower($dir);
+					$view = join(DIRECTORY_SEPARATOR ,array($this->config['view_path'], $dir, $conf[2] . '.php'));
+					$this->klass->render($view);
+				}
+				
                 // call after filters
-                call_user_func(array($klass, "run_after_filters"), $conf[2]);
+                call_user_func(array($this->klass, "run_after_filters"), $conf[2]);
 
                 $out = ob_get_contents();
                	ob_end_clean();  
-                if (count($klass->headers)>0){
-                    foreach($klass->headers as $header){
+                if (count($this->klass->headers)>0){
+                    foreach($this->klass->headers as $header){
                         header($header);
                     }
                 } 
                 print $out;
-                exit();
+				if(!$test){
+					exit();
+				}
             }
         }
 
         if(empty($_SERVER['REQUEST_METHOD'])){
             throw new NimbleExecption('No Request Paramater');
         }
-        call_user_func(array('r404' , $_SERVER['REQUEST_METHOD']));  
+		if(!$test){
+			call_user_func(array('r404' , $_SERVER['REQUEST_METHOD'])); 
+		}		
     }
 
     /**

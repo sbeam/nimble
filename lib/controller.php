@@ -13,6 +13,7 @@ class Controller {
     var $layout_tamplate = 'views/layout.php';
     var $headers;
     var $filters = array('before' => array(), 'after' => array());
+	var $has_rendered = false;
 
     /**
      * The expected output format for this controller.
@@ -109,6 +110,7 @@ class Controller {
      */
     public function render($file)
     {
+		$this->has_rendered = true;
         if ($this->layout==false){
             echo $this->open_template($file); 
         } else {
@@ -143,7 +145,7 @@ class Controller {
                 }
             require($name);
         } else {
-            throw new NiceDogException('View ['.$name.'] Not Found');
+            throw new Exception('View ['.$name.'] Not Found');
         }
         $out = ob_get_contents();
         ob_end_clean();
