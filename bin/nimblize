@@ -1,24 +1,39 @@
 <?php
+	/**
+	* This file is the base generator for a nimble project
+	* It creates the MVC folder structure and sets up your .htaccess file 
+	*/
+
+
 	require_once(dirname(__FILE__) . '/../generators/lib/generator.php');
+	require_once(dirname(__FILE__) . '/../../lib/file_utils.php');
+	
 	if(count($argv) > 2) {
-		die("Please supply a project name");
+		die("Please supply a Project name");
 	}
 	$app = $argv[1];
+	/** init app folder */
 	mkdir($app);
-	mkdir($app . DIRECTORY_SEPARATOR . 'app');
-	mkdir($app . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'controller');
-	mkdir($app . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'model');
-	mkdir($app . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'view');
-	mkdir($app . DIRECTORY_SEPARATOR . 'config');
-	touch($app . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.php');
-	Generator::boot($app . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'boot.php');
-	foreach(array('production', 'test', 'development', 'staging') as $env) {
-		mkdir($app . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . $env);
-		Generator::database_config($app . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . $env . DIRECTORY_SEPARATOR . 'database.json', $env);
-		touch($app . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . $env . DIRECTORY_SEPARATOR . 'config.php');
+	/** make app dir */
+	mkdir(FileUtils::join($app,'app'));
+	/** set up app structure */
+	foreach(array('controller', 'model', 'view') as $dir) {
+		mkdir(FileUtils::join($app,'app', $dir));
 	}
-	mkdir($app . DIRECTORY_SEPARATOR . 'lib');
-	mkdir($app . DIRECTORY_SEPARATOR . 'public');
-	mkdir($app . DIRECTORY_SEPARATOR . 'test');
-	mkdir($app . DIRECTORY_SEPARATOR . 'plugin');
+	/** init config files */
+	mkdir(FileUtils::join($app, 'config'));
+	touch(FileUtils::join($app, 'config', 'config.php'));
+	/** copy boot.php into place */
+	Generator::boot(FileUtils::join($app, 'config', 'boot.php'));
+	/** set up enviroment structure */
+	foreach(array('production', 'test', 'development', 'staging') as $env) {
+		mkdir(FileUtils::join($app, 'config', $env));
+		/** insert database config files */
+		Generator::database_config(FileUtils::join($app, 'config', $env, 'database.json'), $env);
+		touch(FileUtils::join($app, 'config', $env , 'config.php'));
+	}
+	/** create base folders */
+	foreach(array('lib', 'public', 'test', 'plugin') as $folder) {
+		mkdir(FileUtils::join($app, $folder));
+	}
 ?>
