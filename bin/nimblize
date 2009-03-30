@@ -6,7 +6,7 @@
 
 
 	require_once(dirname(__FILE__) . '/../generators/lib/generator.php');
-	require_once(dirname(__FILE__) . '/../../lib/file_utils.php');
+	require_once(dirname(__FILE__) . '/../lib/file_utils.php');
 	
 	if(count($argv) > 2) {
 		die("Please supply a Project name");
