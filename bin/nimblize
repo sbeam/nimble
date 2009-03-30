@@ -1,0 +1,24 @@
+<?php
+	require_once(dirname(__FILE__) . '/../generators/lib/generator.php');
+	if(count($argv) > 2) {
+		die("Please supply a project name");
+	}
+	$app = $argv[1];
+	mkdir($app);
+	mkdir($app . DIRECTORY_SEPARATOR . 'app');
+	mkdir($app . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'controller');
+	mkdir($app . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'model');
+	mkdir($app . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'view');
+	mkdir($app . DIRECTORY_SEPARATOR . 'config');
+	touch($app . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'config.php');
+	Generator::boot($app . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'boot.php');
+	foreach(array('production', 'test', 'development', 'staging') as $env) {
+		mkdir($app . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . $env);
+		Generator::database_config($app . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . $env . DIRECTORY_SEPARATOR . 'database.json', $env);
+		touch($app . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . $env . DIRECTORY_SEPARATOR . 'config.php');
+	}
+	mkdir($app . DIRECTORY_SEPARATOR . 'lib');
+	mkdir($app . DIRECTORY_SEPARATOR . 'public');
+	mkdir($app . DIRECTORY_SEPARATOR . 'test');
+	mkdir($app . DIRECTORY_SEPARATOR . 'plugin');
+?>
