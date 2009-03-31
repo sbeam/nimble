@@ -35,5 +35,11 @@
 	/** create base folders */
 	foreach(array('lib', 'public', 'test', 'plugin') as $folder) {
 		mkdir(FileUtils::join($app, $folder));
+		if($folder == 'public') {
+			Generator::htaccess(FileUtils::join($app, $folder, '.htaccess'));
+			foreach(array('image', 'javascript', 'style') as $sub){
+			  mkdir(FileUtils::join($app, $folder, $sub));
+			}
+		}
 	}
 ?>

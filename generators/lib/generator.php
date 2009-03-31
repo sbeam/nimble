@@ -1,5 +1,5 @@
 <?php
-
+require_once(dirname(__FILE__) . '/../../lib/support/file_utils.php');
 $folder = dirname(__FILE__);
 
 define('TEMPLATE_PATH', $folder . '/../templates');
@@ -18,6 +18,10 @@ define('TEMPLATE_PATH', $folder . '/../templates');
 	
 	public static function boot($path) {
 		copy(TEMPLATE_PATH . DIRECTORY_SEPARATOR . 'boot.php.tmpl', $path);
+	}
+	
+	public static function htaccess($path) {
+		copy(FileUtils::join(TEMPLATE_PATH, 'htaccess.tmpl'), $path);
 	}
 	
 	

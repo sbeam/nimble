@@ -3,6 +3,8 @@ require_once(dirname(__FILE__) . '/controller.php');
 require_once(dirname(__FILE__) . '/exception.php');
 require_once(dirname(__FILE__) . '/helper.php');
 require_once(dirname(__FILE__) . '/route.php');
+require_once(dirname(__FILE__) . '/route/url_builder.php');
+require_once(dirname(__FILE__) . '/support/file_utils.php');
 
 /**
  * Nimble is the base class in the application.
