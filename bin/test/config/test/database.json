@@ -1,0 +1,9 @@
+{"test":
+	[
+		{"username":""}, 
+		{"password":""}, 
+		{"database":""}, 
+		{"host":"localhost"},
+		{"socket":""}
+	]
+}
