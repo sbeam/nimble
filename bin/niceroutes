@@ -3,9 +3,19 @@
 	niceroutes <path to index.php>
 */
 
+	$_SERVER['WEB_ENVIROMENT'] = 'test';
+	$boot = join(DIRECTORY_SEPARATOR, array(dirname(__FILE__), '..', 'config', 'boot.php'));
+	if(file_exists($boot))
+	{
+		$include = $boot;
+	}else if(isset($argv) && count($arvg) == 2){
+		$include = dirname(__FILE__) . '/' . $argv[1];
+	}else{
+		die("Base File not found - try supplying the index.php for your application");
+	}
 	$_GET['url'] = 'dgfojsagosgowrgh8uruogabfworugvfsvgsfhv';
 	$_SERVER['REQUEST_METHOD'] = "GET";
-	require_once(dirname(__FILE__) . '/' . $argv[1]);	
+	require_once($include);	
 	echo UrlBuilder::dumpRoutes(true);
 	exit();
 ?>

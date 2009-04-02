@@ -14,7 +14,11 @@
 	//$_SERVER['WEB_ENVIRONMENT'] = 'test';
 	//$_SERVER['WEB_ENVIRONMENT'] = 'staging';
 	//$_SERVER['WEB_ENVIRONMENT'] = 'production';
-
+	
+	if(!isset($_SERVER['WEB_ENVIRONMENT'])) {
+		$_SERVER['WEB_ENVIRONMENT'] = 'development';
+	}
+	
 	define('NIMBLE_ENV', $_SERVER['WEB_ENVIRONMENT']);
 	function load_files($dir) {
 		if ($dh = opendir($dir)) {
@@ -38,6 +42,7 @@
 	// load any custom global config options 		
 	require_once(FileUtils::join(dirname(__FILE__), 'config.php'));
 	require_once(FileUtils::join(dirname(__FILE__), 'routes.php'));
+	require_once(FileUtils::join(dirname(__FILE__), 'r404.php'));
 	// load any custom enviroment config options
 	// Nimble::Log('loading ' . NIMBLE_ENV . ' enviroment');
 	require_once(FileUtils::join(dirname(__FILE__), NIMBLE_ENV, 'config.php'));

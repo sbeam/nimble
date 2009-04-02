@@ -42,6 +42,10 @@ define('SCRIPT_PATH', FileUtils::join($folder, '..', '..', 'bin'));
 		copy(FileUtils::join(TEMPLATE_PATH, 'route.tmpl'), $path);
 	}
 	
+	public static function r404($path) {
+		copy(FileUtils::join(TEMPLATE_PATH, 'r404.tmpl'), $path);
+	}
+	
 	
 	public static function controller($name) {
 		$class_name = Inflector::classify($name);
