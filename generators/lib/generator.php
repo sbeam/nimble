@@ -2,8 +2,8 @@
 require_once(dirname(__FILE__) . '/../../lib/support/file_utils.php');
 $folder = dirname(__FILE__);
 
-define('TEMPLATE_PATH', $folder . '/../templates');
-define('SCRIPT_PATH', $folder . '/../../bin');
+define('TEMPLATE_PATH', FileUtils::join($folder, '..', 'templates'));
+define('SCRIPT_PATH', FileUtils::join($folder, '..', '..', 'bin'));
 
  class Generator {
 	
@@ -27,16 +27,19 @@ define('SCRIPT_PATH', $folder . '/../../bin');
 	
 	
 	public static function scripts($path) {
-		echo SCRIPT_PATH;
 		if($dir = opendir(SCRIPT_PATH)){
-			while(($file = readdir($dir) !== false)) {
+			while (($file = readdir($dir)) !== false) {
 				if($file == 'nimblize' || $file == '.' || $file == '..') {
 					continue;
 				}
-				echo FileUtils::join($path, $file);
-				copy($file, FileUtils::join($path, $file));
+				copy(FileUtils::join(SCRIPT_PATH, $file), FileUtils::join($path, $file));
 			}
 		}
+	}
+	
+	
+	public static function route($path) {
+		copy(FileUtils::join(TEMPLATE_PATH, 'route.tmpl'), $path);
 	}
 	
 	
@@ -88,10 +91,6 @@ define('SCRIPT_PATH', $folder . '/../../bin');
 	}
 	
 	public static function model($path, $name) {
-	
-	}
-	
-	public function route($path) {
 	
 	}
 	

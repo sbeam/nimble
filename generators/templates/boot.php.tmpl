@@ -28,18 +28,21 @@
 	}
 	/** load nimble */
 	require_once('nimble/nimble.php');
-	/** load controlers  and models */
+	/** Set the path to the view templates */
+	Nimble::set_config('view_path', FileUtils::join(dirname(__FILE__), '..', 'app', 'view'));
+	/** load controlers and models */
 	$dirs = array('controller', 'model');
 	foreach($dirs as $dir) {
-		load_files(join(DIRECTORY_SEPARATOR, array(dirname(__FILE__), '..', 'app', $dir)));
+		load_files(FileUtils::join(dirname(__FILE__), '..', 'app', $dir));
 	}
 	// load any custom global config options 		
-	require_once('config.php');
+	require_once(FileUtils::join(dirname(__FILE__), 'config.php'));
+	require_once(FileUtils::join(dirname(__FILE__), 'routes.php'));
 	// load any custom enviroment config options
 	// Nimble::Log('loading ' . NIMBLE_ENV . ' enviroment');
-	require_once(dirname(__FILE__) . DIRECTORY_SEPARATOR . NIMBLE_ENV . DIRECTORY_SEPARATOR . 'config.php');
+	require_once(FileUtils::join(dirname(__FILE__), NIMBLE_ENV, 'config.php'));
+
 	
-	
-	
+	/** boot the framework */
 	Run();
 ?>

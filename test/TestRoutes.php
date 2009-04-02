@@ -56,7 +56,7 @@ class TestRoutes extends PHPUnit_Framework_TestCase {
 			$this->Nimble->uri = '';
 			$this->Nimble->url = '/class/1';
 			$this->Nimble->add_url('/class/:method', "Class", "Method");
-			$this->assertEquals('/class/1', UrlBuilder::url_for('Class', 'Method', array(1)));
+			$this->assertEquals('/class/1', UrlBuilder::url_for('Class', 'Method', 1));
 		}
 		
 		/**
@@ -67,7 +67,7 @@ class TestRoutes extends PHPUnit_Framework_TestCase {
 			$this->Nimble->uri = '';
 			$this->Nimble->url = '/class/1';
 			$this->Nimble->add_url('/class/:method', "Class", "Method");
-			$this->assertEquals('/class/1', UrlBuilder::url_for('Class', 'Method', array(1, 2)));
+			$this->assertEquals('/class/1', UrlBuilder::url_for('Class', 'Method', 1, 2));
 		}
 		
 		

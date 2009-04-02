@@ -25,6 +25,7 @@
 	touch(FileUtils::join($app, 'config', 'config.php'));
 	/** copy boot.php into place */
 	Generator::boot(FileUtils::join($app, 'config', 'boot.php'));
+	Generator::route(FileUtils::join($app, 'config', 'routes.php'));
 	/** set up enviroment structure */
 	foreach(array('production', 'test', 'development', 'staging') as $env) {
 		mkdir(FileUtils::join($app, 'config', $env));

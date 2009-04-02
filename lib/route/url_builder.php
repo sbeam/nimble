@@ -65,8 +65,13 @@
        * @return string The constructed URL.
        * @throws NimbleException if neither the controller nor the action match.
        */
-      public static function url_for($controller, $action, $params=array())
+      public static function url_for()
       {
+			$args = func_get_args();
+			$controller = array_shift($args);
+			$action = array_shift($args);
+			$params = $args;
+	  
           $klass = Nimble::getInstance();
           foreach($klass->routes as $route) {
               if(strtolower($route[1]) == strtolower($controller) && strtolower($route[2]) == strtolower($action)) {
