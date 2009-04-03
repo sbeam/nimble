@@ -1,9 +1,0 @@
-{"staging":
-	[
-		{"username":""}, 
-		{"password":""}, 
-		{"database":""}, 
-		{"host":"localhost"},
-		{"socket":""}
-	]
-}
