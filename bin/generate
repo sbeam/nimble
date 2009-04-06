@@ -1,5 +1,44 @@
 <?php
-
-
+	require_once('nimble/generators/lib/generator.php');
+	if(count($arvg) < 2)) {
+		display_Help();
+	}
+	
+	
+	function display_help() {
+		die('Help goes here');
+	}
+	
+	
+	switch($arvg[1]) {
+	
+		case 'controller':
+			Generator::controller($arvg[2]);
+		break;
+		
+		
+		case 'model':
+		
+		
+		break;
+		
+		
+		case 'test':
+		
+		break;
+	
+	
+	
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 ?>
