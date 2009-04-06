@@ -1,9 +1,0 @@
-{"production":
-	[
-		{"username":""}, 
-		{"password":""}, 
-		{"database":""}, 
-		{"host":"localhost"},
-		{"socket":""}
-	]
-}
