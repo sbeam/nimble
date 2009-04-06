@@ -1,5 +1,6 @@
 <?php
 require_once(dirname(__FILE__) . '/../../lib/support/file_utils.php');
+require_once(dirname(__FILE__) . '/../../lib/support/file_utils.php');
 $folder = dirname(__FILE__);
 
 define('TEMPLATE_PATH', FileUtils::join($folder, '..', 'templates'));
@@ -49,14 +50,18 @@ define('SCRIPT_PATH', FileUtils::join($folder, '..', '..', 'bin'));
 	
 	public static function controller($name) {
 		$class_name = Inflector::classify($name);
-		$path_name = $name;
-		$view_path = FileUtil::join(NIMBLE_ROOT, 'app', 'view', $path_name);
+		$path_name = FileUtils::join(NIMBLE_ROOT, 'app', 'controller', $class_name . 'Controller.php');
+		$view_path = FileUtils::join(NIMBLE_ROOT, 'app', 'view', Inflector::underscore($class_name));
+		FileUtils::mkdir_p($view_path);
 		$string = "<?php \n";
-		$string .= "  $class_name extends Controller { \n";
+		$string .= "  class $class_name extends Controller { \n";
 		$string .= self::create_view_functions($view_path);
-		$string .= "  }";
+		$string .= "  }\n";
 		$string .= "?>";
 		
+		$db = fopen($path_name, "w");
+		fwrite($db, $string);
+		fclose($db);
 	
 	
 	}
@@ -64,11 +69,22 @@ define('SCRIPT_PATH', FileUtils::join($folder, '..', '..', 'bin'));
 	
 	private static function create_view_functions($view_path) {
 		$out = '';
-		foreach(array('index', 'create') as $view) {
+		foreach(array('index', 'add') as $view) {
 			self::view(FileUtils::join($view_path, $view . '.php'));
 			$out .= self::view_function($view);
 		}
-		foreach(array('update', 'show', 'delete') as $view) {
+		
+		foreach(array('create') as $view){
+			$out .= self::view_function($view);
+		}
+		
+		
+		foreach(array('update', 'delete') as $view) {
+			$out .= self::view_function($view, true);
+		}
+		
+		
+		foreach(array('show', 'edit') as $view) {
 			self::view(FileUtils::join($view_path, $view . '.php'));
 			$out .= self::view_function($view, true);
 		}
@@ -76,17 +92,18 @@ define('SCRIPT_PATH', FileUtils::join($folder, '..', '..', 'bin'));
 	}
 	
 	private static function view_function($view, $id=false) {
-		$out = '/**';
-		$out .= '* ' . $view;
+		$out = "	/**\n";
+		$out .= "	* " . $view . "\n";
 		if($id){
-		$out .= '* @param $id string';
-		$out .= "*/";
-		$out .= '    public function ' . $view . '($id) {';
+		$out .= "	* @param " . '$id' . " string\n";
+		$out .= "	*/\n";
+		$out .= "    public function " . $view . '($id)' . " {\n";
 		}else{
-		$out .= "*/";
-		$out .= '    public function ' . $view . '() {';
+		$out .= "	*/\n";
+		$out .= "    public function " . $view . "() {\n";
 		}
-		$out .= "    }";
+		$out .= "    }\n";
+		$out .= "\n";
 		return $out;
 	}
 	

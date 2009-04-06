@@ -48,7 +48,7 @@ class TestRoutes extends PHPUnit_Framework_TestCase {
 
 		public function testResources() {
 			Route::resources('Form');
-			$this->assertEquals(count($this->Nimble->routes), 5);
+			$this->assertEquals(count($this->Nimble->routes), 6);
 		}
 		
 		public function testUrlFor() {

@@ -83,6 +83,7 @@ class Route
      * person/:id calls PersonController::update if HTTP PUT
      * person/:id calls PersonController::delete if HTTP DELETE
      * person/:id calls PersonController::show if HTTP GET
+     * person/add calls PersonController::add if HTTP GET
      *
      * @param string $controller_prefix The controller class name's prefix.
      */
@@ -100,6 +101,8 @@ class Route
             $r = new Route($controller_prefix . '/:id');
             $r->controller($controller)->action($action)->on($method);
         }
+		$r = new Route($controller_prefix . '/add');
+		$r->controller($controller)->action('add')->on('GET');
     }
 }
 ?>
