@@ -8,10 +8,10 @@ class C extends Controller {}
  * Controller handles user interaction with the site.
  */
 class Controller {
-	var $nimble = Nimble::get_instance();
+	var $nimble;
     var $format;
     var $layout = true;
-    var $layout_tamplate = FileUtils::join($nimble->config['view_path'], 'layout', 'application.php');
+    var $layout_template;
     var $headers;
     var $filters = array('before' => array(), 'after' => array());
 	var $has_rendered = false;
@@ -22,7 +22,10 @@ class Controller {
      */
     var $http_format = 'html';
 
-    public function __construct() {}
+    public function __construct() {
+		$this->nimble = Nimble::getInstance();
+		$this->layout_template = FileUtils::join($this->nimble->config['view_path'], 'layout', 'application.php');;
+	}
 
     /**
      * Load a plugin for this controller and its rendered view.
@@ -116,7 +119,7 @@ class Controller {
             echo $this->open_template($file); 
         } else {
            $this->content = $this->open_template($file); 
-           echo $this->open_template($this->layout_tamplate); 
+           echo $this->open_template($this->layout_template); 
         }
     }
 
