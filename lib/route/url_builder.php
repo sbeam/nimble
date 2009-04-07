@@ -60,6 +60,7 @@
       /**
        * Build a URL that points at the provided controller and action, with the provided params to match.
        * @param string $controller, $action, $params ...
+	   * usage: url_for('controller', 'action')
        * @return string The constructed URL.
        * @throws NimbleException if neither the controller nor the action match.
        */
@@ -106,10 +107,11 @@
    * @param string $controller The controller to match.
    * @param string $action The action to match.
    * @param array $params The params to inject into the URL pattern.
+   * usage: url_for('controller', 'action')
    * @return string The constructed URL.
    * @throws NimbleException if neither the controller nor the action match.
    */
-  function url_for($controller, $action, $params=array()) {
-      return UrlBuilder::url_for($controller, $action, $params);
+  function url_for() {
+      return UrlBuilder::url_for(func_get_args());
   }
 ?>

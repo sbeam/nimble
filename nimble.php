@@ -25,8 +25,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-
-define('__DEBUG__',true);
 require_once(dirname(__FILE__) . '/lib/base.php');
 /*
  * Run application
@@ -36,7 +34,6 @@ function Run()
     try {
         Nimble::getInstance()->dispatch();
     } catch (NimbleException $e) {
-        if (__DEBUG__==true) {
         ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -63,9 +60,6 @@ function Run()
     </body>
 </html>        
         <?php
-       } else {
-        echo 'Oops';       
-       }
     }
 
 }

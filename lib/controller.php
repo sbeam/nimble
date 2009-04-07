@@ -153,7 +153,7 @@ class Controller {
                 }
             require($name);
         } else {
-            throw new Exception('View ['.$name.'] Not Found');
+            throw new NimbleException('View ['.$name.'] Not Found');
         }
         $out = ob_get_contents();
         ob_end_clean();
