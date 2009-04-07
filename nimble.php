@@ -48,7 +48,7 @@ function Run()
         <h2>Line: <?= $e->getLine()?></h2>
         <h3>Trace</h3>
         <pre>
-        <?php var_dump($e->getTraceAsString()); ?>
+        <?= $e->getTraceAsString() ?>
         </pre>
         <h3>Exception Object</h3>
         <pre>
