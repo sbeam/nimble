@@ -42,7 +42,7 @@
 	/** Set the path to the view templates */
 	Nimble::set_config('view_path', FileUtils::join(dirname(__FILE__), '..', 'app', 'view'));
 	/** set the default plugin path */
-	Nimble::set_config('plugins_path', FileUtils::join(dirname(__FILE__) , '..', 'plugin')));
+	Nimble::set_config('plugins_path', FileUtils::join(dirname(__FILE__) , '..', 'plugin'));
 	/** load controlers and models */
 	foreach(array('model', 'controller') as $dir) {
 		load_files(FileUtils::join(dirname(__FILE__), '..', 'app', $dir));

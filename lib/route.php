@@ -1,6 +1,7 @@
 <?php
 require_once(dirname(__FILE__) . '/route/helper.php');
 require_once(dirname(__FILE__) . '/route/url_builder.php');
+require_once(dirname(__FILE__) . '/support/inflector.php');
 
 /**
  * Rotes control how HTTP requests are handled by the application.
@@ -93,7 +94,7 @@ class Route
         $controller_prefix = strtolower($controller_prefix);
         $actions = array('index' => 'GET', 'create' => 'POST');
         foreach($actions as $action=>$method) {
-            $r = new Route($controller_prefix . 's');
+            $r = new Route(Inflector::pluralize($controller_prefix));
             $r->controller($controller)->action($action)->on($method);
         }
         $actionss = array('update' => 'PUT', 'delete' => 'DELETE', 'show' => 'GET');
