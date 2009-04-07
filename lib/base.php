@@ -95,7 +95,7 @@ class Nimble
           */
           $dir = preg_replace('/Controller/', '', $conf[1]);
           $dir = strtolower(Inflector::underscore($dir));
-          $view = FileUtils::join($this->config['view_path'], $dir, $conf[2] . '.php');
+          $view = FileUtils::join($dir, $conf[2] . '.php');
           $this->klass->render($view);
         }
 				

@@ -43,7 +43,7 @@ class MyTestController extends Controller {
 	}
 	
 	public function test2() {
-		$this->render(join(DIRECTORY_SEPARATOR, array(dirname(__FILE__), 'views', 'my_test', 'test.php')));
+		$this->render(join(DIRECTORY_SEPARATOR, array('my_test', 'test.php')));
 	}
 }
 
