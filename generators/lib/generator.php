@@ -54,7 +54,7 @@ define('SCRIPT_PATH', FileUtils::join($folder, '..', '..', 'bin'));
 		$view_path = FileUtils::join(NIMBLE_ROOT, 'app', 'view', strtolower(Inflector::underscore($class_name)));
 		FileUtils::mkdir_p($view_path);
 		$string = "<?php \n";
-		$string .= "  class $class_name extends Controller { \n";
+		$string .= "  class {$class_name}Controller extends Controller { \n";
 		$string .= self::create_view_functions($view_path);
 		$string .= "  }\n";
 		$string .= "?>";
