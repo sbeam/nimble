@@ -8,9 +8,10 @@ class C extends Controller {}
  * Controller handles user interaction with the site.
  */
 class Controller {
+	var $nimble = Nimble::get_instance();
     var $format;
     var $layout = true;
-    var $layout_tamplate = 'views/layout.php';
+    var $layout_tamplate = FileUtils::join($nimble->config['view_path'], 'layout', 'application.php');
     var $headers;
     var $filters = array('before' => array(), 'after' => array());
 	var $has_rendered = false;

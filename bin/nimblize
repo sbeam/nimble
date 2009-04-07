@@ -20,6 +20,8 @@
 	foreach(array('controller', 'model', 'view') as $dir) {
 		mkdir(FileUtils::join($app,'app', $dir));
 	}
+	FileUtils::mkdir_p(FileUtils::join($app, 'app', 'view', 'layout'));
+	touch(FileUtils::join($app, 'app', 'view', 'layout', 'application.php'));
 	/** init config files */
 	mkdir(FileUtils::join($app, 'config'));
 	touch(FileUtils::join($app, 'config', 'config.php'));
