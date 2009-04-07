@@ -110,6 +110,9 @@ class Nimble
           }
         } 
         print $out;
+		if(!$test){
+			exit();
+		}
       }
     }
 

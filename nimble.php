@@ -33,7 +33,7 @@ function Run()
 {
     try {
         Nimble::getInstance()->dispatch();
-    } catch (NimbleException $e) {
+    } catch (Exception $e) {
         ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -47,15 +47,15 @@ function Run()
         <h2>Line: <?= $e->getLine()?></h2>
         <h3>Trace</h3>
         <pre>
-        <?php print_r ($e->getTraceAsString()); ?>
+        <?php var_dump($e->getTraceAsString()); ?>
         </pre>
         <h3>Exception Object</h3>
         <pre>
-        <?php print_r ($e); ?>
+        <?php var_dump($e); ?>
         </pre>
         <h3>Var Dump</h3>
         <pre>
-        <?php debug_print_backtrace (); ?>
+        <?php debug_print_backtrace(); ?>
         </pre>
     </body>
 </html>        
