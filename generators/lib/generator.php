@@ -51,7 +51,7 @@ define('SCRIPT_PATH', FileUtils::join($folder, '..', '..', 'bin'));
 	public static function controller($name) {
 		$class_name = Inflector::classify($name);
 		$path_name = FileUtils::join(NIMBLE_ROOT, 'app', 'controller', $class_name . 'Controller.php');
-		$view_path = FileUtils::join(NIMBLE_ROOT, 'app', 'view', Inflector::underscore($class_name));
+		$view_path = FileUtils::join(NIMBLE_ROOT, 'app', 'view', strtolower(Inflector::underscore($class_name)));
 		FileUtils::mkdir_p($view_path);
 		$string = "<?php \n";
 		$string .= "  class $class_name extends Controller { \n";
@@ -111,15 +111,7 @@ define('SCRIPT_PATH', FileUtils::join($folder, '..', '..', 'bin'));
 		touch($path);
 	}
 	
-	public static function model($path, $name) {
-	
-	}
-	
-	public function app_config($path) {
-	
-	}
-	
-	public function env_config($path, $env) {
+	public static function model($name) {
 	
 	}
 	

@@ -5,6 +5,7 @@ require_once(dirname(__FILE__) . '/helper.php');
 require_once(dirname(__FILE__) . '/route.php');
 require_once(dirname(__FILE__) . '/route/url_builder.php');
 require_once(dirname(__FILE__) . '/support/file_utils.php');
+require_once(dirname(__FILE__) . '/support/inflector.php');
 
 /**
  * Nimble is the base class in the application.
@@ -93,8 +94,8 @@ class Nimble
           * Add inflector for this type of code from now on
           */
           $dir = preg_replace('/Controller/', '', $conf[1]);
-          $dir = strtolower($dir);
-          $view = join(DIRECTORY_SEPARATOR ,array($this->config['view_path'], $dir, $conf[2] . '.php'));
+          $dir = strtolower(Inflector::underscore($dir));
+          $view = FileUtils::join($this->config['view_path'], $dir, $conf[2] . '.php');
           $this->klass->render($view);
         }
 				

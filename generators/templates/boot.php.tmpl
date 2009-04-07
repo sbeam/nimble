@@ -20,11 +20,18 @@
 	}
 	
 	define('NIMBLE_ENV', $_SERVER['WEB_ENVIRONMENT']);
+	
+	
+	
+	/**
+	* @param $dir string 
+	* loads the controller and model classes
+	*/
 	function load_files($dir) {
 		if ($dh = opendir($dir)) {
 			while (($file = readdir($dh)) !== false) {
 				if(preg_match('/\.php$/' , $file)) {
-					require_once($dir . DIRECTORY_SEPARATOR . $file);
+					require_once(FileUtils::join($dir, $file));
 				}
 			}
 			closedir($dh);
@@ -34,9 +41,10 @@
 	require_once('nimble/nimble.php');
 	/** Set the path to the view templates */
 	Nimble::set_config('view_path', FileUtils::join(dirname(__FILE__), '..', 'app', 'view'));
+	/** set the default plugin path */
+	Nimble::set_config('plugins_path', FileUtils::join(dirname(__FILE__) , '..', 'plugin')));
 	/** load controlers and models */
-	$dirs = array('controller', 'model');
-	foreach($dirs as $dir) {
+	foreach(array('model', 'controller') as $dir) {
 		load_files(FileUtils::join(dirname(__FILE__), '..', 'app', $dir));
 	}
 	// load any custom global config options 		
