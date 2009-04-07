@@ -114,6 +114,10 @@ class Controller {
      */
     public function render($file)
     {
+		if($this->has_rendered){
+			throw new NimbleExecption('Double Render Error: Your may only render once per action');
+		}
+	
 		$this->has_rendered = true;
         if ($this->layout==false){
             echo $this->open_template(FileUtils::join(Nimble::getInstance()->config['view_path'], $file)); 
@@ -130,7 +134,7 @@ class Controller {
      */
     public function render_partial($file)
     {
-        return $this->open_template($file);
+        return $this->open_template(FileUtils::join(Nimble::getInstance()->config['view_path'], $file));
     }
 
     /**

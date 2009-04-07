@@ -28,6 +28,15 @@ class TestRender extends PHPUnit_Framework_TestCase {
 	
 	}
 	
+	/**
+	* @expectedException NimbleExecption
+	*/
+	public function testDoubleRenderThrowsExecption() {
+		$this->Nimble->url = "";
+		$this->Nimble->add_url('', "MyTestController", "test3");	
+		$this->Nimble->dispatch(true);
+	}
+	
 
 }
 
@@ -40,6 +49,11 @@ class MyTestController extends Controller {
 	
 	public function test() {
 		
+	}
+	
+	public function test3() {
+		$this->render(join(DIRECTORY_SEPARATOR, array('my_test', 'test.php')));
+		$this->render(join(DIRECTORY_SEPARATOR, array('my_test', 'test.php')));
 	}
 	
 	public function test2() {
