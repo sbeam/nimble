@@ -208,12 +208,23 @@ class Nimble
       $klass->config[$config] = $value;
     }
 	
-	public static function get_title() {
-		$klass = self::getInstance();
-		return $klass->page_title;
-	}
+	/**
+	* Set a page title
+	* @see function Nimble::get_title()
+	* @uses Nimble::set_title('My page title');
+	*/
 	
-	public static function set_title() {
+	public static function set_title($title) {
+		$klass = self::getInstance();
+		$klass->page_title = $title;
+	}
+	/**
+	* Get the page title
+	* @see function Nimble::set_title()
+	* @uses Nimble::get_title();
+	* @returns the page title set by set_title
+	*/
+	public static function get_title() {
 		$klass = self::getInstance();
 		$title = $klass->page_title;
 		
