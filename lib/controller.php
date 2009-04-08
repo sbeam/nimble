@@ -1,4 +1,5 @@
 <?php
+	require_once(dirname(__FILE__) . '/exception.php');
 	/**
 	* An alias to Controller for backwards compatibility with Nice Dog.
 	* @package Nimble
@@ -25,12 +26,22 @@ class Controller {
      * @var string
      */
     var $http_format = 'html';
-
-    public function __construct() {
-		$this->nimble = Nimble::getInstance();
-		$this->layout_template = FileUtils::join($this->nimble->config['view_path'], 'layout', 'application.php');;
+	/**
+	*
+	* @return instance of the Nimble class
+	*/
+	public function nimble() {
+		return Nimble::getInstance();;
 	}
-
+	/**
+	*
+	* @return path to the application.php template
+	*/
+	public function set_layout_template() {
+		$this->layout_template = $this->nimble()->config['default_layout'];
+	}
+	
+	
     /**
      * Load a plugin for this controller and its rendered view.
      * @param string,... $plugins The plugins to load.
@@ -127,7 +138,7 @@ class Controller {
             echo $this->open_template(FileUtils::join(Nimble::getInstance()->config['view_path'], $file)); 
         } else {
            $this->content = $this->open_template(FileUtils::join(Nimble::getInstance()->config['view_path'], $file)); 
-           echo $this->open_template($this->layout_template); 
+		   echo $this->open_template($this->layout_template); 
         }
     }
 
@@ -156,8 +167,10 @@ class Controller {
                     $$key = $value;
                 }
             require($name);
+		}else if(empty($name)){
+			return;
         } else {
-            throw new NimbleException('View ['.$name.'] Not Found');
+            throw new NimbleExecption('View ['.$name.'] Not Found');
         }
         $out = ob_get_contents();
         ob_end_clean();

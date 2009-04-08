@@ -1,6 +1,6 @@
 <?php
-require_once(dirname(__FILE__) . '/controller.php');
 require_once(dirname(__FILE__) . '/exception.php');
+require_once(dirname(__FILE__) . '/controller.php');
 require_once(dirname(__FILE__) . '/helper.php');
 require_once(dirname(__FILE__) . '/route.php');
 require_once(dirname(__FILE__) . '/route/url_builder.php');
@@ -27,6 +27,10 @@ class Nimble
             $this->uri = str_replace(basename($_SERVER['PHP_SELF']), '', $_SERVER['PHP_SELF']);
         }
         $this->load_plugins();
+		/** set default configs */
+		$this->config['title_seperator'] = ':';
+		$this->config['default_layout'] = '';
+		$this->page_title = '';
     }
 
     /**
@@ -78,7 +82,8 @@ class Nimble
             // Only declared variables in URL regex
             $matches = $this->parse_urls_args($matches);
             $this->klass = new $conf[1]();
-
+			/** set the layout tempalte to the default */
+			$this->klass->set_layout_template();
             $this->klass->format = ($conf[4]) ? array_pop($matches) : 'html';
 
             ob_start();
@@ -202,6 +207,27 @@ class Nimble
       $klass = self::getInstance();
       $klass->config[$config] = $value;
     }
+	
+	public static function get_title() {
+		$klass = self::getInstance();
+		return $klass->page_title;
+	}
+	
+	public static function set_title() {
+		$klass = self::getInstance();
+		$title = $klass->page_title;
+		
+		if(isset($klass->config['site_title'])) {
+			$title = $klass->config['site_title'] .  $klass->config['title_seperator'] . $title;
+		}
+		
+		
+		if(isset($klass->page_title)){
+			return $title;
+		}else{
+			return '';
+		}
+	}
 }
 
 ?>
