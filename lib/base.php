@@ -6,7 +6,8 @@ require_once(dirname(__FILE__) . '/route.php');
 require_once(dirname(__FILE__) . '/route/url_builder.php');
 require_once(dirname(__FILE__) . '/support/file_utils.php');
 require_once(dirname(__FILE__) . '/support/inflector.php');
-
+require_once(dirname(__FILE__) . '/support/tag_helper.php');
+require_once(dirname(__FILE__) . '/support/asset_helper.php');
 /**
  * Nimble is the base class in the application.
  * This class provides methods to add & call routes, parse URLs, and load plugins.
