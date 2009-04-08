@@ -3,9 +3,10 @@ require_once(dirname(__FILE__) . '/route/helper.php');
 require_once(dirname(__FILE__) . '/route/url_builder.php');
 require_once(dirname(__FILE__) . '/support/inflector.php');
 
-/**
- * Rotes control how HTTP requests are handled by the application.
- */
+	/**
+ 	* Rotes control how HTTP requests are handled by the application.
+	* @package Nimble 
+ 	*/
 class Route
 {
     static $allowed_methods = array("GET", "POST", "PUT", "DELETE");

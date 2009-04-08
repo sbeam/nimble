@@ -26,9 +26,9 @@ THE SOFTWARE.
 */
 
 require_once(dirname(__FILE__) . '/lib/base.php');
-/*
- * Run application
- */
+	/*
+ 	* Run application
+ 	*/
 function Run()
 {
     try {

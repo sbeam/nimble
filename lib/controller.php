@@ -1,12 +1,16 @@
 <?php
-/**
- * An alias to Controller for backwards compatibility with Nice Dog.
- */
+	/**
+	* An alias to Controller for backwards compatibility with Nice Dog.
+	* @package Nimble
+	* @see class Controller
+	*/
 class C extends Controller {}
 
-/**
- * Controller handles user interaction with the site.
- */
+	/**
+ 	* Controller handles user interaction with the site.
+	* An alias to Controller for backwards compatibility with Nice Dog.
+	* @package Nimble
+	*/
 class Controller {
 	var $nimble;
     var $format;

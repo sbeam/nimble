@@ -1,4 +1,9 @@
 <?php
+
+/**
+* @package Support
+*/
+
 class Inflector {
   
   /**
@@ -20,8 +25,15 @@ class Inflector {
   * @since 0.1
   * @version $Revision 0.1 $
   */
-  
-  
+
+	/**
+	* Pluralizes English nouns.
+	*
+	* @access public
+	* @static
+	* @param string $word English noun to pluralize
+	* @return string Plural noun.
+	*/  
   public static function pluralize($word)
   {
       $plural = array(
@@ -80,13 +92,13 @@ class Inflector {
   // {{{ singularize()
  
   /**
-* Singularizes English nouns.
-*
-* @access public
-* @static
-* @param string $word English noun to singularize
-* @return string Singular noun.
-*/
+	* Singularizes English nouns.
+	*
+	* @access public
+	* @static
+	* @param string $word English noun to singularize
+	* @return string Singular noun.
+	*/
   public static function singularize($word)
   {
       $singular = array (
