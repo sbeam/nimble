@@ -105,10 +105,7 @@
 
   /**
    * Build a URL that points at the provided controller and action, with the provided params to match.
-   * @param string $controller The controller to match.
-   * @param string $action The action to match.
-   * @param array $params The params to inject into the URL pattern.
-   * usage: url_for('controller', 'action')
+   * @uses url_for('controller', 'action', 'param1', 'params2', 'etc')
    * @return string The constructed URL.
    * @throws NimbleException if neither the controller nor the action match.
    */
