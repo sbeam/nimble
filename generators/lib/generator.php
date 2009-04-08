@@ -36,7 +36,7 @@
 			copy(FileUtils::join(TEMPLATE_PATH, 'boot.php.tmpl'), $path);
 		}
 	
-	 /**
+		/**
 		* Creates a .htaccess file
 		* @param string $path - path you want the htaccess stored
 		*/
