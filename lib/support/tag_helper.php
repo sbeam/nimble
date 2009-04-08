@@ -9,7 +9,7 @@
 		
 		/**
 		*  Creates and HTML label tag
-		*  @param string $content What goes between the label tag
+		*  @param string $contents What goes between the label tag
 		*  @param string $id The help id of the element that this label is attached
 		*  @param array $options key => value pairs for tag attributes
 		*/
@@ -62,7 +62,6 @@
 		
 		/**
 		*  Creates and HTML hidden input tag
-		*  @param string $content What goes between the label tag
 		*  @param string $id The help id of the element
 		*  @param array $options key => value pairs for tag attributes
 		*/
