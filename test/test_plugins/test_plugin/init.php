@@ -1,8 +1,11 @@
 <?php
-class TestPlugin {
-	public function foo() {
-		return 'foo';
+	/**
+	* @package FrameworkTest
+	*/
+	class TestPlugin {
+		public function foo() {
+			return 'foo';
+		}
 	}
-}
 
 ?>
