@@ -19,7 +19,7 @@
 		}
 		
 		/**
-		*  Creates and HTML input text_field tag
+		*  Creates and HTML text_field input tag
 		*  @param string $id The help id of the element
 		*  @param string $name of the element
 		*  @param array $options key => value pairs for tag attributes
@@ -30,7 +30,7 @@
 		}
 		
 		/**
-		*  Creates and HTML input checkbox tag
+		*  Creates and HTML checkbox input tag
 		*  @param string $id The help id of the element
 		*  @param string $name of the element
 		*  @param array $options key => value pairs for tag attributes

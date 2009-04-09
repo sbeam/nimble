@@ -1,3 +1,4 @@
+
 <?php
 
 $classes_loaded = array();
@@ -14,7 +15,9 @@ class TestNimble {
 		global $classes_loaded;
 		$suite = new PHPUnit_Framework_TestSuite();
 		foreach ($classes_loaded as $class) {
-			$suite->addTestSuite(new ReflectionClass($class));
+			if(file_exists($class . '.php')){
+				$suite->addTestSuite(new ReflectionClass($class));
+			}
 		}
 		return $suite;
 	}
