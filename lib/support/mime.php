@@ -7,7 +7,9 @@
   * @package Support
   */
   class Mime {
+	/** JS */
 	const JS = 'text/javascript';
+	/** CSS */
 	const CSS = 'text/css';
   }
  
