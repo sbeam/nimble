@@ -2,7 +2,7 @@
 
 
   /**
-  * Class of constants that link Mime types to there WEB form
+  * Class of constants that link Mime types to there web format
   * ex. Mime::JS returns 'text/javascript'
   * @package Support
   */
