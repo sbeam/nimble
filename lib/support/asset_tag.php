@@ -80,6 +80,7 @@
 		* Creates file timestamp
 		* @param string $source Filename
 		* @param string $dir Path to base directory of file
+		* @access private
 		* @return string
 		*/
 		private static function asset_id($source, $dir) {
@@ -95,6 +96,7 @@
 		* Creates a timestamped URL
 		* @param string $source Filename
 		* @param string $dir Path to base directory of file
+		* @access private
 		* @return string
 		*/
 		private static function rewrite_asset_path($source, $dir) {
@@ -110,6 +112,7 @@
 		* @param string $source Filename
 		* @param string $dir Path to base directory of file
 		* @param string $url prefix base url of asset folder
+		* @access private
 		* @return string
 		*/
 		private static function compute_public_path($source, $dir, $url) {
