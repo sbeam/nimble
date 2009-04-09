@@ -32,7 +32,7 @@
 		}
 		/**
 		* Check to see if a key is set
-		* @param $key Cache key
+		* @param string $key Cache key
 		* @return boolean
 		*/
 		public static function isCached($key) {
