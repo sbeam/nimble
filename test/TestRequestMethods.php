@@ -2,15 +2,7 @@
 
 require_once('PHPUnit/Framework.php');
 require_once('../nimble.php');
-	/**
-	* @package FrameworkTest
-	*/
-	class r404 {
-		function GET(){}
-		function POST(){}
-		function DELETE(){}
-		function PUT(){}
-	}
+
 	/**
 	* @package FrameworkTest
 	*/
