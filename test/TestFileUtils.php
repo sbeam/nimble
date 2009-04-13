@@ -6,6 +6,12 @@
 	*/
 	class TestFileUtils extends PHPUnit_Framework_TestCase {
 
+	  public function setUp() {
+		$_SESSION = array();
+		$_SESSION['flashes'] = array();
+	  }
+	
+	
 	  public function testFileJoinReturnsString() {
 		$string = 'test' . DIRECTORY_SEPARATOR . 'myfolder';
 		$this->assertEquals($string, FileUtils::join('test', 'myfolder'));

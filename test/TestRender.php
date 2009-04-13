@@ -6,6 +6,8 @@ require_once('../nimble.php');
 	*/
 	class TestRender extends PHPUnit_Framework_TestCase {
 		public function setUp() {
+			$_SESSION = array();
+			$_SESSION['flashes'] = array();
 			$_SERVER['REQUEST_METHOD'] = 'GET';
 			$this->Nimble = Nimble::getInstance();
 			$this->Nimble->routes = array();

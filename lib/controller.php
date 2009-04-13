@@ -48,7 +48,7 @@ class Controller {
      */
     public function load_plugins() {
         $args = func_get_args();
-        if(count($args) ==0) { return false; }
+        if(count($args) == 0) { return false; }
         Nimble::require_plugins($args);
     }
 

@@ -1,5 +1,5 @@
 <?php
-	
+	session_start();
 	/**
 	* This file boots and loads the framework
 	* In order for the enviroments to work correctly add the line below to your server apache config
@@ -44,6 +44,11 @@
 	/** set the default plugin path */
 	Nimble::set_config('plugins_path', FileUtils::join(dirname(__FILE__) , '..', 'plugin'));
 	Nimble::set_config('default_layout', FileUtils::join(Nimble::getInstance()->config['view_path'], 'layout', 'application.php'));
+	/** set asset path change this in your config.php to override */
+	Nimble::set_config('stylesheet_folder', FileUtils::join(dirname(__FILE__), '..', 'public', 'style'));
+	Nimble::set_config('stylesheet_folder_url', '/style');
+	Nimble::set_config('javascript_folder', FileUtils::join(dirname(__FILE__), '..', 'public', 'javascript'));
+	Nimble::set_config('javascript_folder_url', '/javascript');
 	/** load controlers and models */
 	foreach(array('model', 'controller') as $dir) {
 		load_files(FileUtils::join(dirname(__FILE__), '..', 'app', $dir));

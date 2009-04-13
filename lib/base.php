@@ -16,20 +16,24 @@ class Nimble
     var $routes = array();
     var $config = array();
     var $plugins = array();
+	var $test_mode = false;
     static private $instance = NULL;
 
     function __construct()
-    {
+    {	
         $this->url = (isset($_GET['url'])) ? trim($_GET['url'], '/') : '';
-
         if(!isset($this->uri)) {
             $this->uri = str_replace(basename($_SERVER['PHP_SELF']), '', $_SERVER['PHP_SELF']);
         }
-        $this->load_plugins();
 		/** set default configs */
 		$this->config['title_seperator'] = ':';
 		$this->config['default_layout'] = '';
 		$this->page_title = '';
+		if(!$this->test_mode) {
+			if(!isset($_SESSION['flashes']) && !is_array($_SESSION['flashes'])) {
+				$_SESSION['flashes'] = array();
+			}
+		}
     }
 
     /**
@@ -70,6 +74,7 @@ class Nimble
      */
     public function dispatch($test=false)
     {	
+		$this->load_plugins();
       foreach($this->routes as $rule=>$conf) {
         // if a vaild _method is passed in a post set it to the REQUEST_METHOD so that we can route for DELETE and PUT methods
         if(isset($_POST['_method']) && !empty($_POST['_method']) && in_array(strtoupper($_POST['_method']), Route::$allowed_methods)){
@@ -120,7 +125,7 @@ class Nimble
       }
     }
 
-        if(empty($_SERVER['REQUEST_METHOD'])){
+        if(empty($_SERVER['REQUEST_METHOD']) && !$test){
           throw new NimbleExecption('No Request Paramater');
         }
 		if(!$test){
@@ -170,7 +175,7 @@ class Nimble
     /**
      * Load the requested plugins before the rest of the code executes.
      */
-    private function load_plugins()
+    public function load_plugins()
     {
       if(count($this->plugins) == 0) {return false;}
       self::require_plugins($this->plugins);
@@ -185,13 +190,13 @@ class Nimble
       $klass = self::getInstance();
       foreach($array as $plugin) {
         if(array_key_exists('plugins_path', $klass->config)) {
-          $file = $klass->config['plugins_path'] . $plugin . '/init.php';
+		  $file = FileUtils::join($klass->config['plugins_path'], $plugin, 'init.php');
           if(file_exists($file)) {
             require_once($file);
             continue;
           }
         }
-          $file = dirname(__FILE__) . '/../plugins/' . $plugin . '/init.php';
+		  $file = FileUtils::join(dirname(__FILE__), '..', 'plugins', $plugin, 'init.php');
           require_once($file);
       }
     }
@@ -238,6 +243,32 @@ class Nimble
 			return '';
 		}
 	}
+	
+	/**
+	* Displays a flash message for the current key
+	* @param string $key
+	* @uses <?php echo Nimble::display_flash('notice') ?>
+	*/
+	public static function display_flash($key) {
+		Nimble::getInstance();
+		if(isset($_SESSION['flashes'][$key])) {
+			$value = $_SESSION['flashes'][$key];
+			unset($_SESSION['flashes'][$key]);
+			return $value; 
+		}
+	}
+	
+	/**
+	* Sets a flash message for the current key
+	* @param string $key
+	* @param string $value
+	*/
+	public static function flash($key, $value) {
+		$_SESSION['flashes'][$key] = $value;
+	}
+	
+	
+	
 }
 
 ?>

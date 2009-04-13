@@ -7,6 +7,8 @@
 	*/
 	class TestPluginLoader extends PHPUnit_Framework_TestCase {
 		public function setUp() {
+			$_SESSION = array();
+			$_SESSION['flashes'] = array();
 			$this->Nimble = Nimble::getInstance();
 			$this->Nimble->routes = array();
 			$this->url = '';
@@ -21,6 +23,7 @@
 			public function testPluginGetsLoaded() {
 				Nimble::plugins('test_plugin');
 				$this->Nimble->__construct();
+				$this->Nimble->dispatch(true);
 				$test_class = new TestPlugin();
 				$this->assertEquals($test_class->foo(), 'foo');
 			}
@@ -28,6 +31,7 @@
 			public function testCanLoadNimblePLuginFormHelper() {
 				Nimble::plugins('remote_form_helper');
 				$this->Nimble->__construct();
+				$this->Nimble->dispatch(true);
 				new RemoteFormHelper();
 				$this->assertEquals(1,1);
 			}
@@ -35,6 +39,7 @@
 			public function testLoadBothCustomAndNimble() {
 				Nimble::plugins('remote_form_helper', 'test_plugin');
 				$this->Nimble->__construct();
+				$this->Nimble->dispatch(true);
 				$test_class = new TestPlugin();
 				$this->assertEquals($test_class->foo(), 'foo');
 				new RemoteFormHelper();

@@ -9,11 +9,13 @@ require_once('../nimble.php');
 	class TestRequestMethods extends PHPUnit_Framework_TestCase {
 		
 		public function setUp() {
-				$_POST['_method'] = 'GET';
-				$_SERVER['REQUEST_METHOD'] = '';
-		  $this->Nimble = Nimble::getInstance();
-		  $this->Nimble->routes = array();
-				$this->Nimble->url = '';
+			$_SESSION = array();
+			$_POST['_method'] = 'GET';
+			$_SERVER['REQUEST_METHOD'] = '';
+			$_SESSION['flashes'] = array();
+			$this->Nimble = Nimble::getInstance();
+			$this->Nimble->routes = array();
+			$this->Nimble->url = '';
 	  }
 
 		public function testDelete() {

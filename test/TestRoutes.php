@@ -7,15 +7,20 @@ require_once('../nimble.php');
 	*/
 	class TestRoutes extends PHPUnit_Framework_TestCase {
 		public function setUp() {
+			$_SESSION = array();
+			$_SESSION['flashes'] = array();
 			$this->Nimble = Nimble::getInstance();
+			$this->Nimble->test_mode = true;
 			$this->Nimble->routes = array();
-					$this->url = '';
+			$this->url = '';
 		}
 
 		/**
 		 * @dataProvider providerRubyOnRailsRoutes
 		 */
 		public function testRubyOnRailsRoutes($ror_route, $expected_pattern) {
+			$_SESSION = array();
+			$_SESSION['flashes'] = array();
 			$this->Nimble->add_url($ror_route, "Class", "method");
 			$this->assertEquals("/^" . str_replace('/', '\/', $expected_pattern) . "$/", $this->Nimble->routes[0][0]);
 					
