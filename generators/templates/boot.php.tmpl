@@ -49,10 +49,7 @@
 	Nimble::set_config('stylesheet_folder_url', '/style');
 	Nimble::set_config('javascript_folder', FileUtils::join(dirname(__FILE__), '..', 'public', 'javascript'));
 	Nimble::set_config('javascript_folder_url', '/javascript');
-	/** load controlers and models */
-	foreach(array('model', 'controller') as $dir) {
-		load_files(FileUtils::join(dirname(__FILE__), '..', 'app', $dir));
-	}
+
 	// load any custom global config options 		
 	require_once(FileUtils::join(dirname(__FILE__), 'config.php'));
 	require_once(FileUtils::join(dirname(__FILE__), 'routes.php'));
@@ -61,6 +58,10 @@
 	// Nimble::Log('loading ' . NIMBLE_ENV . ' enviroment');
 	require_once(FileUtils::join(dirname(__FILE__), NIMBLE_ENV, 'config.php'));
 
+	/** load controlers and models */
+	foreach(array('model', 'controller') as $dir) {
+		load_files(FileUtils::join(dirname(__FILE__), '..', 'app', $dir));
+	}
 	
 	/** boot the framework */
 	Run();

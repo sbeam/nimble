@@ -30,7 +30,7 @@ class Nimble
 		$this->config['default_layout'] = '';
 		$this->page_title = '';
 		if(!$this->test_mode) {
-			if(!isset($_SESSION['flashes']) && !is_array($_SESSION['flashes'])) {
+			if(isset($_SESSION) && !isset($_SESSION['flashes'])) {
 				$_SESSION['flashes'] = array();
 			}
 		}
