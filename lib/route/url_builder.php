@@ -1,4 +1,6 @@
 <?php
+$dir = dirname(__FILE__);
+require_once($dir . '/../exception.php');
   /**
   * UrlBuilder constructs a usable URL from a Route pattern.
 	* @package Route
@@ -48,7 +50,7 @@
           if(!empty($params) && preg_match_all($route_regex, $pattern, $matches)){
               // test if we have the right number of params
               if (count($matches[0]) != count($params)) {
-                  throw new NimbleExecption('Invalid Number of Params expected: ' . count($matches[0]) . ' Given: ' . count($params));
+                  throw new Execption('Invalid Number of Params expected: ' . count($matches[0]) . ' Given: ' . count($params));
               }
 
               // replace the regular expression syntax with the params
@@ -67,6 +69,7 @@
        */
       public static function url_for()
       {	
+			
 			$args = func_get_args();
 			$controller = array_shift($args);
 			$action = array_shift($args);
@@ -74,11 +77,12 @@
 	  
           $klass = Nimble::getInstance();
           foreach($klass->routes as $route) {
+				var_dump($route);
               if(strtolower($route[1]) == strtolower($controller) && strtolower($route[2]) == strtolower($action)) {
                   return self::build_url($route, $params);
               }
           }
-          throw new NimbleException('Invalid Controller / Method Pair');
+          throw new Exception('Invalid Controller / Method Pair');
       }
 
       /**
@@ -110,6 +114,6 @@
    * @throws NimbleException if neither the controller nor the action match.
    */
   function url_for() {
-      return UrlBuilder::url_for(func_get_args());
+      return UrlBuilder::url_for(join(',', func_get_args()));
   }
 ?>
