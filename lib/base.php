@@ -22,12 +22,10 @@ class Nimble
     function __construct()
     {	
         $this->url = (isset($_GET['url'])) ? trim($_GET['url'], '/') : '';
-        if(!isset($this->uri)) {
-            $this->uri = str_replace(basename($_SERVER['PHP_SELF']), '', $_SERVER['PHP_SELF']);
-        }
 		/** set default configs */
 		$this->config['title_seperator'] = ':';
 		$this->config['default_layout'] = '';
+		$this->config['uri'] = str_replace(basename($_SERVER['PHP_SELF']), '', $_SERVER['PHP_SELF']);
 		$this->page_title = '';
 		if(!$this->test_mode) {
 			if(isset($_SESSION) && !isset($_SESSION['flashes'])) {
@@ -36,6 +34,13 @@ class Nimble
 		}
     }
 
+	/**
+	* Returns the uri defined by nimble config 'uri'
+	*/
+	public static function uri() {
+		return self::getInstance()->config['uri'];
+	}
+		
     /**
      * Get the global Nimble object instance.
      * @return Nimble The global Nimble reference.

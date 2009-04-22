@@ -33,8 +33,7 @@ require_once($dir . '/../exception.php');
        * @return string The current request's URI.
        */
       public static function uri() {
-          $klass = Nimble::getInstance();
-          return $klass->uri;
+          return Nimble::uri() . '/';
       }
 
       /**
@@ -77,7 +76,6 @@ require_once($dir . '/../exception.php');
 	  
           $klass = Nimble::getInstance();
           foreach($klass->routes as $route) {
-				var_dump($route);
               if(strtolower($route[1]) == strtolower($controller) && strtolower($route[2]) == strtolower($action)) {
                   return self::build_url($route, $params);
               }
@@ -114,6 +112,6 @@ require_once($dir . '/../exception.php');
    * @throws NimbleException if neither the controller nor the action match.
    */
   function url_for() {
-      return UrlBuilder::url_for(join(',', func_get_args()));
+      return call_user_func_array(array('UrlBuilder','url_for'), func_get_args());
   }
 ?>
