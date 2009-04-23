@@ -130,7 +130,7 @@ class Controller {
     public function render($file)
     {
 		if($this->has_rendered){
-			throw new NimbleExecption('Double Render Error: Your may only render once per action');
+			throw new NimbleException('Double Render Error: Your may only render once per action');
 		}
 	
 		$this->has_rendered = true;
@@ -170,7 +170,7 @@ class Controller {
 		}else if(empty($name)){
 			return;
         } else {
-            throw new NimbleExecption('View ['.$name.'] Not Found');
+            throw new NimbleException('View ['.$name.'] Not Found');
         }
         $out = ob_get_contents();
         ob_end_clean();

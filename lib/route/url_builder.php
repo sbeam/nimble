@@ -1,6 +1,6 @@
 <?php
-$dir = dirname(__FILE__);
-require_once($dir . '/../exception.php');
+	$dir = dirname(__FILE__);
+	require_once($dir . '/../exception.php');
   /**
   * UrlBuilder constructs a usable URL from a Route pattern.
 	* @package Route
@@ -49,13 +49,13 @@ require_once($dir . '/../exception.php');
           if(!empty($params) && preg_match_all($route_regex, $pattern, $matches)){
               // test if we have the right number of params
               if (count($matches[0]) != count($params)) {
-                  throw new Execption('Invalid Number of Params expected: ' . count($matches[0]) . ' Given: ' . count($params));
+                  throw new NimbleException('Invalid Number of Params expected: ' . count($matches[0]) . ' Given: ' . count($params));
               }
 
               // replace the regular expression syntax with the params
               return str_replace('//', '/', self::uri() . preg_replace(array_fill(0, count($params), $route_regex), $params, $pattern, 1));
           }else{
-              return $pattern;
+              return self::uri() . $pattern;
           }
       }
 
@@ -68,7 +68,6 @@ require_once($dir . '/../exception.php');
        */
       public static function url_for()
       {	
-			
 			$args = func_get_args();
 			$controller = array_shift($args);
 			$action = array_shift($args);
@@ -80,7 +79,7 @@ require_once($dir . '/../exception.php');
                   return self::build_url($route, $params);
               }
           }
-          throw new Exception('Invalid Controller / Method Pair');
+          throw new NimbleException('Invalid Controller / Method Pair');
       }
 
       /**
@@ -106,6 +105,7 @@ require_once($dir . '/../exception.php');
   // Global functions
 
   /**
+   * @global
    * Build a URL that points at the provided controller and action, with the provided params to match.
    * @uses url_for('controller', 'action', 'param1', 'params2', 'etc')
    * @return string The constructed URL.

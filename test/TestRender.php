@@ -33,9 +33,9 @@ require_once('../nimble.php');
 		}
 		
 		/**
-		* @expectedException NimbleExecption
+		* @expectedException NimbleException
 		*/
-		public function testDoubleRenderThrowsExecption() {
+		public function testDoubleRenderThrowsException() {
 			$this->Nimble->url = "";
 			$this->Nimble->add_url('', "MyTestController", "test3");	
 			$this->Nimble->dispatch(true);

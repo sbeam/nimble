@@ -1,7 +1,7 @@
 <?php
   /**
   * NimbleException is the type of exception thrown by Nimble.
-	* @package Execption
+	* @package Exception
   */
-  class NimbleExecption extends Exception {}
+  class NimbleException extends Exception {}
 ?>

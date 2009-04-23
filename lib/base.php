@@ -131,7 +131,7 @@ class Nimble
     }
 
         if(empty($_SERVER['REQUEST_METHOD']) && !$test){
-          throw new NimbleExecption('No Request Paramater');
+          throw new NimbleException('No Request Paramater');
         }
 		if(!$test){
 			call_user_func(array('r404' , $_SERVER['REQUEST_METHOD'])); 

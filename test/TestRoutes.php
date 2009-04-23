@@ -61,20 +61,21 @@ require_once('../nimble.php');
 			public function testUrlFor() {
 				$this->Nimble->routes = array();
 				$this->Nimble->uri = '';
+				Nimble::set_config('uri', '');
 				$this->Nimble->url = '/class/1';
 				$this->Nimble->add_url('/class/:method', "Class", "Method");
-				$this->assertEquals('/class/1', UrlBuilder::url_for('Class', 'Method', 1));
+				$this->assertEquals('/class/1', url_for('Class', 'Method', 1));
 			}
 			
 			/**
-			* @expectedException NimbleExecption
+			* @expectedException NimbleException
 			*/
 			public function testUrlForFailsWrongParams() {
 				$this->Nimble->routes = array();
 				$this->Nimble->uri = '';
-				$this->Nimble->url = '/class/1';
+				Nimble::set_config('url', '/class/1');
 				$this->Nimble->add_url('/class/:method', "Class", "Method");
-				$this->assertEquals('/class/1', UrlBuilder::url_for('Class', 'Method', 1, 2));
+				$this->assertEquals('/class/1', url_for('Class', 'Method', 1, 2));
 			}
 			
 			

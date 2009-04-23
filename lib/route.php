@@ -2,6 +2,7 @@
 require_once(dirname(__FILE__) . '/route/helper.php');
 require_once(dirname(__FILE__) . '/route/url_builder.php');
 require_once(dirname(__FILE__) . '/support/inflector.php');
+require_once(dirname(__FILE__) . '/exception.php');
 
 	/**
  	* Rotes control how HTTP requests are handled by the application.
@@ -70,7 +71,7 @@ class Route
         if(in_array($this->http_method, self::$allowed_methods)){
             $router = Nimble::getInstance()->add_url($this->pattern, $this->controller, $this->action, $this->http_method);
         }else{
-            throw new NimbleExecption('Invalid Request');
+            throw new NimbleException('Invalid Request');
         }  
     }
 
@@ -93,7 +94,9 @@ class Route
     {
         $controller = ucwords($controller_prefix) . 'Controller';
         $controller_prefix = strtolower($controller_prefix);
-        $actions = array('index' => 'GET', 'create' => 'POST');
+		$r = new Route($controller_prefix . '/add');
+		$r->controller($controller)->action('add')->on('GET');     
+		$actions = array('index' => 'GET', 'create' => 'POST');
         foreach($actions as $action=>$method) {
             $r = new Route(Inflector::pluralize($controller_prefix));
             $r->controller($controller)->action($action)->on($method);
@@ -103,8 +106,7 @@ class Route
             $r = new Route($controller_prefix . '/:id');
             $r->controller($controller)->action($action)->on($method);
         }
-		$r = new Route($controller_prefix . '/add');
-		$r->controller($controller)->action('add')->on('GET');
+
     }
 }
 ?>

@@ -30,14 +30,14 @@ require_once('../nimble.php');
 			$this->assertEquals($this->Nimble->routes[0][3], $_POST['_method']);
 		}
 		/**
-		* @expectedException NimbleExecption
+		* @expectedException NimbleException
 		*/
 		public function testInvalidMethod() {
 			$_POST['_method'] = 'OWNAGE';
 			R('test/:id')->controller('Class')->action('method')->on('PUTff');
 		}
 		/**
-		* @expectedException NimbleExecption
+		* @expectedException NimbleException
 		*/	
 		public function testInvalidMethodAgain() {
 			$_POST['_method'] = 'PUT';
@@ -45,7 +45,7 @@ require_once('../nimble.php');
 
 		}
 		/**
-		* @expectedException NimbleExecption
+		* @expectedException NimbleException
 		*/	
 		public function testInvalidMethodAgainWithPoo() {
 			$_POST['_method'] = 'Poo';
