@@ -255,7 +255,6 @@ class Nimble
 	* @uses <?php echo Nimble::display_flash('notice') ?>
 	*/
 	public static function display_flash($key) {
-		Nimble::getInstance();
 		if(isset($_SESSION['flashes'][$key])) {
 			$value = $_SESSION['flashes'][$key];
 			unset($_SESSION['flashes'][$key]);

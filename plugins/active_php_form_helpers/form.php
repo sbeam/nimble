@@ -29,6 +29,7 @@
 		*  @param array $options key => value pairs for tag attributes
 		*/
 		public function select($name, $collection, $options=array()) {
+			$options = $this->has_errors($name, $options);
 			$value = $this->fetch_value($name);
 			$option_a = array();
 			if(empty($value)) {
