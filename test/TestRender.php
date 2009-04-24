@@ -11,7 +11,7 @@ require_once('../nimble.php');
 			$_SERVER['REQUEST_METHOD'] = 'GET';
 			$this->Nimble = Nimble::getInstance();
 			$this->Nimble->routes = array();
-					$this->url = '';
+			$this->url = '';
 			Nimble::set_config('plugins_path', join(DIRECTORY_SEPARATOR, array(dirname(__FILE__) , 'test_plugins')));
 			Nimble::set_config('view_path', join(DIRECTORY_SEPARATOR, array(dirname(__FILE__), 'views')));
 		}
