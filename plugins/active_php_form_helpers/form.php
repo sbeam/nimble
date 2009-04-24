@@ -31,6 +31,10 @@
 		public function select($name, $collection, $options=array()) {
 			$value = $this->fetch_value($name);
 			$option_a = array();
+			if(empty($value)) {
+				array_push($option_a, FormTagHelper::option('-- Select One --', ''));
+			}
+			
 			foreach($collection as $option) {
 				if($value == $option[0]) {
 					array_push($option_a, FormTagHelper::option($option[1], $option[0], array('selected' => 'SELECTED')));
@@ -58,6 +62,7 @@
 		*  @param array $options key => value pairs for tag attributes
 		*/
 		public function text_field($name, $options=array()){
+			$options = $this->has_errors($name, $options);
 			$options = array_merge($options, array('value' => $this->fetch_value($name)));
 			return FormTagHelper::text_field($this->get_id($name), $this->get_name($name), $options);
 		}
@@ -68,6 +73,7 @@
 		*  @param array $options key => value pairs for tag attributes
 		*/
 		public function checkbox($name, $options=array()){
+			$options = $this->has_errors($name, $options);
 			$options = array_merge($options, array('value' => $this->fetch_value($name)));
 			return FormTagHelper::checkbox($this->get_id($name), $this->get_name($name), $options);
 		}
@@ -77,6 +83,7 @@
 		*  @param array $options key => value pairs for tag attributes
 		*/
 		public function submit($name, $options=array()) {
+			$options = $this->has_errors($name, $options);
 			return FormTagHelper::submit($name, $options);
 		}
 		
@@ -86,6 +93,7 @@
 		*  @param array $options key => value pairs for tag attributes
 		*/
 		public function image_submit($image, $options=array()) {
+			$options = $this->has_errors($name, $options);
 			return FormTagHelper::image_submit($image, $options);
 		}
 		
@@ -94,6 +102,7 @@
 		*  @param array $options key => value pairs for tag attributes
 		*/
 		public function hidden_field($name, $options=array()) {
+			$options = $this->has_errors($name, $options);
 			return FormTagHelper::hidden_field($this->get_id($name), $this->get_name($name), $this->fetch_value($name), $options);
 		}
 		
@@ -103,6 +112,7 @@
 		*  @param array $options key => value pairs for tag attributes
 		*/
 		public function textarea($name, $options=array()) {
+			$options = $this->has_errors($name, $options);
 			return FormTagHelper::textarea($this->get_id($name), $this->get_name($name), $this->fetch_value($name), $options);
 		}
 		
@@ -128,6 +138,33 @@
 		public function end() {
 			return TagHelper::close_tag('form');
 		}
+		
+		
+		private function has_errors($name, $options) {
+			if(isset($this->obj) && !empty($this->obj) && !is_string($this->obj)) {
+				//if this has been processed - skip the processing
+				if(!isset($this->errors)) {
+					$this->errors = array();
+					foreach($this->obj->errors as $error) {
+						foreach($error as $col => $value) {
+							$this->errors[$col] = $value;
+						}
+					}
+				}
+
+				if(in_array($name, array_keys($this->errors))) {
+					if(isset($options['class'])) {
+						$options['class'] = $options['class'] . ' ' . 'fieldWithErrors ';
+					}else{
+						$options['class'] = 'fieldWithErrors ';
+					}
+				}
+			}
+		
+		
+			return $options;
+		}
+		
 		
 		private function get_form_name() {
 			if(isset($this->obj) && !empty($this->obj) && !is_string($this->obj)) {
