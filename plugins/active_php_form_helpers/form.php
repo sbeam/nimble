@@ -67,6 +67,16 @@
 			$options = array_merge(array('value' => $this->fetch_value($name)), $options);
 			return FormTagHelper::text_field($this->get_id($name), $this->get_name($name), $options);
 		}
+    
+    /**
+		*  Creates and HTML password input tag
+		*  @param string $name of the element
+		*  @param array $options key => value pairs for tag attributes
+		*/
+		public function password($name, $options=array()){
+			$options = $this->has_errors($name, $options);
+			return FormTagHelper::password($this->get_id($name), $this->get_name($name), $options);
+		}
 		
 		/**
 		*  Creates and HTML checkbox input tag

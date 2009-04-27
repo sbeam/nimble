@@ -97,7 +97,17 @@
 			$options = array_merge($options, array('id' => $id, 'name' => $name, 'type' => 'text'));
 			return self::tag('input', $options);
 		}
-		
+    
+		/**
+		*  Creates and HTML pasword input tag
+		*  @param string $id The help id of the element
+		*  @param string $name of the element
+		*  @param array $options key => value pairs for tag attributes
+		*/
+		public static function password($id, $name, $options=array()){
+			$options = array_merge($options, array('id' => $id, 'name' => $name, 'type' => 'password'));
+			return self::tag('input', $options);
+		}		
 		/**
 		*  Creates and HTML checkbox input tag
 		*  @param string $id The help id of the element
