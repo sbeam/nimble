@@ -64,7 +64,7 @@
 		*/
 		public function text_field($name, $options=array()){
 			$options = $this->has_errors($name, $options);
-			$options = array_merge($options, array('value' => $this->fetch_value($name)));
+			$options = array_merge(array('value' => $this->fetch_value($name)), $options);
 			return FormTagHelper::text_field($this->get_id($name), $this->get_name($name), $options);
 		}
 		

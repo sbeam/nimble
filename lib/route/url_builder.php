@@ -6,6 +6,11 @@
 	* @package Route
   */
   class UrlBuilder {
+
+      public static function root_path() {
+        return Nimble::uri() . '/';
+      }
+  
       /**
        * Get the current UrlBuilder object.
        * @return UrlBuilder The current UrlBuilder.
@@ -114,4 +119,10 @@
   function url_for() {
       return call_user_func_array(array('UrlBuilder','url_for'), func_get_args());
   }
+  
+  
+  function root_path() {
+    return UrlBuilder::root_path();
+  }
+  
 ?>
