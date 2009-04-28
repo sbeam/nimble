@@ -154,7 +154,7 @@ class Controller {
 
     /**
      * Open a view template file, inject the controller's properties into that file, and execute the file, capturing and returning the output.
-     *.@param string $name The view file to render, relative to the base of the application.
+     * @param string $name The view file to render, relative to the base of the application.
      * @return string The rendered view file.
      */
     private function open_template($name)

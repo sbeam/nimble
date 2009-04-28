@@ -94,9 +94,11 @@ class Route
     {
         $controller = ucwords($controller_prefix) . 'Controller';
         $controller_prefix = strtolower($controller_prefix);
-		$r = new Route($controller_prefix . '/add');
-		$r->controller($controller)->action('add')->on('GET');     
-		$actions = array('index' => 'GET', 'create' => 'POST');
+        $r = new Route($controller_prefix . '/add');
+        $r->controller($controller)->action('add')->on('GET');
+        $r = new Route($controller_prefix . '/:id/edit');
+        $r->controller($controller)->action('edit')->on('GET');  
+        $actions = array('index' => 'GET', 'create' => 'POST');
         foreach($actions as $action=>$method) {
             $r = new Route(Inflector::pluralize($controller_prefix));
             $r->controller($controller)->action($action)->on($method);

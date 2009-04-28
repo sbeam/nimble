@@ -187,7 +187,20 @@
 		
 		
 		public function __toString() {
-			return TagHelper::tag('form', array('name' => strtolower($this->get_form_name()), 'method' => $this->config['method'], 'action' => $this->config['path']));
+    
+      if(strtolower($this->config['method']) == 'put' || strtolower($this->config['method']) == 'delete') {
+        $method = 'POST';
+        $extra = FormTagHelper::hidden_field('_method', '_method', $this->config['method']);
+      }else{
+        $method = $this->config['method'];
+      }
+    
+			$return = TagHelper::tag('form', array('name' => strtolower($this->get_form_name()), 'method' => $method, 'action' => $this->config['path']));
+      if(isset($extra)) {
+        $return = $return . $extra;
+      }
+      
+      return $return;
 		}
 		
 		

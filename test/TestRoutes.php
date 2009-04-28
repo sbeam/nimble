@@ -55,7 +55,7 @@ require_once('../nimble.php');
 
 			public function testResources() {
 				Route::resources('Form');
-				$this->assertEquals(count($this->Nimble->routes), 6);
+				$this->assertEquals(count($this->Nimble->routes), 7);
 			}
 			
 			public function testUrlFor() {
