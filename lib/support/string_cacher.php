@@ -27,7 +27,7 @@
 		*/
 		public static function set($key, $value) {
 			$klass = self::getInstance();
-			$klass->cache[md5($key)] = $value;
+			$klass->cache[crc32($key)] = $value;
 			return $value;
 		}
 		/**
@@ -37,7 +37,7 @@
 		*/
 		public static function isCached($key) {
 			$klass = self::getInstance();
-			return isset($klass->cache[md5($key)]);
+			return isset($klass->cache[crc32($key)]);
 		}
 		/**
 		* Unsets the value for a giving key
@@ -45,7 +45,7 @@
 		*/
 		public static function cache_unset($key) {
 			$klass = self::getInstance();
-			unset($klass->cache[md5($key)]);
+			unset($klass->cache[crc32($key)]);
 		}
 		/** 
 		* Fetches a value from the cache givin the key
@@ -54,7 +54,7 @@
 		*/
 		public static function fetch($key) {
 			$klass = self::getInstance();
-			return $klass->cache[md5($key)];
+			return $klass->cache[crc32($key)];
 		}
 		/**
 		* Clears the current cache
