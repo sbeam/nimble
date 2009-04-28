@@ -2,7 +2,7 @@
 	/**
 	* @package Support
 	* Cacheing for single requests
-	* @todo add apc cache calls if apc is enabled
+	* @todo add apc and xcache cache calls if apc is enabled
 	*/
 	class StringCacher {
   
