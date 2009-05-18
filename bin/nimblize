@@ -20,6 +20,7 @@
 	foreach(array('controller', 'model', 'view') as $dir) {
 		mkdir(FileUtils::join($app,'app', $dir));
 	}
+  			Generator::htaccess(FileUtils::join($app, '.htaccess'));
 	FileUtils::mkdir_p(FileUtils::join($app, 'app', 'view', 'layout'));
 	touch(FileUtils::join($app, 'app', 'view', 'layout', 'application.php'));
 	/** init config files */
@@ -43,7 +44,6 @@
 			Generator::scripts(FileUtils::join($app, $folder));
 		}
 		if($folder == 'public') {
-			Generator::htaccess(FileUtils::join($app, $folder, '.htaccess'));
 			foreach(array('image', 'javascript', 'style') as $sub){
 			  mkdir(FileUtils::join($app, $folder, $sub));
 			}

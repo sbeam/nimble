@@ -28,7 +28,7 @@
 	* loads the controller and model classes
 	*/
 	function load_files($dir) {
-		if ($dh = opendir($dir)) {
+		if (is_dir($dir) && $dh = opendir($dir)) {
 			while (($file = readdir($dh)) !== false) {
 				if(preg_match('/\.php$/' , $file)) {
 					require_once(FileUtils::join($dir, $file));
@@ -46,10 +46,10 @@
 	Nimble::set_config('default_layout', FileUtils::join(Nimble::getInstance()->config['view_path'], 'layout', 'application.php'));
 	/** set asset path change this in your config.php to override */
 	Nimble::set_config('stylesheet_folder', FileUtils::join(dirname(__FILE__), '..', 'public', 'style'));
-	Nimble::set_config('stylesheet_folder_url', '/style');
+	Nimble::set_config('stylesheet_folder_url', '/public/style');
 	Nimble::set_config('javascript_folder', FileUtils::join(dirname(__FILE__), '..', 'public', 'javascript'));
-	Nimble::set_config('javascript_folder_url', '/javascript');
-
+	Nimble::set_config('javascript_folder_url', '/public/javascript');
+  Nimble::set_config('uri', '/');
 	// load any custom global config options 		
 	require_once(FileUtils::join(dirname(__FILE__), 'config.php'));
 	require_once(FileUtils::join(dirname(__FILE__), 'routes.php'));
