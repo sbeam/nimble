@@ -202,8 +202,11 @@
       }else{
         $method = $this->config['method'];
       }
-    
-			$return = TagHelper::tag('form', array('name' => strtolower($this->get_form_name()), 'method' => $method, 'action' => $this->config['path']));
+      $form_options = array('name' => strtolower($this->get_form_name()), 'method' => $method, 'action' => $this->config['path']);
+      if(isset($this->config['type'])) {
+        $form_options['enctype'] = $this->config['type'];
+      }
+			$return = TagHelper::tag('form', $form_options);
       if(isset($extra)) {
         $return = $return . $extra;
       }
