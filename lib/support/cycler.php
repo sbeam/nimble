@@ -38,7 +38,7 @@
 		}
 		
 		public static function reset_cycler() {
-      $class = getInstance();
+      $class = self::getInstance();
 			$class->scopes = array();
 			$class->cycle_states = array();
 		}
