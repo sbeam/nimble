@@ -67,7 +67,15 @@
 			$options = array_merge(array('value' => $this->fetch_value($name)), $options);
 			return FormTagHelper::text_field($this->get_id($name), $this->get_name($name), $options);
 		}
-    
+    /**
+		*  Creates and HTML file_field input tag
+		*  @param string $name of the element
+		*  @param array $options key => value pairs for tag attributes
+		*/
+		public function file_field($name, $options=array()){
+			$options = $this->has_errors($name, $options);
+			return FormTagHelper::file_field($this->get_id($name), $this->get_name($name), $options);
+		}
     /**
 		*  Creates and HTML password input tag
 		*  @param string $name of the element

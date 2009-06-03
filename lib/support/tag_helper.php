@@ -98,6 +98,17 @@
 			return self::tag('input', $options);
 		}
     
+    /**
+		*  Creates and HTML file_field input tag
+		*  @param string $id The help id of the element
+		*  @param string $name of the element
+		*  @param array $options key => value pairs for tag attributes
+		*/
+		public static function file_field($id, $name, $options=array()){
+			$options = array_merge($options, array('id' => $id, 'name' => $name, 'type' => 'file'));
+			return self::tag('input', $options);
+		}
+    
 		/**
 		*  Creates and HTML pasword input tag
 		*  @param string $id The help id of the element
