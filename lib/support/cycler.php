@@ -37,9 +37,9 @@
 			
 		}
 		
-		public function reset_cycler($key) {
-			unset($this->scopes[$key]);
-			unset($this->cycle_states[$key]);
+		public function reset_cycler() {
+			$this->scopes = array();
+			$this->cycle_states = array();
 		}
 	
 	
