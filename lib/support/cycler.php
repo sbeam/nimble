@@ -37,9 +37,10 @@
 			
 		}
 		
-		public function reset_cycler() {
-			$this->scopes = array();
-			$this->cycle_states = array();
+		public static function reset_cycler() {
+      $class = getInstance();
+			$class->scopes = array();
+			$class->cycle_states = array();
 		}
 	
 	
