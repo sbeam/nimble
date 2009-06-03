@@ -53,7 +53,7 @@
           $pattern = self::clean_route($route[0]);
           if(!empty($params) && preg_match_all($route_regex, $pattern, $matches)){
               // test if we have the right number of params
-              if (count($matches[0]) != count($params)) {
+              if (count($matches[0]) < count($params)) {
                   throw new NimbleException('Invalid Number of Params expected: ' . count($matches[0]) . ' Given: ' . count($params));
               }
 
@@ -120,7 +120,6 @@
       $args = func_get_args(); //php 5.2.9 compat
       return call_user_func_array(array('UrlBuilder','url_for'), $args);
   }
-  
   
   function root_path() {
     return UrlBuilder::root_path();
