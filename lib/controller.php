@@ -17,9 +17,9 @@ class Controller {
     var $format;
     var $layout = true;
     var $layout_template;
-    var $headers;
+    var $headers = array('Content-Type: text/html');
     var $filters = array('before' => array(), 'after' => array());
-	var $has_rendered = false;
+		var $has_rendered = false;
 
     /**
      * The expected output format for this controller.
@@ -31,7 +31,7 @@ class Controller {
 	* @return instance of the Nimble class
 	*/
 	public function nimble() {
-		return Nimble::getInstance();;
+		return Nimble::getInstance();
 	}
 	/**
 	*

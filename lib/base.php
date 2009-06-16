@@ -16,7 +16,7 @@ class Nimble
     var $routes = array();
     var $config = array();
     var $plugins = array();
-	var $test_mode = false;
+		var $test_mode = false;
     static private $instance = NULL;
 
     function __construct()
@@ -120,7 +120,7 @@ class Nimble
         ob_end_clean();  
         if (count($this->klass->headers)>0){
           foreach($this->klass->headers as $header){
-             header($header);
+             $this->test_mode ? '' : header($header);
           }
         } 
         print $out;
