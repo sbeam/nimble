@@ -10,6 +10,7 @@ while (!empty($path_parts)) {
   $path = implode(DIRECTORY_SEPARATOR, array_merge($path_parts, array("config", "boot.php")));
   if (file_exists($path)) {
     define("NIMBLE_IS_TESTING", true);
+    define("NIMBLE_RUN", false);
     require_once($path); break;    
   } else {
     array_pop($path_parts);
@@ -107,6 +108,9 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
     ob_start();
     call_user_func_array(array($controller, $method), $parameters);
     if ($controller->has_rendered === false) {
+      if (empty($controller->layout_template) && $controller->layout) {
+        $controller->set_layout_template();
+      }
       $controller->render($template);
     }
     return ob_get_clean();
