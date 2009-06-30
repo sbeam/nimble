@@ -64,5 +64,9 @@
 	}
 	
 	/** boot the framework */
-	Run();
+	if (defined("NIMBLE_RUN")) {
+	  if (NIMBLE_RUN) { Run(); }
+	} else {
+  	Run();
+  }
 ?>

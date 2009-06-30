@@ -19,6 +19,8 @@ while (!empty($path_parts)) {
 if (!defined("NIMBLE_IS_TESTING")) {
   throw new Exception("Could not find Nimble config/boot.php from " . getcwd() . "!");
   exit(1); 
+} else {
+  define("NIMBLE_RUN", false);
 }
 
 /**
