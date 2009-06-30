@@ -108,6 +108,9 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
     ob_start();
     call_user_func_array(array($controller, $method), $parameters);
     if ($controller->has_rendered === false) {
+      if (empty($controller->layout_template) && $controller->layout) {
+        $controller->set_layout_template();
+      }
       $controller->render($template);
     }
     return ob_get_clean();
