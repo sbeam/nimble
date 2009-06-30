@@ -4,7 +4,7 @@ require_once('../nimble.php');
 	/**
 	* @package FrameworkTest
 	*/
-	class TestRender extends PHPUnit_Framework_TestCase {
+	class RenderTest extends PHPUnit_Framework_TestCase {
 		public function setUp() {
 			$_SESSION = array();
 			$_SESSION['flashes'] = array();

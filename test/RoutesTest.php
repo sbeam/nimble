@@ -5,7 +5,7 @@ require_once('../nimble.php');
 	/**
 	* @package FrameworkTest
 	*/
-	class TestRoutes extends PHPUnit_Framework_TestCase {
+	class RoutesTest extends PHPUnit_Framework_TestCase {
 		public function setUp() {
 			$_SESSION = array();
 			$_SESSION['flashes'] = array();

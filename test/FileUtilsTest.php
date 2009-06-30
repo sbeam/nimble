@@ -4,7 +4,7 @@
 	/**
 	* @package FrameworkTest
 	*/
-	class TestFileUtils extends PHPUnit_Framework_TestCase {
+	class FileUtilsTest extends PHPUnit_Framework_TestCase {
 
 	  public function setUp() {
 		$_SESSION = array();

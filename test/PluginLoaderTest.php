@@ -5,7 +5,7 @@
 	/**
 	* @package FrameworkTest
 	*/
-	class TestPluginLoader extends PHPUnit_Framework_TestCase {
+	class PluginLoaderTest extends PHPUnit_Framework_TestCase {
 		public function setUp() {
 			$_SESSION = array();
 			$_SESSION['flashes'] = array();
@@ -52,9 +52,8 @@
 				$test_class = new TestPlugin();
 				$this->assertEquals($test_class->foo(), 'foo');
 			}
-
 	}
-
+	
 	/**
 	* @package FrameworkTest
 	* Test controller 

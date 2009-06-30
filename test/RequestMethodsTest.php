@@ -6,7 +6,7 @@ require_once('../nimble.php');
 	/**
 	* @package FrameworkTest
 	*/
-	class TestRequestMethods extends PHPUnit_Framework_TestCase {
+	class RequestMethodsTest extends PHPUnit_Framework_TestCase {
 		
 		public function setUp() {
 			$_SESSION = array();

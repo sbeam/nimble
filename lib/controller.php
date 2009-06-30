@@ -34,11 +34,16 @@ class Controller {
 		return Nimble::getInstance();
 	}
 	/**
-	*
-	* @return path to the application.php template
+	* @param string path to template you want to use as layout
+	* @return string path to the application.php template
 	*/
-	public function set_layout_template() {
-		$this->layout_template = $this->nimble()->config['default_layout'];
+	public function set_layout_template($template ='') {
+		if(!empty($template) && file_exists($template)) {
+			$this->layout_template = $template;
+		}else{
+			$this->layout_template = $this->nimble()->config['default_layout'];
+		}
+		return $this->layout_template;
 	}
 	
 	
@@ -57,8 +62,32 @@ class Controller {
      * @param string $method The controller action that is being invoked.
      */
     public function run_before_filters($method) {
-        $filters = $this->filters['before'];
-        $this->process_filters($method, $filters);
+				$_methods = get_class_methods($this);
+				foreach($_methods as $_method) {
+					$matches = array();
+					if(preg_match('/^before_filter($|_(for|except)_([0-9a-z_]+)$)/', $_method, $matches)) {
+						if(isset($matches[2])) {
+							$hash = array_flip(explode('_and_', $matches[3]));
+							switch($matches[2]) {
+								case 'for':
+									if(isset($hash[$method])) {
+										call_user_func(array($this, $_method));
+									}
+								break;
+								case 'except':
+									if(!isset($hash[$method])) {
+										call_user_func(array($this, $_method));
+									}
+								break;
+								default:
+									return;
+								break;
+							}
+						}else{
+							call_user_func(array($this, $_method));
+						}
+					}
+				}
     }
 
     /**
@@ -138,7 +167,7 @@ class Controller {
             echo $this->open_template(FileUtils::join(Nimble::getInstance()->config['view_path'], $file)); 
         } else {
            $this->content = $this->open_template(FileUtils::join(Nimble::getInstance()->config['view_path'], $file)); 
-		   echo $this->open_template($this->layout_template); 
+		   		echo $this->open_template($this->layout_template); 
         }
     }
 

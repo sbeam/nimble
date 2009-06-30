@@ -30,7 +30,8 @@
 	function load_files($dir) {
 		if (is_dir($dir) && $dh = opendir($dir)) {
 			while (($file = readdir($dh)) !== false) {
-				if(preg_match('/\.php$/' , $file)) {
+		todo/
+		if(preg_match('/\.php$/' , $file)) {
 					require_once(FileUtils::join($dir, $file));
 				}
 			}

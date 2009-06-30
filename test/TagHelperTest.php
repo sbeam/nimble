@@ -5,7 +5,7 @@
 	/**
 	* @package FrameworkTest
 	*/
-	class TestTagHelpers extends PHPUnit_Framework_TestCase {
+	class TagHelperTest extends PHPUnit_Framework_TestCase {
 	
 	
 		public function setUp() {
