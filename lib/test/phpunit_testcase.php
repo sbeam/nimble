@@ -10,6 +10,7 @@ while (!empty($path_parts)) {
   $path = implode(DIRECTORY_SEPARATOR, array_merge($path_parts, array("config", "boot.php")));
   if (file_exists($path)) {
     define("NIMBLE_IS_TESTING", true);
+    define("NIMBLE_RUN", false);
     require_once($path); break;    
   } else {
     array_pop($path_parts);
@@ -19,8 +20,6 @@ while (!empty($path_parts)) {
 if (!defined("NIMBLE_IS_TESTING")) {
   throw new Exception("Could not find Nimble config/boot.php from " . getcwd() . "!");
   exit(1); 
-} else {
-  define("NIMBLE_RUN", false);
 }
 
 /**
