@@ -74,12 +74,58 @@
 		public static function r404($path) {
 			copy(FileUtils::join(TEMPLATE_PATH, 'r404.tmpl'), $path);
 		}
+		/**
+			* Creates a Nimble Unit Test Case
+			* @param string $name name of test
+			*/
+				
+		public static function unit_test($name) {
+			$class_name = Inflector::classify($name);
+			$path = FileUtils::join(NIMBLE_ROOT, 'test', 'unit');
+			
+			$string = "<?php \n";
+			$string .= "	/**\n	* @package unit_test\n	*	*/\n";
+			$string .= "  class {$class_name} extends NimblePHPUnitTestCase";
+			$string .= " { \n\n";
+			$string .= "  }\n";
+			$string .= "?>";
+			
+			FileUtils::mkdir_p($path);
+			$file = fopen(FileUtils::join($path, $class_name . 'Test.php'), "w");
+			fwrite($file, $string);
+			fclose($path);
+		}
+		
+		/**
+			* Creates a model class with option of a parent to extend
+			* @param string $name the name of the class
+			* @param string $parent the parent class you with to extend with this model
+			*
+			*/
+		public static function model($name, $parent='') {
+			$class_name = Inflector::classify($name);
+			$path = FileUtils::join(NIMBLE_ROOT, 'app', 'model', $class_name . '.php');
+			$string = "<?php \n";
+			$string .= "	/**\n	* @package model\n	*	*/\n";
+			$string .= "  class {$class_name}"; 
+			if(!empty($parent)) {
+				$string .= "extends $parent";
+			}
+			$string .= " { \n\n";
+			$string .= "  }\n";
+			$string .= "?>";
+			
+			$file = fopen($path, "w");
+			fwrite($file, $string);
+			fclose($path);
+			
+		}
 
 		/**
-		* Creates a controller and its associated views ex. add, create, update, show, index, delete
-		* @todo need to add name space support
-		* @param string $name - suffix you want the name the controller
-		*/
+			* Creates a controller and its associated views ex. add, create, update, show, index, delete
+			* @todo need to add name space support
+			* @param string $name - suffix you want the name the controller
+			*/
 		public static function controller($name) {
 			$class_name = Inflector::classify($name);
 			$path_name = FileUtils::join(NIMBLE_ROOT, 'app', 'controller', $class_name . 'Controller.php');

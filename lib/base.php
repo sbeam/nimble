@@ -21,17 +21,17 @@ class Nimble
 
     function __construct()
     {	
-        $this->url = (isset($_GET['url'])) ? trim($_GET['url'], '/') : '';
-		/** set default configs */
-		$this->config['title_seperator'] = ':';
-		$this->config['default_layout'] = '';
-		$this->config['uri'] = str_replace(basename($_SERVER['PHP_SELF']), '', $_SERVER['PHP_SELF']);
-		$this->page_title = '';
-		if(!$this->test_mode) {
-			if(isset($_SESSION) && !isset($_SESSION['flashes'])) {
-				$_SESSION['flashes'] = array();
+      $this->url = (isset($_GET['url'])) ? trim($_GET['url'], '/') : '';
+			/** set default configs */
+			$this->config['title_seperator'] = ':';
+			$this->config['default_layout'] = '';
+			$this->config['uri'] = str_replace(basename($_SERVER['PHP_SELF']), '', $_SERVER['PHP_SELF']);
+			$this->page_title = '';
+			if(!$this->test_mode) {
+				if(isset($_SESSION) && !isset($_SESSION['flashes'])) {
+					$_SESSION['flashes'] = array();
+				}
 			}
-		}
     }
 
 	/**
@@ -86,9 +86,9 @@ class Nimble
             $_SERVER['REQUEST_METHOD'] = strtoupper($_POST['_method']);
         }
 
-            // test to see if its a valid route
+        /** test to see if its a valid route */
         if (preg_match($conf[0], $this->url, $matches) && $_SERVER['REQUEST_METHOD'] == $conf[3]){
-            // Only declared variables in URL regex
+            /** Only declared variables in URL regex */
             $matches = $this->parse_urls_args($matches);
             $this->klass = new $conf[1]();
 			/** set the layout tempalte to the default */

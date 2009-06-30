@@ -62,7 +62,7 @@ class Controller {
      * @param string $method The controller action that is being invoked.
      */
     public function run_before_filters($method) {
-				$this->run_filters('before', $method);
+			$this->run_filters('before', $method);
     }
 
     /**

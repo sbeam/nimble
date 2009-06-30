@@ -23,8 +23,12 @@
 		
 		
 		case 'model':
-			//Generator::model();
-			echo "HI NOT YET!";
+			if(isset($argv[3])) {
+				$parent = $argv[3];
+			}else{
+				$parent = '';
+			}
+			Generator::model($argv[2], $parent);
 		break;
 		
 		
@@ -34,7 +38,7 @@
 					echo "maybe tomarrow";
 				break;
 				case 'unit':
-					echo 'some day';
+					Generator::unit_test($argv[2]);
 				break;
 			
 			}
