@@ -62,50 +62,7 @@ class Controller {
      * @param string $method The controller action that is being invoked.
      */
     public function run_before_filters($method) {
-				$_methods = get_class_methods($this);
-				foreach($_methods as $_method) {
-					$matches = array();
-					if(preg_match('/^before_filter($|_(for|except)_([0-9a-z_]+)$)/', $_method, $matches)) {
-						if(isset($matches[2])) {
-							$hash = array_flip(explode('_and_', $matches[3]));
-							switch($matches[2]) {
-								case 'for':
-									if(isset($hash[$method])) {
-										call_user_func(array($this, $_method));
-									}
-								break;
-								case 'except':
-									if(!isset($hash[$method])) {
-										call_user_func(array($this, $_method));
-									}
-								break;
-								default:
-									return;
-								break;
-							}
-						}else{
-							call_user_func(array($this, $_method));
-						}
-					}
-				}
-    }
-
-    /**
-     * Add a before filter.
-     * @param string $method The controller action to which this filter is attached.
-     * @param array $options The options for this filter.
-     */
-    public function add_before_filter($method, $options = array()) {
-        $this->filters['before'][$method] = $options;
-    }
-
-    /**
-     * Add an after filter.
-     * @param string $method The controller action to which this filter is attached.
-     * @param array $options The options for this filter.
-     */
-    public function add_after_filter($method, $options = array()) {
-        $this->filters['after'][$method] = $options;
+				$this->run_filters('before', $method);
     }
 
     /**
@@ -113,37 +70,43 @@ class Controller {
      * @param string $method The controller action that is being invoked.
      */
     public function run_after_filters($method) {
-        $filters = $this->filters['after'];
-        $this->process_filters($method, $filters);
+       $this->run_filters('after', $method);
     }
 
-    /**
-     * Process all filters for this controller.
-     * @param string $method The controller method that's being called.
-     * @param array $filters The filters to execute.
-     */
-    private function process_filters($method, $filters) {
-        foreach($filters as $fmethod=>$options) {
-            // process the only methods
-            if(array_key_exists('only', $options)) {
-                if(in_array($method, $options['only'])) {
-                    call_user_func(array($this, $fmethod));
-                }
-            }
-
-            // process the except methods
-            if(array_key_exists('except', $options)) {
-                if(!in_array($method, $options['except'])) {
-                    call_user_func(array($this, $fmethod));
-                }
-            }
-
-            // process the method if its global
-            if(!array_key_exists('except', $options) && !array_key_exists('only', $options)) {
-                call_user_func(array($this, $fmethod));
-            }
-        }
-    }
+		/**
+			* Runs filters given the type and method to match
+			* @param string $type (before | after)
+			* @param string $method The method the controller if trying to invoke
+			*/
+ 		private function run_filters($type, $method) {
+			$_methods = get_class_methods($this);
+			foreach($_methods as $_method) {
+				$matches = array();
+				$regex = "/^{$type}_filter($|_(for|except)_([0-9a-z_]+)$)/";
+				if(preg_match($regex, $_method, $matches)) {
+					if(isset($matches[2])) {
+						$hash = array_flip(explode('_and_', $matches[3]));
+						switch($matches[2]) {
+							case 'for':
+								if(isset($hash[$method])) {
+									call_user_func(array($this, $_method));
+								}
+							break;
+							case 'except':
+								if(!isset($hash[$method])) {
+									call_user_func(array($this, $_method));
+								}
+							break;
+							default:
+								return;
+							break;
+						}
+					}else{
+						call_user_func(array($this, $_method));
+					}
+				}
+			}
+		}
 
     /**
      * Return the current format.
@@ -156,20 +119,19 @@ class Controller {
      * If $this->layout == false, will act the same as Controller::render_partial.
      * @param string $file The view file to render, relative to the base of the application.
      */
-    public function render($file)
-    {
-		if($this->has_rendered){
-			throw new NimbleException('Double Render Error: Your may only render once per action');
-		}
+    public function render($file) {
+			if($this->has_rendered){
+				throw new NimbleException('Double Render Error: Your may only render once per action');
+			}
 	
-		$this->has_rendered = true;
-        if ($this->layout==false){
-            echo $this->open_template(FileUtils::join(Nimble::getInstance()->config['view_path'], $file)); 
-        } else {
-           $this->content = $this->open_template(FileUtils::join(Nimble::getInstance()->config['view_path'], $file)); 
-		   		echo $this->open_template($this->layout_template); 
-        }
-    }
+			$this->has_rendered = true;
+     	if ($this->layout==false){
+      	echo $this->open_template(FileUtils::join(Nimble::getInstance()->config['view_path'], $file)); 
+     	} else {
+      	$this->content = $this->open_template(FileUtils::join(Nimble::getInstance()->config['view_path'], $file)); 
+  			echo $this->open_template($this->layout_template); 
+     }
+   }
 
     /**
      * Include a PHP file, inject the controller's properties into that file, and return the output.
