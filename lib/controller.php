@@ -20,7 +20,7 @@ class Controller {
     var $headers = array('Content-Type: text/html');
     var $filters = array('before' => array(), 'after' => array());
 		var $has_rendered = false;
-
+		var $template = '';
     /**
      * The expected output format for this controller.
      * @var string
@@ -125,10 +125,11 @@ class Controller {
 			}
 	
 			$this->has_rendered = true;
+			$this->template = FileUtils::join(Nimble::getInstance()->config['view_path'], $file);
      	if ($this->layout==false){
-      	echo $this->open_template(FileUtils::join(Nimble::getInstance()->config['view_path'], $file)); 
+      	echo $this->open_template($this->template); 
      	} else {
-      	$this->content = $this->open_template(FileUtils::join(Nimble::getInstance()->config['view_path'], $file)); 
+      	$this->content = $this->open_template($this->template); 
   			echo $this->open_template($this->layout_template); 
      }
    }

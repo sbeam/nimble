@@ -8,7 +8,7 @@
   class UrlBuilder {
 
       public static function root_path() {
-        return Nimble::uri() . '/';
+        return Nimble::uri();
       }
   
       /**
