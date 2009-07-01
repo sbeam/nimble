@@ -21,6 +21,8 @@ if (!defined("NIMBLE_IS_TESTING")) {
   throw new Exception("Could not find Nimble config/boot.php from " . getcwd() . "!");
   exit(1); 
 }
+/** mock session as an array **/
+$_SESSION = array();
 
 /**
  * Run PHPUnit tests on Nimble-specific entities.
@@ -119,6 +121,56 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
 
 
 	abstract class NimblePHPFunctonalTestCase extends PHPUnit_Framework_TestCase {
+	
+		public function get($controller, $action, $action_params = array(), $params = array(), $session = array()) {
+			global $_SESSION, $_POST, $_GET;
+			$_POST = $_GET = $params;
+			$_SESSION = $session;
+			$_POST['METHOD'] = 'GET';
+			$string = $this->load_action($controller, $action, $action_params);
+			return $string;
+		}
+		
+		public function post($controller, $action, $action_params = array(), $params = array(), $session = array()) {
+			global $_SESSION, $_POST, $_GET;
+			$_POST = $_GET = $params;
+			$_SESSION = $session;
+			$_POST['METHOD'] = 'POST';
+			$string = $this->load_action($controller, $action, $action_params);
+			return $string;
+		}
+		
+		public function put($controller, $action, $action_params = array(), $params = array(), $session = array()) {
+			global $_SESSION, $_POST, $_GET;
+			$_POST = $_GET = $params;
+			$_SESSION = $session;
+			$_POST['METHOD'] = 'PUT';
+			$string = $this->load_action($controller, $action, $action_params);
+			return $string;
+		}
+		
+		public function delete($controller, $action, $action_params = array(), $params = array(), $session = array()) {
+			global $_SESSION, $_POST, $_GET;
+			$_POST = $_GET = $params;
+			$_SESSION = $session;
+			$_POST['METHOD'] = 'DELETE';
+			$string = $this->load_action($controller, $action, $action_params);
+			return $string;
+		}
+		
+		
+		priate function load_action($controller, $action, $action_params) {
+			ob_start();
+			$c = new $controller();
+			call_user_func_array(array($c, $action), $action_params);
+			if ($controller->has_rendered === false) {
+	      if (empty($controller->layout_template) && $controller->layout) {
+	        $controller->set_layout_template();
+	      }
+	      $controller->render($template);
+	    }
+			return ob_get_clean();
+		}
 	
 	}
 
