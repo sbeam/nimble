@@ -117,4 +117,9 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
   }
 }
 
+
+	abstract class NimblePHPFunctonalTestCase extends PHPUnit_Framework_TestCase {
+	
+	}
+
 ?>

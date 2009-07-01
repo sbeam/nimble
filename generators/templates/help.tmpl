@@ -1,0 +1,30 @@
+--- Nimble Generator Help --
+
+-- Sample Commands --
+
+-- Controller "script/generate controller name"
+
+- script/generate controller my -> app/controller/MyController.php
+				-> app/view/my/index.php
+				-> app/view/my/edit.php
+				-> app/view/my/add.php
+				-> app/view/my/show.php
+				
+-- Model "script/generate model name parent"
+
+Generate a Model that extends \ActivePhp::Base
+- script/generate model Task "\ActivePhp::Base" -> app/model/task.php
+
+**note: Use quotes around the parent if it has a namespace operator
+
+Generate a Empty Model Class
+- script/generate model Task -> app/model/task.php
+
+-- Test "script/generate test (functional | unit) name"
+
+Generates a Test that extends nimbles PHPUnit functional test case
+- script/generate test functional my -> app/test/functional/MyControllerTest.php 
+
+Generates a Tests that extends nimbles PHPUnit unit test case
+- script/generate test unit my -> app/test/unit/MyUnitTest.php
+

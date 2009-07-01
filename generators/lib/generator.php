@@ -85,7 +85,8 @@
 			
 			$string = "<?php \n";
 			$string .= "	/**\n	* @package unit_test\n	*	*/\n";
-			$string .= "  class {$class_name} extends NimblePHPUnitTestCase";
+			$string .= "	require_once('nimble/lib/test/phpunit_testcase.php');\n";
+			$string .= "  class {$class_name}UnitTest extends NimblePHPUnitTestCase";
 			$string .= " { \n\n";
 			$string .= "  }\n";
 			$string .= "?>";
@@ -94,6 +95,30 @@
 			$file = fopen(FileUtils::join($path, $class_name . 'Test.php'), "w");
 			fwrite($file, $string);
 			fclose($path);
+		}
+		
+		/**
+			* Creates a Nimble Unit Test Case
+			* @param string $name name of test
+			*/
+				
+		public static function functional_test($name) {
+			$class_name = Inflector::classify($name);
+			$path = FileUtils::join(NIMBLE_ROOT, 'test', 'functional');
+			
+			$string = "<?php \n";
+			$string .= "	/**\n	* @package functional_test\n	*	*/\n";
+			$string .= "	require_once('nimble/lib/test/phpunit_testcase.php');\n";
+			$string .= "  class {$class_name}ControllerTest extends NimblePHPFunctonalTestCase";
+			$string .= " { \n\n";
+			$string .= "  }\n";
+			$string .= "?>";
+			if(!is_dir($path)) {
+				FileUtils::mkdir_p($path);
+			}
+			$file = fopen(FileUtils::join($path, $class_name . 'ControllerTest.php'), "w");
+			fwrite($file, $string);
+			fclose($file);
 		}
 		
 		/**
@@ -106,10 +131,10 @@
 			$class_name = Inflector::classify($name);
 			$path = FileUtils::join(NIMBLE_ROOT, 'app', 'model', $class_name . '.php');
 			$string = "<?php \n";
-			$string .= "	/**\n	* @package model\n	*	*/\n";
+			$string .= "	/**\n	* @package model\n	* \n */\n";
 			$string .= "  class {$class_name}"; 
 			if(!empty($parent)) {
-				$string .= "extends $parent";
+				$string .= " extends $parent";
 			}
 			$string .= " { \n\n";
 			$string .= "  }\n";
@@ -117,7 +142,7 @@
 			
 			$file = fopen($path, "w");
 			fwrite($file, $string);
-			fclose($path);
+			fclose($file);
 			
 		}
 
@@ -203,6 +228,11 @@
 		*/
 		private static function view($path) {
 			touch($path);
+		}
+		
+		
+		public static function help() {
+			return file_get_contents(FileUtils::join(TEMPLATE_PATH, 'help.tmpl'), true);
 		}
 
 	}
