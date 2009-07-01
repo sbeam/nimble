@@ -167,9 +167,13 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
 			* @param array $action_params array of arguments to pass to the action method
 			*/
 		private function load_action($c, $action, $action_params) {
+			global $_SESSION, $_POST, $_GET;
+			$nimble = Nimble::getInstance();
 			ob_start();
 			$controller = new $c();
-			call_user_func_array(array($c, $action), $action_params);
+			call_user_func_array(array($controller, $action), $action_params);
+			$path = strtolower(Inflector::underscore(str_replace('Controller', '', $c)));
+			$template = FileUtils::join($path, $action . '.php');
 			if ($controller->has_rendered === false) {
 	      if (empty($controller->layout_template) && $controller->layout) {
 	        $controller->set_layout_template();

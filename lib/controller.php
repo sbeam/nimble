@@ -177,16 +177,15 @@ class Controller {
     /**
      * Redirect to another URL.
      * @param string $url The URL to redirect to.
-     * @param boolean $now If true, redirect immediately
+     * @param boolean $now If true
      */
-    public function redirect($url,$now=false)
+    public function redirect($url, $now=false)
     {
-        if(!$now) {
-            $this->header("Location: {$url}");
-        }else{
-            header("Location: {$url}");
-            exit();
-        }
+			if($now && self::nimble()->test_mode === false){
+				header("Location: {$url}");
+			}else{
+      	$this->header("Location: {$url}");
+			}
     }
 
     /**
@@ -195,7 +194,7 @@ class Controller {
      */
     public function redirect_to($url)
     {
-        $this->redirect($url, true);
+       $this->redirect($url, true);
     }
 }
 

@@ -21,6 +21,9 @@ class Nimble
 
     function __construct()
     {	
+			if(defined("NIMBLE_IS_TESTING") && NIMBLE_IS_TESTING) {
+				$this->test_mode = true;
+			}
       $this->url = (isset($_GET['url'])) ? trim($_GET['url'], '/') : '';
 			/** set default configs */
 			$this->config['title_seperator'] = ':';
@@ -107,7 +110,7 @@ class Nimble
           /**
           * Add inflector for this type of code from now on
           */
-          $dir = preg_replace('/Controller/', '', $conf[1]);
+          $dir = str_replace('Controller', '', $conf[1]);
           $dir = strtolower(Inflector::underscore($dir));
           $view = FileUtils::join($dir, $conf[2] . '.php');
           $this->klass->render($view);
@@ -117,12 +120,12 @@ class Nimble
         call_user_func(array($this->klass, "run_after_filters"), $conf[2]);
 
         $out = ob_get_contents();
-        ob_end_clean();  
-        if (count($this->klass->headers)>0){
-          foreach($this->klass->headers as $header){
-             $this->test_mode ? '' : header($header);
-          }
-        } 
+        ob_end_clean();
+        	if (count($this->klass->headers)>0){
+	          foreach($this->klass->headers as $header){
+	             $this->test_mode ? '' : header($header);
+	          }
+	        } 
         print $out;
 		if(!$test){
 			exit();
