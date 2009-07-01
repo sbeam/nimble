@@ -5,6 +5,9 @@ require_once('PHPUnit/Framework.php');
 // because we can't guarantee where we'll be in the filesystem, find the
 // nearest config/boot.php file from the current working directory.
 
+//set the enviroment to test
+$_SERVER['WEB_ENVIRONMENT'] = 'test';
+
 $path_parts = explode(DIRECTORY_SEPARATOR, getcwd());
 while (!empty($path_parts)) {
   $path = implode(DIRECTORY_SEPARATOR, array_merge($path_parts, array("config", "boot.php")));
@@ -158,10 +161,14 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
 			return $string;
 		}
 		
-		
-		priate function load_action($controller, $action, $action_params) {
+		/**
+			* @param string $c Controller name you wish to call
+			* @param string $action action you wish to call
+			* @param array $action_params array of arguments to pass to the action method
+			*/
+		private function load_action($c, $action, $action_params) {
 			ob_start();
-			$c = new $controller();
+			$controller = new $c();
 			call_user_func_array(array($c, $action), $action_params);
 			if ($controller->has_rendered === false) {
 	      if (empty($controller->layout_template) && $controller->layout) {

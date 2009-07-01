@@ -15,10 +15,15 @@
 	//$_SERVER['WEB_ENVIRONMENT'] = 'staging';
 	//$_SERVER['WEB_ENVIRONMENT'] = 'production';
 	
+	
+	/** SHOULD NEVER NEED TO CHANGE BELOW THIS LINE 
+		* ALL CHANGES SHOULD BE MADE IN the config.php files
+	**/
+	
 	if(!isset($_SERVER['WEB_ENVIRONMENT'])) {
 		$_SERVER['WEB_ENVIRONMENT'] = 'development';
 	}
-	
+	//set ENV as constant
 	define('NIMBLE_ENV', $_SERVER['WEB_ENVIRONMENT']);
 	
 	
@@ -27,7 +32,7 @@
 	* @param $dir string 
 	* loads the controller and model classes
 	*/
-	function load_files($dir) {
+	function __load_files($dir) {
 		if (is_dir($dir) && $dh = opendir($dir)) {
 			while (($file = readdir($dh)) !== false) {
 		if(preg_match('/\.php$/' , $file)) {
@@ -50,6 +55,10 @@
 	Nimble::set_config('javascript_folder', FileUtils::join(dirname(__FILE__), '..', 'public', 'javascript'));
 	Nimble::set_config('javascript_folder_url', '/public/javascript');
   Nimble::set_config('uri', '/');
+
+	//define the root 
+	define('NIMBLE_ROOT', FileUtils::join(dirname(__FILE__), '..'));
+	
 	// load any custom global config options 		
 	require_once(FileUtils::join(dirname(__FILE__), 'config.php'));
 	require_once(FileUtils::join(dirname(__FILE__), 'routes.php'));
@@ -60,7 +69,7 @@
 
 	/** load controlers and models */
 	foreach(array('model', 'controller') as $dir) {
-		load_files(FileUtils::join(dirname(__FILE__), '..', 'app', $dir));
+		__load_files(FileUtils::join(dirname(__FILE__), '..', 'app', $dir));
 	}
 	
 	/** boot the framework */

@@ -234,6 +234,14 @@
 		public static function help() {
 			return file_get_contents(FileUtils::join(TEMPLATE_PATH, 'help.tmpl'), true);
 		}
+		
+		
+		public static function update($dir) {
+			//update scripts
+			self::scripts(FileUtils::join($dir));
+			//update boot.php
+			self::boot(FileUtils::join($dir, '..', 'config', 'boot.php'));
+		}
 
 	}
 
