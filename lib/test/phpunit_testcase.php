@@ -124,41 +124,88 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
 
 
 	abstract class NimblePHPFunctonalTestCase extends PHPUnit_Framework_TestCase {
-	
+		/**
+			* Loads a controller and mocks a GET HTTP request
+			* @param string controller name to call
+			* @param string action name to call
+			* @param array $action_params array of params to be passed to the controller action that would be passed in by routes 
+			* @param array $params array of key => value pairs to be the $_GET or $_POST array
+			* @param array $session array with key => value pairs to be the session
+			* @return TestRequest
+			* @see TestRequest
+			* @uses $this->get('TaskController', 'index', array(), array(), array('user_id' => 1));
+			*/
 		public function get($controller, $action, $action_params = array(), $params = array(), $session = array()) {
 			global $_SESSION, $_POST, $_GET;
-			$_POST = $_GET = $params;
+			$_GET = $params;
 			$_SESSION = $session;
 			$_POST['METHOD'] = 'GET';
-			$string = $this->load_action($controller, $action, $action_params);
-			return $string;
+			$obj = new TestRequest();
+			$return = $this->load_action($controller, $action, $action_params, $obj);
+			return $return;
 		}
-		
+
+		/**
+			* Loads a controller and mocks a POST HTTP request
+			* @param string controller name to call
+			* @param string action name to call
+			* @param array $action_params array of params to be passed to the controller action that would be passed in by routes 
+			* @param array $params array of key => value pairs to be the $_GET or $_POST array
+			* @param array $session array with key => value pairs to be the session
+			* @return TestRequest
+			* @see TestRequest
+			* @uses $this->post('TaskController', 'create', array(), array('name' => 'bob'), array('user_id' => 1));
+			*/		
 		public function post($controller, $action, $action_params = array(), $params = array(), $session = array()) {
 			global $_SESSION, $_POST, $_GET;
 			$_POST = $_GET = $params;
 			$_SESSION = $session;
 			$_POST['METHOD'] = 'POST';
-			$string = $this->load_action($controller, $action, $action_params);
-			return $string;
+			$obj = new TestRequest();
+			$return = $this->load_action($controller, $action, $action_params, $obj);
+			return $return;
 		}
-		
+
+		/**
+			* Loads a controller and mocks a PUT HTTP request
+			* @param string controller name to call
+			* @param string action name to call
+			* @param array $action_params array of params to be passed to the controller action that would be passed in by routes 
+			* @param array $params array of key => value pairs to be the $_GET or $_POST array
+			* @param array $session array with key => value pairs to be the session
+			* @return TestRequest
+			* @see TestRequest
+			* @uses $this->put('TaskController', 'update', array(1), array('name' => 'joe'), array('user_id' => 1));
+			*/		
 		public function put($controller, $action, $action_params = array(), $params = array(), $session = array()) {
 			global $_SESSION, $_POST, $_GET;
 			$_POST = $_GET = $params;
 			$_SESSION = $session;
 			$_POST['METHOD'] = 'PUT';
-			$string = $this->load_action($controller, $action, $action_params);
-			return $string;
+			$obj = new TestRequest();
+			$return = $this->load_action($controller, $action, $action_params, $obj);
+			return $return;
 		}
 		
+		/**
+			* Loads a controller and mocks a DELETE HTTP request
+			* @param string controller name to call
+			* @param string action name to call
+			* @param array $action_params array of params to be passed to the controller action that would be passed in by routes 
+			* @param array $params array of key => value pairs to be the $_GET or $_POST array
+			* @param array $session array with key => value pairs to be the session
+			* @return TestRequest
+			* @see TestRequest
+			* @uses $this->delete('TaskController', 'delete', array(1), array(), array('user_id' => 1));
+			*/		
 		public function delete($controller, $action, $action_params = array(), $params = array(), $session = array()) {
 			global $_SESSION, $_POST, $_GET;
 			$_POST = $_GET = $params;
 			$_SESSION = $session;
 			$_POST['METHOD'] = 'DELETE';
-			$string = $this->load_action($controller, $action, $action_params);
-			return $string;
+			$obj = new TestRequest();
+			$return = $this->load_action($controller, $action, $action_params, $obj);
+			return $return;
 		}
 		
 		/**
@@ -166,7 +213,7 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
 			* @param string $action action you wish to call
 			* @param array $action_params array of arguments to pass to the action method
 			*/
-		private function load_action($c, $action, $action_params) {
+		private function load_action($c, $action, $action_params, $obj) {
 			global $_SESSION, $_POST, $_GET;
 			$nimble = Nimble::getInstance();
 			ob_start();
@@ -180,9 +227,17 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
 	      }
 	      $controller->render($template);
 	    }
-			return ob_get_clean();
+			$obj->response = ob_get_clean();
+			$obj->controller = $controller;
+			return $obj;
 		}
 	
 	}
+	
+	class TestRequest {
+		var $response;
+		var $controller;
+	}
+	
 
 ?>

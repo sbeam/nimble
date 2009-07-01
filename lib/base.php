@@ -178,6 +178,7 @@ class Nimble
       if(count($args) == 0) {return false;}
       $klass = self::getInstance();
       $klass->plugins = $args;
+			$klass->load_plugins();
     }
 
     /**
