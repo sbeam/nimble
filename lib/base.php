@@ -123,7 +123,9 @@ class Nimble
         ob_end_clean();
         	if (count($this->klass->headers)>0){
 	          foreach($this->klass->headers as $header){
-	             $this->test_mode ? '' : header($header);
+	             if(!$this->test_mode) {
+								header($header[0], true, empty($header[1]) ? null : $header[1]);
+							}
 	          }
 	        } 
         print $out;

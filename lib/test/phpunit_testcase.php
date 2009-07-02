@@ -214,8 +214,13 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
 			*/
 		
 		public function assertRedirect($url) {
-			$hash = array_flip($this->controller->headers);
-			$this->assertTrue(isset($hash["Location: {$url}"]));
+			$test = "Location: {$url}";
+			$this->header_test($test);
+		}
+		
+		
+		public function headers() {
+			return $this->controller->headers;
 		}
 		
 		
@@ -225,9 +230,40 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
 			*/
 		
 		public function assertContentType($type) {
-			$hash = array_flip($this->controller->headers);
-			$this->assertTrue(isset($hash["Content-Type: {$type}"]));
+			$test = "Content-Type: {$type}";
+			$this->header_test($test);
 		}
+		
+		
+		private function header_test($test) {
+			$headers = $this->headers();
+			foreach($headers as $header) {
+				if(strtolower($header[0]) == strtolower($test)) {
+					$this->assertTrue(true);
+					return;
+				}
+			}
+			$this->assertTrue(false, "No header found matching " . $test);
+		}
+		
+		
+		private function check_response_code($start, $end=null) {
+			$headers = $this->headers();
+			if($start == $end) {
+				$message = "No response code found for " . $start;
+			}else{
+				$message = "No response code found between " . $start . " and " . $end;
+			}
+			foreach($headers as $header) {
+				$code = $header[1];
+				if($code <= $end && $code >= $start) {
+					$this->assertTrue(true);
+					return;
+				}
+			}
+			$this->assertTrue(false, $message);
+		}
+		
 		
 		/**
 			* Looks for a string match in the response text
@@ -282,6 +318,16 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
 			return $this->controller->$var;
 		}
 		
+		/**
+			* Helper function for adding .php to a string
+			* @param string $name string to add .php
+			*/		
+		private function add_php_extension($name) {
+			if(strpos($name, '.php') === false) {
+				$name = $name . ".php";
+			}
+			return $name;
+		}
 		
 		/**
 			* Asserts that the given template has been rendered
@@ -289,20 +335,40 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
 			*/
 		public function assertTemplate($name) {
 			$name = basename($name);
-			if(strpos($name, '.php') === false) {
-				$name = $name . ".php";
-			}
+			$name = $this->add_php_extension($name);
 			$template_rendered = basename($this->controller->template);
 			$this->assertEquals($name, $template_rendered);
 		}
+		/**
+			* Asserts that the given partial template has been rendered
+			* @param string $name the name of the partial template with or without .php extension
+			*/
+		public function assertPartial($name) {
+			$name = basename($name);
+			$name = $this->add_php_extension($name);
+			$partials = $this->controller->rendered_partials;
+			$base = array();
+			foreach($partials as $partial) {
+				$base[] = basename($partial);
+			}
+			$base = array_flip($partial);
+			$this->assertTrue(isset($base[$name]), "No partial matching $name was found");
+		}
 		
 		public function assertResponse($code) {
-			$shortcuts = array('success' => 200, 'redirect' => range(300,399), 'missing' => 404, 'error' => range(500, 599));
+			$shortcuts = array('success' => 200, 'redirect' => array(300,399), 'missing' => 404, 'error' => array(500, 599));
 			$message = "Expected response to be a ?, but was ?";
 			if(is_string($code) && isset($shortcuts[$code])) {
 				$code = $shortcuts[$code];
 			}
-			
+			if(is_array($code)) {
+				$start = reset($code);
+				$end = end($code);
+			}else{
+				$start = $code;
+				$end = $code;
+			}
+			$this->check_response_code($start, $end);
 		}
 		
 		
