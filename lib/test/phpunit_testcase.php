@@ -243,33 +243,33 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
 		
 		/**
 			* Asserts that a node exists matching the xpath expression
-			* @param string $xpath expression
+			* @param string $selector expression
 			*/
-		public function assertXpath($xpath) {
+		public function assertSelector($selector) {
 			$html = str_get_html($this->response);
-			$values = $html->find($xpath);
+			$values = $html->find($selector);
 			$assert = (count($values) > 0);
-			$this->assertTrue($assert, "No Xpath node found for " . $xpath);
+			$this->assertTrue($assert, "No css selector node found for " . $selector);
 		}
 		
 		/**
 			* Asserts that a {n} node(s) exists matching the xpath expression
 			* @param integer $number_of_nodes the number of nodes you expect to be returned
-			* @param string $xpath expression
+			* @param string $selector expression
 			*/
-		public function assertXpathNodes($xpath, $number_of_nodes) {
+		public function assertSelectorNodes($selector, $number_of_nodes) {
 			$html = str_get_html($this->response);
-			$values = $html->find($xpath);
+			$values = $html->find($selector);
 			$this->assertEquals($number_of_nodes, count($values));
 		}
 		/**
 			* Asserts that a node exists matching the xpath expression
 			* @param string $value the value you want to match within the xpath node
-			* @param string $xpath expression
+			* @param string $selector expression
 			*/
-		public function assertXpathValue($xpath, $value) {
+		public function assertSelectorValue($selector, $value) {
 			$html = str_get_html($this->response);
-			$values = $html->find($xpath);
+			$values = $html->find($selector);
 			$text = $values[0]->innertext;
 			$this->assertEquals($text, $value);
 		}
@@ -295,6 +295,16 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
 			$template_rendered = basename($this->controller->template);
 			$this->assertEquals($name, $template_rendered);
 		}
+		
+		public function assertResponse($code) {
+			$shortcuts = array('success' => 200, 'redirect' => range(300,399), 'missing' => 404, 'error' => range(500, 599));
+			$message = "Expected response to be a ?, but was ?";
+			if(is_string($code) && isset($shortcuts[$code])) {
+				$code = $shortcuts[$code];
+			}
+			
+		}
+		
 		
 		/**
 			* @param string $action action you wish to call
