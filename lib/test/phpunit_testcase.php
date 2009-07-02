@@ -297,11 +297,10 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
 		}
 		
 		/**
-			* @param string $c Controller name you wish to call
 			* @param string $action action you wish to call
 			* @param array $action_params array of arguments to pass to the action method
 			*/
-		private function load_action($action, $action_params, $obj) {
+		private function load_action($action, $action_params) {
 			global $_SESSION, $_POST, $_GET;
 			$nimble = Nimble::getInstance();
 			ob_start();

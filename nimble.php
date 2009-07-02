@@ -29,10 +29,10 @@ require_once(dirname(__FILE__) . '/lib/base.php');
 	/*
  	* Run application
  	*/
-function Run()
+function Run($test_mode = false)
 {
     try {
-        Nimble::getInstance()->dispatch();
+        Nimble::getInstance()->dispatch($test_mode);
     } catch (Exception $e) {
 		if(NIMBLE_ENV == 'development') {
         ?>
