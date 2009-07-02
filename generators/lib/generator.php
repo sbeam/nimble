@@ -109,7 +109,7 @@
 			$string = "<?php \n";
 			$string .= "	/**\n	* @package functional_test\n	*	*/\n";
 			$string .= "	require_once('nimble/lib/test/phpunit_testcase.php');\n";
-			$string .= "  class {$class_name}ControllerTest extends NimblePHPFunctonalTestCase";
+			$string .= "  class {$class_name}ControllerTest extends NimblePHPFunctionalTestCase";
 			$string .= " { \n\n";
 			$string .= "  }\n";
 			$string .= "?>";
