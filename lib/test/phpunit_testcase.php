@@ -47,7 +47,7 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
    */
   public function assertXpath($source, $path, $match = self::XpathExists, $count = 0) {
     if (($xml = $this->stringToXML($source)) !== false) {
-      if (($result = $xml->css selector($path)) !== false) {
+      if (($result = $xml->xpath($path)) !== false) {
         if ($match === true) { $match = self::XpathExists; }
         if ($match === false) { $match = self::XpathNotExists; }
         switch ($match) {
@@ -154,7 +154,7 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
 			global $_SESSION, $_POST, $_GET;
 			$_GET = $params;
 			$_SESSION = $session;
-			$_POST['_METHOD'] = 'GET';
+			$_POST['_method'] = 'GET';
 			$this->load_action($action, $action_params);
 		}
 
@@ -170,7 +170,7 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
 			global $_SESSION, $_POST, $_GET;
 			$_POST = $_GET = $params;
 			$_SESSION = $session;
-			$_POST['_METHOD'] = 'POST';
+			$_POST['_method'] = 'POST';
 			$this->load_action($action, $action_params);
 		}
 
@@ -186,7 +186,7 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
 			global $_SESSION, $_POST, $_GET;
 			$_POST = $_GET = $params;
 			$_SESSION = $session;
-			$_POST['_METHOD'] = 'PUT';
+			$_POST['_method'] = 'PUT';
 			$this->load_action($action, $action_params);
 		}
 		
@@ -202,8 +202,8 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
 			global $_SESSION, $_POST, $_GET;
 			$_POST = $_GET = $params;
 			$_SESSION = $session;
-			$_POST['_METHOD'] = 'DELETE';
-			$this->load_action($controller, $action, $action_params);
+			$_POST['_method'] = 'DELETE';
+			$this->load_action($action, $action_params);
 		}
 		
 		
