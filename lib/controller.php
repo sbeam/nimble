@@ -186,6 +186,7 @@ class Controller {
 				header("Location: {$url}");
 			}else{
       	$this->header("Location: {$url}");
+				$this->has_rendered = true;
 			}
     }
 
