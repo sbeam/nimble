@@ -126,12 +126,12 @@ class Controller {
 	
 			$this->has_rendered = true;
 			$this->template = FileUtils::join(Nimble::getInstance()->config['view_path'], $file);
-     	if ($this->layout==false){
+      if ($this->layout==false){
       	echo $this->open_template($this->template); 
-     	} else {
+      } else {
       	$this->content = $this->open_template($this->template); 
   			echo $this->open_template($this->layout_template); 
-     }
+      }
    }
 
     /**
