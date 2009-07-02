@@ -47,25 +47,25 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
    */
   public function assertXpath($source, $path, $match = self::XpathExists, $count = 0) {
     if (($xml = $this->stringToXML($source)) !== false) {
-      if (($result = $xml->xpath($path)) !== false) {
+      if (($result = $xml->css selector($path)) !== false) {
         if ($match === true) { $match = self::XpathExists; }
         if ($match === false) { $match = self::XpathNotExists; }
         switch ($match) {
           case self::XpathExists:
-            $this->assertTrue(count($result) > 0, "no xpath matches found for <${path}>");
+            $this->assertTrue(count($result) > 0, "no css selector matches found for <${path}>");
             break;
           case self::XpathNotExists:
-            $this->assertTrue(count($result) == 0, "xpath matches found for <${path}>");
+            $this->assertTrue(count($result) == 0, "css selector matches found for <${path}>");
             break;
           case self::XpathCount:
-            $this->assertEquals($count, count($result), "xpath count of <" . count($result) . "> does not match expected <${count}>");
+            $this->assertEquals($count, count($result), "css selector count of <" . count($result) . "> does not match expected <${count}>");
             break;
           default:
-            $this->assertEquals($match, (string)reset($result), "xpath value <" . (string)reset($result) . "> does not match expected <${match}>");
+            $this->assertEquals($match, (string)reset($result), "css selector value <" . (string)reset($result) . "> does not match expected <${match}>");
             break;
         }
       } else {
-        $this->assertTrue(false, "xpath <${path}> is not valid");
+        $this->assertTrue(false, "css selector <${path}> is not valid");
       }
     }
   }
@@ -242,7 +242,7 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
 		}
 		
 		/**
-			* Asserts that a node exists matching the xpath expression
+			* Asserts that a node exists matching the css selector expression
 			* @param string $selector expression
 			*/
 		public function assertSelector($selector) {
@@ -253,7 +253,7 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
 		}
 		
 		/**
-			* Asserts that a {n} node(s) exists matching the xpath expression
+			* Asserts that a {n} node(s) exists matching the css selector expression
 			* @param integer $number_of_nodes the number of nodes you expect to be returned
 			* @param string $selector expression
 			*/
@@ -263,8 +263,8 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
 			$this->assertEquals($number_of_nodes, count($values));
 		}
 		/**
-			* Asserts that a node exists matching the xpath expression
-			* @param string $value the value you want to match within the xpath node
+			* Asserts that a node exists matching the css selector expression
+			* @param string $value the value you want to match within the css selector node
 			* @param string $selector expression
 			*/
 		public function assertSelectorValue($selector, $value) {
