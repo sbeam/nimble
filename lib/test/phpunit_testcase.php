@@ -154,8 +154,8 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
 			global $_SESSION, $_POST, $_GET;
 			$_GET = $params;
 			$_SESSION = $session;
-			$_POST['METHOD'] = 'GET';
-			$this->load_action($action, $action_params, $obj);
+			$_POST['_METHOD'] = 'GET';
+			$this->load_action($action, $action_params);
 		}
 
 		/**
@@ -170,8 +170,8 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
 			global $_SESSION, $_POST, $_GET;
 			$_POST = $_GET = $params;
 			$_SESSION = $session;
-			$_POST['METHOD'] = 'POST';
-			$this->load_action($action, $action_params, $obj);
+			$_POST['_METHOD'] = 'POST';
+			$this->load_action($action, $action_params);
 		}
 
 		/**
@@ -186,8 +186,8 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
 			global $_SESSION, $_POST, $_GET;
 			$_POST = $_GET = $params;
 			$_SESSION = $session;
-			$_POST['METHOD'] = 'PUT';
-			$this->load_action($action, $action_params, $obj);
+			$_POST['_METHOD'] = 'PUT';
+			$this->load_action($action, $action_params);
 		}
 		
 		/**
@@ -202,8 +202,8 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
 			global $_SESSION, $_POST, $_GET;
 			$_POST = $_GET = $params;
 			$_SESSION = $session;
-			$_POST['METHOD'] = 'DELETE';
-			$this->load_action($controller, $action, $action_params, $obj);
+			$_POST['_METHOD'] = 'DELETE';
+			$this->load_action($controller, $action, $action_params);
 		}
 		
 		
