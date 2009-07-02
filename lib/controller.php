@@ -17,10 +17,11 @@ class Controller {
     var $format;
     var $layout = true;
     var $layout_template;
-    var $headers = array('Content-Type: text/html');
+    var $headers = array(array('Content-Type: text/html', 200));
     var $filters = array('before' => array(), 'after' => array());
 		var $has_rendered = false;
 		var $template = '';
+		var $rendered_partials = array();
     /**
      * The expected output format for this controller.
      * @var string
@@ -141,6 +142,7 @@ class Controller {
      */
     public function render_partial($file)
     {
+				$this->rendered_partials[] = $file;
         return $this->open_template(FileUtils::join(Nimble::getInstance()->config['view_path'], $file));
     }
 
@@ -173,7 +175,9 @@ class Controller {
      * Add an HTTP header to be included in the output.
      * @param string $text The header to add.
      */
-    public function header($text){ $this->headers[] = $text; }
+    public function header($text, $code=''){ 
+			$this->headers[] = array($text, $code); 
+		}
 
     /**
      * Redirect to another URL.
@@ -183,9 +187,9 @@ class Controller {
     public function redirect($url, $now=false)
     {
 			if($now && self::nimble()->test_mode === false){
-				header("Location: {$url}");
+				header("Location: {$url}", true, 302);
 			}else{
-      	$this->header("Location: {$url}");
+      	$this->header("Location: {$url}", 302);
 				$this->has_rendered = true;
 			}
     }
