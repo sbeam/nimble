@@ -10,7 +10,7 @@ require_once(dirname(__FILE__) . '/support/base.php');
 	* Load these only if we are in php version 5.3 
 	* Magic happends here
 	*/
-if(version_compare(PHP_VERSION, '5.3', '>')) {
+if(version_compare(PHP_VERSION, '5.3', '>=')) {
 	require_once(dirname(__FILE__) . '/mailer.php');
 }
 

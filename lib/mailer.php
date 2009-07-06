@@ -6,36 +6,59 @@
 		* also allowing multiple emails to be sent
 		* ----NOTE!!----
 		* This script is not suitable yet for mass mailing in since the mail() 
-		* function openes a new SMTP socket for each call of mail() this script 
+		* function opens a new SMTP socket for each call of mail() this script 
 		* will break down and become slow around 5-10 emails depending on server load
 		* @todo queue support
 		* @package Nimble
+		* @uses Test::deliver_foo() will send the email for you public instance method foo in the subclass
+		* @uses Test::create_foo() will create the email for you public instance method foo in the subclass and return the object it --Note-- this does not send the email
 		*/
 	class NimbleMailer {
-		
+		//configs
 		var $view_path = '';
 		var $nimble = NULL;
+		//settings
 		var $recipiants = array();
 		var $from = '';
+		var $subject = '';
+		var $recipiant = '';
+		//optional settings
 		var $time = '';
 		var $headers = '';
+		//internals
 		var $_divider = '';
 		var $_content = '';
+		var $_prepaired_message = '';
 		
+		
+		/**
+			* This class has 3 required variables that need to be set
+			* $from (string), $subject (string), $recipiant | $recipiants (string || array)
+			* Options Variables
+			* $time (time), $headers (string)
+			*/
 		public function __construct() {
 			$this->nimble = Nimble::getInstance();
-			$this->view_path = $nimble->config['view_path'] = '/Users/srdavis/Documents/temp_mail';
-			$this->view_path = $nimble->config['view_path'];
+			$this->view_path = $this->nimble->config['view_path'];
 			$this->class = get_called_class();
-			$this->divider = '------=_' . (rand(100000000, 99999999999) * 2);
+			$this->time = time();
+			$this->_divider = '------=_' . (rand(10000000, 99999999999) * 2);
+			$this->_content = array();
 		}
 		
+		
+		/**
+			* @see __callStatic
+			*/
 		public function __call($method, $args) {
 			self::__callStatic($method, $args);
 		}
 		
-		
-		
+		/**
+			* Magic method for catching static method calls
+			* @param string $method
+			* @param array $args 
+			*/
 		public static function __callStatic($method, $args) {
 			$matches = array();
 			$class = get_called_class();
@@ -51,11 +74,21 @@
 						if(file_exists($text_template)) {
 							$klass->prep_template($text_template, 'text');
 						}
-						$this->_content = array();
+						$klass->output_message();
 						$klass->send_mail();
+						return true;
 					break;
 					case 'create':
-					
+						$klass->load_method($matches[2], $args);
+						//php template
+						$klass->prep_template(FileUtils::join($klass->view_path, strtolower($class), $matches[2] . '.php'), 'html');
+						//text template
+						$text_template = FileUtils::join($klass->view_path, strtolower($class), $matches[2] . '.txt');
+						if(file_exists($text_template)) {
+							$klass->prep_template($text_template, 'text');
+						}
+						$klass->output_message();
+						return $klass;
 					break;
 					case 'queue':
 						//Not implimented yet
@@ -63,21 +96,32 @@
 				}
 			}
 		}
-		
+		/**
+			* Invokes the model method that defines the settings for this message
+			* @param string $method
+			* @param array $args
+			*/
 		private function load_method($method, $args) {
-			call_user_func(array($this, $method), $args);
+			call_user_func_array(array($this, $method), $args);
+			if(isset($this->recipiant)) {
+				$this->recipiants = array($this->recipiant);
+			}
 			if(!is_array($this->recipiants) && is_string($this->recipiants)) {
 				$this->recipiants = array($this->recipiants);
 			}
 		}
-		
+		/**
+			* Renders the email templates and stores the data in the $this->_content class variable
+			* @param string $name file path + filename of template to call
+			* @param string $type type of email template (html|text)
+			*/
 		private function prep_template($name, $type) {
-			var_dump($name);
 			$vars = get_object_vars($this);
       ob_start();
       if (file_exists($name)){
           if (count($vars)>0)
               foreach($vars as $key => $value){
+									if($key == 'nimble') {continue;}
                   $$key = $value;
               }
           require($name);
@@ -86,27 +130,36 @@
       } else {
           throw new NimbleException('View ['.$name.'] Not Found');
       }
-      $this->_content = ob_get_clean();
+
+			$this->_content[$type] = ob_get_clean();
 		}
 		
-		//create headers
+		/**
+			* Creates the default email headers
+			*/
 		private function create_headers() {
+				$date = date(DATE_RFC822, $this->time);
 				$headers  = '';
 				$headers  = "MIME-Version: 1.0\r\n";
 				$headers .= "From: " . $this->from . "\n";
-				$headers .= "Content-Type: multipart/alternative; boundary=\"" . $this->_divider . "\"; charset=windows-1252\n" .
-							"Content-Transfer-Encoding: binary\n";
+				$headers .= "Content-Type: multipart/alternative; boundary=\"" . $this->_divider . "\"; charset=ISO-8859-1\n" .
+										"Content-Transfer-Encoding: binary\n" . 
+										"X-Mailer: Thunderbird 2.0.0.22 (Macintosh/20090605)\n" .
+										"User-Agent: 	Thunderbird 2.0.0.22 (Macintosh/20090605)\n" .
+										"Date: $date";
 
 				if(isset($this->headers) && !empty($this->headers)) $headers .= $this->headers;
-
 				return $headers;
-
 			}
 			
+			
+			/**
+				* Assembles the message body of the email
+				*/
 			public function output_message() {
-				if (isset($this->html_message) && !empty($this->html_message))
+				if (isset($this->_content['html']) && !empty($this->_content['html']))
 				{
-					$html_message = $this->parse_and_replace_message($this->html_message);
+					$html_message = $this->_content['html'];
 
 					$html_message =  "--" . $this->_divider . 
 									"\nContent-Disposition: inline\n" .
@@ -114,9 +167,9 @@
 									"Content-Type: text/html\n" .
 									"Content-length: " . strlen($html_message) . "\n\n" . $html_message . "\n";
 				}
-				if (isset($this->text_message)) 
+				if (isset($this->_content['text'])) 
 				{
-					$text_message = $this->parse_and_replace_message($this->text_message);
+					$text_message = $this->_content['text'];
 
 					$text_message = "This is a multi-part message in MIME format.\n\n" . "--" . $this->_divider . 
 									"\nContent-Disposition: inline\n" .
@@ -130,13 +183,23 @@
 				if(!empty($text_message)) $message .= $text_message;
 				if(!empty($html_message)) $message .= "\n\n" . $html_message . "\n" . "--" . $this->_divider . "--";
 
-
-				return $message;
+				$this->_prepaired_message = $message;
 			}
 		
-		
-		private function do_mail() {
-			
+		/**
+			* Sends the email
+			*/
+		private function send_mail() {
+			foreach($this->recipiants as $to) {
+				mail($to, $this->subject, $this->_prepaired_message, $this->create_headers());
+			}
+		}
+		/**
+			* Public version of send_email()
+			* @see send_email()
+			*/
+		public function send() {
+			$this->send_mail();
 		}
 		
 	}
