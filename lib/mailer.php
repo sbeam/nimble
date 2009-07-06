@@ -10,6 +10,7 @@
 		* will break down and become slow around 5-10 emails depending on server load
 		* @todo queue support
 		* @package Nimble
+		* @version php 5.3 only
 		* @uses Test::deliver_foo() will send the email for you public instance method foo in the subclass
 		* @uses Test::create_foo() will create the email for you public instance method foo in the subclass and return the object it --Note-- this does not send the email
 		*/
@@ -63,14 +64,15 @@
 			$matches = array();
 			$class = get_called_class();
 			$klass = new $class();
+			$class_folder = strtolower(Inflector::underscore($class));
 			if(preg_match('/^(deliver|create|queue)_(.+)$/', $method, $matches)) {
 				switch($matches[1]) {
 					case 'deliver':
 						$klass->load_method($matches[2], $args);
 						//php template
-						$klass->prep_template(FileUtils::join($klass->view_path, strtolower($class), $matches[2] . '.php'), 'html');
+						$klass->prep_template(FileUtils::join($klass->view_path, $class_folder, $matches[2] . '.php'), 'html');
 						//text template
-						$text_template = FileUtils::join($klass->view_path, strtolower($class), $matches[2] . '.txt');
+						$text_template = FileUtils::join($klass->view_path, $class_folder, $matches[2] . '.txt');
 						if(file_exists($text_template)) {
 							$klass->prep_template($text_template, 'text');
 						}
@@ -81,9 +83,9 @@
 					case 'create':
 						$klass->load_method($matches[2], $args);
 						//php template
-						$klass->prep_template(FileUtils::join($klass->view_path, strtolower($class), $matches[2] . '.php'), 'html');
+						$klass->prep_template(FileUtils::join($klass->view_path, $class_folder, $matches[2] . '.php'), 'html');
 						//text template
-						$text_template = FileUtils::join($klass->view_path, strtolower($class), $matches[2] . '.txt');
+						$text_template = FileUtils::join($klass->view_path, $class_folder, $matches[2] . '.txt');
 						if(file_exists($text_template)) {
 							$klass->prep_template($text_template, 'text');
 						}
@@ -103,7 +105,7 @@
 			*/
 		private function load_method($method, $args) {
 			call_user_func_array(array($this, $method), $args);
-			if(isset($this->recipiant)) {
+			if(!empty($this->recipiant)) {
 				$this->recipiants = array($this->recipiant);
 			}
 			if(!is_array($this->recipiants) && is_string($this->recipiants)) {
@@ -119,11 +121,12 @@
 			$vars = get_object_vars($this);
       ob_start();
       if (file_exists($name)){
-          if (count($vars)>0)
+          if (count($vars)>0) {
               foreach($vars as $key => $value){
 									if($key == 'nimble') {continue;}
                   $$key = $value;
               }
+						}
           require($name);
 			}else if(empty($name)){
 				return;
@@ -134,8 +137,33 @@
 			$this->_content[$type] = ob_get_clean();
 		}
 		
+		
+		/**
+			* Renders a partial template
+			* @param string $name name of partial to load and render
+			*/
+		public function render_partial($name) {
+			$vars = get_object_vars($this);
+			$partial = FileUtils::join($this->view_path, strtolower($this->class), $name);
+			if(!file_exists($partial)) {
+				$partial = $name;
+			}
+			ob_start();
+			if (count($vars)>0) {
+         foreach($vars as $key => $value){
+						if($key == 'nimble') {continue;}
+             $$key = $value;
+         }
+			}
+			require($partial);
+			return ob_get_clean();
+			
+			
+		}
+		
 		/**
 			* Creates the default email headers
+			* @return string
 			*/
 		private function create_headers() {
 				$date = date(DATE_RFC822, $this->time);

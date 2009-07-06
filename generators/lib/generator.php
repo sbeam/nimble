@@ -242,6 +242,40 @@
 			//update boot.php
 			self::boot(FileUtils::join($dir, '..', 'config', 'boot.php'));
 		}
+		
+		public static function mailer($name, $methods) {
+			$class_name = Inflector::classify($name);
+			$out = "<?php \n";
+			$out .= " /**\n * Templates in " . FileUtils::join('app', 'view', strtolower(Inflector::underscore($class_name))) . "\n */\n";
+			$out .= "	class $class_name extends NimbleMailer { \n";
+			foreach($methods as $method) {
+				$out .= self::mailer_method($method);
+				self::mailer_template($class_name, $method);
+			}
+			$out .= " }\n";
+			$out .= "?>";
+			
+			$path_name = FileUtils::join(NIMBLE_ROOT, 'app', 'model', $class_name . '.php');
+			$db = fopen($path_name, "w");
+			fwrite($db, $out);
+			fclose($db);
+		}
+		
+		private static function mailer_method($name) {
+			$out = "\n";
+			$out .= "   public function " . $name . '($to)' . " {\n";
+			$out .= '	  	$this->recipiants = $to;' . "\n";
+			$out .= '	  	$this->from = \'\';' . "\n";
+			$out .= '	  	$this->subject = \'\';' . "\n";
+			$out .= "	  }\n";
+			return $out;
+		}
+		
+		private static function mailer_template($class, $method) {
+			FileUtils::mkdir_p(FileUtils::join(NIMBLE_ROOT, 'app', 'view', strtolower(Inflector::underscore($class))));
+			touch(FileUtils::join(NIMBLE_ROOT, 'app', 'view', strtolower(Inflector::underscore($class)), strtolower($method) . '.php'));
+			touch(FileUtils::join(NIMBLE_ROOT, 'app', 'view', strtolower(Inflector::underscore($class)), strtolower($method) . '.txt'));
+		}
 
 	}
 

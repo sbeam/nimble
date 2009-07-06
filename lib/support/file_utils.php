@@ -19,8 +19,10 @@
 		* @param string $path - Path to create directory
 		* @param integer $mode - Mode in which to create directories
 		*/
-		public static function mkdir_p($path, $mode=0777) {
-			mkdir($path, $mode, true);
+		public static function mkdir_p($path, $mode=0775) {
+			if(!is_dir($path)) {
+				mkdir($path, $mode, true);
+			}
 		}
 	
 	}

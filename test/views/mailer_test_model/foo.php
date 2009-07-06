@@ -1,0 +1,2 @@
+PHP TEMPLATE
+<?= $string ?>

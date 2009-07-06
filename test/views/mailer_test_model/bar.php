@@ -1,0 +1,3 @@
+<?= $string ?>
+
+BAR TEMPLATE
