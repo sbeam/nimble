@@ -7,6 +7,14 @@ require_once(dirname(__FILE__) . '/route/url_builder.php');
 require_once(dirname(__FILE__) . '/support/base.php');
 
 /**
+	* Load these only if we are in php version 5.3 
+	* Magic happends here
+	*/
+if(version_compare(PHP_VERSION, '5.3', '>')) {
+	require_once(dirname(__FILE__) . '/mailer.php');
+}
+
+/**
  * Nimble is the base class in the application.
  * This class provides methods to add & call routes, parse URLs, and load plugins.
  * @package Nimble
@@ -119,8 +127,7 @@ class Nimble
         // call after filters
         call_user_func(array($this->klass, "run_after_filters"), $conf[2]);
 
-        $out = ob_get_contents();
-        ob_end_clean();
+        $out = ob_get_clean();
         	if (count($this->klass->headers)>0){
 	          foreach($this->klass->headers as $header){
 	             if(!$this->test_mode) {

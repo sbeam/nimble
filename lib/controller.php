@@ -161,8 +161,8 @@ class Controller {
                     $$key = $value;
                 }
             require($name);
-		}else if(empty($name)){
-			return;
+				}else if(empty($name)){
+					return;
         } else {
             throw new NimbleException('View ['.$name.'] Not Found');
         }

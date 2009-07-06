@@ -1,8 +1,4 @@
 <?php
-require_once(dirname(__FILE__) . '/route/helper.php');
-require_once(dirname(__FILE__) . '/route/url_builder.php');
-require_once(dirname(__FILE__) . '/support/inflector.php');
-require_once(dirname(__FILE__) . '/exception.php');
 
 	/**
  	* Rotes control how HTTP requests are handled by the application.
