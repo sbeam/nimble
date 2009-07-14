@@ -58,10 +58,9 @@
 		case 'mailer':
 			$new = $argv;
 			$methods = array_splice($new, 3);
-			var_dump($methods);
 		 	$methods = empty($methods) ? array('foo') : $methods;
-			var_dump($argv);
 			Generator::mailer($argv[2], $methods);
+			exit();
 		break;
 	
 	

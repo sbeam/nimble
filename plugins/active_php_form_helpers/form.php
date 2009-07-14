@@ -145,7 +145,7 @@
 		
 		
 		private function fetch_value($name) {
-			if(isset($this->obj) && !is_string($this->obj) && $this->obj->is_set($name)) {
+			if(isset($this->obj) && !is_string($this->obj) && isset($this->obj->$name)) {
 				return $this->obj->$name;
 			}else{
 				return '';

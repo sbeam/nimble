@@ -34,7 +34,7 @@ function Run($test_mode = false)
     try {
         Nimble::getInstance()->dispatch($test_mode);
     } catch (Exception $e) {
-		if(NIMBLE_ENV == 'development') {
+		if(NIMBLE_ENV == 'development' && !$test_mode) {
         ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
