@@ -186,8 +186,9 @@ class Controller {
      */
     public function redirect($url, $now=false)
     {
-			if($now && self::nimble()->test_mode === false){
+			if($now && self::nimble()->test_mode == false){
 				header("Location: {$url}", true, 302);
+				exit();
 			}else{
       	$this->header("Location: {$url}", 302);
 				$this->has_rendered = true;
