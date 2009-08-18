@@ -88,7 +88,7 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
     $hash = md5($source);
     if (!isset($this->_cached_xml[$hash])) {
       try {
-        $xml = new SimpleXMLElement("<x>" . $source . "</x>");
+        $xml = new SimpleXMLElement("<x>" . $this->clean_xml_string($source) . "</x>");
         $this->_cached_xml[$hash] = $xml;
       } catch (Exception $e) {
         $this->_cached_xml[$hash] = false;
@@ -102,7 +102,26 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
     }
     return $this->_cached_xml[$hash];
   }
-
+  
+  /**
+   * Clean a string containing HTML entities for XML parsing for test purposes.
+   * @param string $source The string to clean.
+   * @return string The cleaned string.
+   */
+  public function clean_xml_string($source) {
+    $source = str_replace(
+      array("&nbsp;", "&mdash;", "&ndash;"),
+      array(" ", "--", "-"),
+      $source
+    );
+    $source = preg_replace_callback('#&[^\;]+;#', array($this, 'callback_replace_non_xml_entities'), $source);
+    return $source;
+  }
+  
+  private function callback_replace_non_xml_entities($matches) {
+    return (in_array($matches[0], array("&quot;", "&amp;", "&apos;", "&lt;", "&gt;")) ? $matches[0] : "");
+  }
+  
   /**
    * Render a controller method using the provided template, if necessary.
    * @param Controller $controller The controller to use.
