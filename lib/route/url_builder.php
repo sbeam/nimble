@@ -38,7 +38,7 @@
        * @return string The current request's URI.
        */
       public static function uri() {
-          return Nimble::uri() . '/';
+          return Nimble::uri();
       }
 
       /**
