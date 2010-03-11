@@ -24,7 +24,8 @@ class Nimble
 			if(defined("NIMBLE_IS_TESTING") && NIMBLE_IS_TESTING) {
 				$this->test_mode = true;
 			}
-      $this->url = (isset($_GET['url'])) ? trim($_GET['url'], '/') : '';
+            $this->url = (isset($_GET['url'])) ? trim($_GET['url'], '/') : '';
+
 			/** set default configs */
 			$this->config['title_seperator'] = ':';
 			$this->config['default_layout'] = '';

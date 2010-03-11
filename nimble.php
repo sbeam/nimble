@@ -5,6 +5,7 @@ The MIT License
 Copyright (c) 2007 Tiago Bastos
 Copyright (c) 2009 John Bintz
 Copyright (c) 2009 Scott Davis
+Copyright (c) 2010 Sam Beam
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -26,43 +27,11 @@ THE SOFTWARE.
 */
 
 require_once(dirname(__FILE__) . '/lib/base.php');
-	/*
- 	* Run application
- 	*/
+/*
+ * Run application
+ */
 function Run($test_mode = false)
 {
-    try {
-        Nimble::getInstance()->dispatch($test_mode);
-    } catch (Exception $e) {
-		if(NIMBLE_ENV == 'development' && !$test_mode) {
-        ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-    <head>
-        <title>Error!</title>
-    </head>
-    <body>
-        <h1>Caught exception: <?= $e->getMessage(); ?></h1>
-        <h2>File: <?= $e->getFile()?></h2>
-        <h2>Line: <?= $e->getLine()?></h2>
-        <h3>Trace</h3>
-        <pre>
-        <?= $e->getTraceAsString() ?>
-        </pre>
-        <h3>Exception Object</h3>
-        <pre>
-        <?php var_dump($e); ?>
-        </pre>
-        <h3>Var Dump</h3>
-        <pre>
-        <?php debug_print_backtrace(); ?>
-        </pre>
-    </body>
-</html>        
-        <?php
-		}
-    }
-
+    Nimble::getInstance()->dispatch($test_mode);
+    // exceptions handled by my_exception_handler.
 }
-?>
