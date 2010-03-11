@@ -69,7 +69,7 @@ class Nimble
         // parse format
         $has_format = false;
         if(preg_match('/\.[a-zA-Z0-9]+$/', $this->url)) {
-            $rule .= '\.(?P<format>[a-zA-Z0-9]+)';
+            $rule .= '\.(?P<format>[a-zA-Z0-9]+)'; // named capture http://www.regular-expressions.info/named.html
             $has_format = true;
         }
         $rule = preg_replace('/:([a-zA-Z0-9_]+)(?!:)/', '(?P<\1>[a-zA-Z0-9_-]+)', $rule);
@@ -97,7 +97,7 @@ class Nimble
                 $this->klass = new $conf[1]();
                 /** set the layout tempalte to the default */
                 $this->klass->set_layout_template();
-                $this->klass->format = ($conf[4]) ? array_pop($matches) : 'html';
+                $this->klass->format = ($conf[4]) ? array_pop($matches) : $this->klass->default_format;
 
                 ob_start();
 
@@ -110,7 +110,7 @@ class Nimble
                 if(!$this->klass->has_rendered && isset($this->config['view_path'])) {
                     $dir = str_replace('Controller', '', $conf[1]);
                     $dir = strtolower(Inflector::underscore($dir));
-                    $view = FileUtils::join($dir, $conf[2] . '.php');
+                    $view = FileUtils::join($dir, $conf[2]);
                     $this->klass->render($view);
                 }
 

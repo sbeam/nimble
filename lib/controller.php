@@ -16,6 +16,9 @@ class Controller {
     var $has_rendered = false;
     var $template = '';
     var $rendered_partials = array();
+    var $default_template_ext = 'php';
+    var $respond_to_formats = array();
+    var $default_format = 'html';
 
     /**
      * The expected output format for this controller.
@@ -126,7 +129,14 @@ class Controller {
 
         if ($file === null) return;
 
+        if (!preg_match('/\.[a-zA-Z0-9]+$/', $file)) { // no haz extension?
+            $format = $this->format();
+            $ext = ($format && $format != $this->default_format && in_array($format, $this->respond_to_formats))? $format : $this->default_template_ext;
+            $file .= ".$ext";
+        }
+
         $this->template = FileUtils::join(Nimble::getInstance()->config['view_path'], $file);
+
         if ($this->layout==false){
             echo $this->open_template($this->template); 
         } else {
