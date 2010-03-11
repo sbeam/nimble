@@ -13,7 +13,7 @@ class C extends Controller {}
 	* @package Nimble
 	*/
 class Controller {
-	var $nimble;
+    var $nimble;
     var $format;
     var $layout = true;
     var $layout_template;
@@ -22,6 +22,7 @@ class Controller {
 		var $has_rendered = false;
 		var $template = '';
 		var $rendered_partials = array();
+
     /**
      * The expected output format for this controller.
      * @var string
@@ -130,8 +131,10 @@ class Controller {
       if ($this->layout==false){
       	echo $this->open_template($this->template); 
       } else {
-      	$this->content = $this->open_template($this->template); 
-  			echo $this->open_template($this->layout_template); 
+          $this->content = $this->open_template($this->template); 
+          if (empty($this->layout_template))
+              throw new NimbleException("Layout Template is not set for this controller");
+          echo $this->open_template($this->layout_template); 
       }
    }
 
@@ -161,8 +164,8 @@ class Controller {
                     $$key = $value;
                 }
             require($name);
-				}else if(empty($name)){
-					return;
+        }else if(empty($name)){
+            return;
         } else {
             throw new NimbleException('View ['.$name.'] Not Found');
         }
