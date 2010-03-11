@@ -83,64 +83,70 @@ class Nimble
      */
     public function dispatch($test=false)
     {	
-		$this->load_plugins();
-      foreach($this->routes as $rule=>$conf) {
-        // if a vaild _method is passed in a post set it to the REQUEST_METHOD so that we can route for DELETE and PUT methods
-        if(isset($_POST['_method']) && !empty($_POST['_method']) && in_array(strtoupper($_POST['_method']), Route::$allowed_methods)){
-            $_SERVER['REQUEST_METHOD'] = strtoupper($_POST['_method']);
+        $this->load_plugins();
+        foreach($this->routes as $rule=>$conf) {
+            // if a vaild _method is passed in a post set it to the REQUEST_METHOD so that we can route for DELETE and PUT methods
+            if(isset($_POST['_method']) && !empty($_POST['_method']) && in_array(strtoupper($_POST['_method']), Route::$allowed_methods)){
+                $_SERVER['REQUEST_METHOD'] = strtoupper($_POST['_method']);
+            }
+
+            /** test to see if its a valid route */
+            if (preg_match($conf[0], $this->url, $matches) && (empty($conf[3]) || $_SERVER['REQUEST_METHOD'] == $conf[3])) {
+                /** Only declared variables in URL regex */
+                $matches = $this->parse_urls_args($matches);
+                $this->klass = new $conf[1]();
+                /** set the layout tempalte to the default */
+                $this->klass->set_layout_template();
+                $this->klass->format = ($conf[4]) ? array_pop($matches) : 'html';
+
+                ob_start();
+
+                // call before filters
+                call_user_func(array($this->klass, "run_before_filters"), $conf[2]);
+
+                // call methods on controller class
+                call_user_func_array(array($this->klass , $conf[2]), $matches);
+
+                if(!$this->klass->has_rendered && isset($this->config['view_path'])) {
+                    $dir = str_replace('Controller', '', $conf[1]);
+                    $dir = strtolower(Inflector::underscore($dir));
+                    $view = FileUtils::join($dir, $conf[2] . '.php');
+                    $this->klass->render($view);
+                }
+
+                // call after filters
+                call_user_func(array($this->klass, "run_after_filters"), $conf[2]);
+
+                $out = ob_get_clean();
+                if (count($this->klass->headers)>0){
+                    foreach($this->klass->headers as $header){
+                        if(!$this->test_mode) {
+                            header($header[0], true, empty($header[1]) ? null : $header[1]);
+                        }
+                    }
+                }
+                print $out;
+                if(!$test){
+                    exit();
+                }
+            }
         }
-
-        /** test to see if its a valid route */
-        if (preg_match($conf[0], $this->url, $matches) && $_SERVER['REQUEST_METHOD'] == $conf[3]){
-            /** Only declared variables in URL regex */
-            $matches = $this->parse_urls_args($matches);
-            $this->klass = new $conf[1]();
-			/** set the layout tempalte to the default */
-			$this->klass->set_layout_template();
-            $this->klass->format = ($conf[4]) ? array_pop($matches) : 'html';
-
-            ob_start();
-
-            // call before filters
-            call_user_func(array($this->klass, "run_before_filters"), $conf[2]);
-
-            // call methods on controller class
-            call_user_func_array(array($this->klass , $conf[2]), $matches);
-				
-        if(!$this->klass->has_rendered && isset($this->config['view_path'])) {
-          /**
-          * Add inflector for this type of code from now on
-          */
-          $dir = str_replace('Controller', '', $conf[1]);
-          $dir = strtolower(Inflector::underscore($dir));
-          $view = FileUtils::join($dir, $conf[2] . '.php');
-          $this->klass->render($view);
-        }
-				
-        // call after filters
-        call_user_func(array($this->klass, "run_after_filters"), $conf[2]);
-
-        $out = ob_get_clean();
-        	if (count($this->klass->headers)>0){
-	          foreach($this->klass->headers as $header){
-	             if(!$this->test_mode) {
-								header($header[0], true, empty($header[1]) ? null : $header[1]);
-							}
-	          }
-	        } 
-        print $out;
-		if(!$test){
-			exit();
-		}
-      }
-    }
 
         if(empty($_SERVER['REQUEST_METHOD']) && !$test){
-          throw new NimbleException('No Request Paramater');
+            throw new NimbleException('No Request Paramater');
         }
-		if(!$test){
-			call_user_func(array('r404' , $_SERVER['REQUEST_METHOD'])); 
-		}		
+
+        if(!$test) {
+            if (class_exists('r404')) {
+               if (method_exists('r404', $_SERVER['REQUEST_METHOD']))
+                   call_user_func(array('r404' , $_SERVER['REQUEST_METHOD'])); 
+               else
+                   call_user_func(array('r404' , 'renderError'));
+            }
+            else
+                throw new NimbleException("Routing Error. No suitable routes found and no 404 handler exists.");
+        }
+
     }
 
     /**
@@ -281,4 +287,4 @@ class Nimble
 	
 }
 
-?>
+/* vim: set ts=4 sw=4 expandtab: */
