@@ -125,8 +125,10 @@ class Controller {
 			if($this->has_rendered){
 				throw new NimbleException('Double Render Error: Your may only render once per action');
 			}
-	
 			$this->has_rendered = true;
+
+      if ($file === null) return;
+	
 			$this->template = FileUtils::join(Nimble::getInstance()->config['view_path'], $file);
       if ($this->layout==false){
       	echo $this->open_template($this->template); 
