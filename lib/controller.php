@@ -108,31 +108,34 @@ class Controller {
      * Return the current format.
      * @return string The current format.
      */
-    public function format() { return $this->format; }
+    public function format()
+    { 
+        return $this->format; 
+    }
 
-        /**
-         * Include a PHP file, inject the controller's properties into that file, and echo the output.
-         * If $this->layout == false, will act the same as Controller::render_partial.
-         * @param string $file The view file to render, relative to the base of the application.
-         */
-        public function render($file) {
-            if($this->has_rendered){
-                throw new NimbleException('Double Render Error: Your may only render once per action');
-            }
-            $this->has_rendered = true;
-
-            if ($file === null) return;
-
-            $this->template = FileUtils::join(Nimble::getInstance()->config['view_path'], $file);
-            if ($this->layout==false){
-                echo $this->open_template($this->template); 
-            } else {
-                $this->content = $this->open_template($this->template); 
-                if (empty($this->layout_template))
-                    throw new NimbleException("Layout Template is not set for this controller");
-                echo $this->open_template($this->layout_template); 
-            }
+    /**
+     * Include a PHP file, inject the controller's properties into that file, and echo the output.
+     * If $this->layout == false, will act the same as Controller::render_partial.
+     * @param string $file The view file to render, relative to the base of the application.
+     */
+    public function render($file) {
+        if($this->has_rendered){
+            throw new NimbleException('Double Render Error: Your may only render once per action');
         }
+        $this->has_rendered = true;
+
+        if ($file === null) return;
+
+        $this->template = FileUtils::join(Nimble::getInstance()->config['view_path'], $file);
+        if ($this->layout==false){
+            echo $this->open_template($this->template); 
+        } else {
+            $this->content = $this->open_template($this->template); 
+            if (empty($this->layout_template))
+                throw new NimbleException("Layout Template is not set for this controller");
+            echo $this->open_template($this->layout_template); 
+        }
+    }
 
     /**
      * Include a PHP file, inject the controller's properties into that file, and return the output.
