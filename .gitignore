@@ -2,3 +2,5 @@
 *.tgz
 package.xml
 phpunit.xml
+.svn
+*.sw[op]
