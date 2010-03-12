@@ -37,11 +37,12 @@ class Controller {
      * @return string path to the application.php template
      */
     public function set_layout_template($template ='') {
-        if(!empty($template) && file_exists($template)) {
+
+        if(!empty($template) && file_exists($template)) 
             $this->layout_template = $template;
-        }else{
+        elseif (empty($this->layout_template))
             $this->layout_template = $this->nimble()->config['default_layout'];
-        }
+
         return $this->layout_template;
     }
 
@@ -141,8 +142,10 @@ class Controller {
             echo $this->open_template($this->template); 
         } else {
             $this->content = $this->open_template($this->template); 
+
             if (empty($this->layout_template))
                 throw new NimbleException("Layout Template is not set for this controller");
+
             echo $this->open_template($this->layout_template); 
         }
     }
@@ -214,6 +217,35 @@ class Controller {
     public function redirect_to($url)
     {
         $this->redirect($url, true);
+    }
+
+
+    /**
+     * respond to a given request format directly, using a specific function/method 
+     * - instead of the default Controller->render() action which loads a view.
+     *
+     * Would be nice to use a lambda function with a closure here, so we could pass the controller
+     * itself to the function at runtime. But for php<5.3 have to settle for this.
+     *
+     * example call, in a controller action:
+     *      $this->respond_to('xml', array('XMLview', 'build'), array('loginResult', $this->result));
+     *      # pre-supposes that xml_view plugin is loaded via Nimble::plugins('xml_view')
+     *
+     * @param $format string        format we are expecting to respond to (xml, json, etc)
+     * @param $func mixed           function name, reference or array suitable for call_user_func_array()
+     * @param $args array opt       arguments to be passed to the function
+     * @throws NimbleException       
+     */
+    public function respond_to($format, $func=null, $args=array()) {
+        if ($this->format() == $format) {
+            if (is_callable($func)) {
+                echo call_user_func_array($func, $args);
+                $this->has_rendered = true;
+            }
+            else {
+                throw new NimbleException('Uncallable function given to respond_to()');
+            }
+        }
     }
 }
 
