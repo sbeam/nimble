@@ -19,6 +19,7 @@ class Controller {
     var $default_template_ext = 'php';
     var $respond_to_formats = array();
     var $default_format = 'html';
+    var $headers_by_format = array('xml' => array('Content-Type: text/xml', 200));
 
     /**
      * The expected output format for this controller.
@@ -241,6 +242,9 @@ class Controller {
             if (is_callable($func)) {
                 echo call_user_func_array($func, $args);
                 $this->has_rendered = true;
+                if (isset($this->headers_by_format[$format])) {
+                    $this->headers[] = $this->headers_by_format[$format];
+                }
             }
             else {
                 throw new NimbleException('Uncallable function given to respond_to()');
