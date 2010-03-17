@@ -2,16 +2,24 @@
 	require_once('nimble/generators/lib/generator.php');
 	require_once('nimble/lib/support/inflector.php');
 	
-	define('NIMBLE_ROOT', dirname(__FILE__) . DIRECTORY_SEPARATOR . '..');
+	define('NIMBLE_ROOT', getcwd());
 	
 	if(count($argv) < 2) {
-		echo NIMBLE_ROOT;
 		display_Help();
 	}
 	
 	
 	function display_help() {
-		die('Help goes here' . "\n");
+        $root = NIMBLE_ROOT;
+		$usage = <<<EOu
+Generator utility for nimble objects
+
+Usage: php nimble/bin/generate (model|controller|test|mailer) [args] 
+
+current root: {$root}
+
+EOu;
+        die($usage);
 	}
 	
 	
@@ -33,23 +41,25 @@
 		
 		
 		case 'test':
+            if(!isset($argv[2]))
+                die ("Please supply a test type, 'functional', or 'unit'\n");
+
+            $res = false;
 			switch($argv[2]) {
 				case 'functional':
 					if(!isset($argv[3])) {
-						echo "Please supply a test name";
-						return;
+						die("Please supply a test name\n");
 					}
-					Generator::functional_test($argv[3]);
+					$res = Generator::functional_test($argv[3]);
 				break;
 				case 'unit':
 					if(!isset($argv[3])) {
-						echo "Please supply a test name";
-						return;
+						die("Please supply a test name\n");
 					}
-					Generator::unit_test($argv[3]);
+					$res = Generator::unit_test($argv[3]);
 				break;
-			
 			}
+            if ($res) echo "Wrote $argv[2] test to $res\n";
 		break;
 		case 'help':
 			echo Generator::help();
