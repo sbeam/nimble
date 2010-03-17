@@ -90,6 +90,13 @@ class Nimble
                 $_SERVER['REQUEST_METHOD'] = strtoupper($_POST['_method']);
             }
 
+            if(empty($_SERVER['REQUEST_METHOD'])){
+                if (!$test)
+                    throw new NimbleException('No valid Request Method given.');
+                else
+                    return false;
+            }
+
             /** test to see if its a valid route */
             if (preg_match($conf[0], $this->url, $matches) && (empty($conf[3]) || $_SERVER['REQUEST_METHOD'] == $conf[3])) {
                 /** Only declared variables in URL regex */
@@ -130,10 +137,6 @@ class Nimble
                     exit();
                 }
             }
-        }
-
-        if(empty($_SERVER['REQUEST_METHOD']) && !$test){
-            throw new NimbleException('No Request Paramater');
         }
 
         if(!$test) {
