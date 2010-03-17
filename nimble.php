@@ -32,6 +32,9 @@ require_once(dirname(__FILE__) . '/lib/base.php');
  */
 function Run($test_mode = false)
 {
+    if (defined('NIMBLE_IS_TESTING'))
+        $test_mode = NIMBLE_IS_TESTING;
+
     Nimble::getInstance()->dispatch($test_mode);
     // exceptions handled by my_exception_handler.
 }
