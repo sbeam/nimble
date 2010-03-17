@@ -84,17 +84,19 @@
 			$path = FileUtils::join(NIMBLE_ROOT, 'test', 'unit');
 			
 			$string = "<?php \n";
-			$string .= "	/**\n	* @package unit_test\n	*	*/\n";
-			$string .= "	require_once('nimble/lib/test/phpunit_testcase.php');\n";
-			$string .= "  class {$class_name}UnitTest extends NimblePHPUnitTestCase";
-			$string .= " { \n\n";
-			$string .= "  }\n";
-			$string .= "?>";
+			$string .= "/**\n* @package unit_test\n**/\n";
+			$string .= "require_once('nimble/lib/test/phpunit_testcase.php');\n";
+			$string .= "class {$class_name}UnitTest extends NimblePHPUnitTestCase";
+			$string .= "\n{\n\n}\n";
 			
 			FileUtils::mkdir_p($path);
-			$file = fopen(FileUtils::join($path, $class_name . 'Test.php'), "w");
-			fwrite($file, $string);
-			fclose($path);
+            $filename = FileUtils::join($path, $class_name . 'Test.php');
+			$file = fopen($filename, "w");
+            if ($file) {
+                fwrite($file, $string);
+                fclose($file);
+                return $filename;
+            }
 		}
 		
 		/**
@@ -107,18 +109,20 @@
 			$path = FileUtils::join(NIMBLE_ROOT, 'test', 'functional');
 			
 			$string = "<?php \n";
-			$string .= "	/**\n	* @package functional_test\n	*	*/\n";
-			$string .= "	require_once('nimble/lib/test/phpunit_testcase.php');\n";
-			$string .= "  class {$class_name}ControllerTest extends NimblePHPFunctionalTestCase";
-			$string .= " { \n\n";
-			$string .= "  }\n";
-			$string .= "?>";
+			$string .= "/**\n* @package functional_test\n**/\n";
+			$string .= "require_once('nimble/lib/test/phpunit_testcase.php');\n";
+			$string .= "class {$class_name}ControllerTest extends NimblePHPFunctionalTestCase";
+			$string .= "\n{\n\n}\n";
 			if(!is_dir($path)) {
 				FileUtils::mkdir_p($path);
 			}
-			$file = fopen(FileUtils::join($path, $class_name . 'ControllerTest.php'), "w");
-			fwrite($file, $string);
-			fclose($file);
+            $filename = FileUtils::join($path, $class_name . 'ControllerTest.php');
+			$file = fopen($filename, "w");
+            if ($file) {
+                fwrite($file, $string);
+                fclose($file);
+                return $filename;
+            }
 		}
 		
 		/**
@@ -131,14 +135,12 @@
 			$class_name = Inflector::classify($name);
 			$path = FileUtils::join(NIMBLE_ROOT, 'app', 'model', $class_name . '.php');
 			$string = "<?php \n";
-			$string .= "	/**\n	* @package model\n	* \n */\n";
-			$string .= "  class {$class_name}"; 
+			$string .= "/**\n	* @package model\n	* \n */\n";
+			$string .= "class {$class_name}"; 
 			if(!empty($parent)) {
 				$string .= " extends $parent";
 			}
-			$string .= " { \n\n";
-			$string .= "  }\n";
-			$string .= "?>";
+			$string .= "{ \n\n}\n";
 			
 			$file = fopen($path, "w");
 			fwrite($file, $string);
