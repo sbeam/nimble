@@ -2,30 +2,33 @@
 
 require_once('PHPUnit/Framework.php');
 require_once(dirname(__FILE__) . '/simple_html_dom.php');
-// because we can't guarantee where we'll be in the filesystem, find the
-// nearest config/boot.php file from the current working directory.
-
 //set the enviroment to test
 $_SERVER['WEB_ENVIRONMENT'] = 'test';
 
-$path_parts = explode(DIRECTORY_SEPARATOR, getcwd());
-while (!empty($path_parts)) {
-  $path = implode(DIRECTORY_SEPARATOR, array_merge($path_parts, array("config", "boot.php")));
-  if (file_exists($path)) {
-    define("NIMBLE_IS_TESTING", true);
-    define("NIMBLE_RUN", false);
-    require_once($path); break;    
-  } else {
-    array_pop($path_parts);
-  } 
+// because we can't guarantee where we'll be in the filesystem, find the
+// nearest config/boot.php file from the current working directory, unless it's already done.
+if (!defined('NIMBLE_RUN')) {
+    $path_parts = explode(DIRECTORY_SEPARATOR, getcwd());
+    while (!empty($path_parts)) {
+        $path = implode(DIRECTORY_SEPARATOR, array_merge($path_parts, array("config", "boot.php")));
+        if (file_exists($path)) {
+            define("NIMBLE_IS_TESTING", true);
+            define("NIMBLE_RUN", false);
+            require_once($path); break;    
+        } else {
+            array_pop($path_parts);
+        } 
+    }
 }
 
-if (!defined("NIMBLE_IS_TESTING")) {
+
+if (!defined("NIMBLE_RUN")) {
   throw new Exception("Could not find Nimble config/boot.php from " . getcwd() . "!");
   exit(1); 
 }
 /** mock session as an array **/
 $_SESSION = $_POST = $_GET = array();
+$_SERVER['REQUEST_METHOD'] = null;
 
 /**
  * Run PHPUnit tests on Nimble-specific entities.
@@ -154,7 +157,7 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
 		var $controller_name;
 		
 		public function __construct() {
-			global $_SESSION, $_POST, $_GET;
+			global $_SESSION, $_POST, $_GET, $_SERVER;
 			$_SESSION = $_POST = $_GET = array();
 			parent::__construct();
 			$class = get_class($this);
