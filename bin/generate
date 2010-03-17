@@ -66,10 +66,14 @@ EOu;
 			exit();
 		break;
 		case 'mailer':
+            if(!isset($argv[2]))
+                die("Please supply a name for the Mailer class\n");
+
 			$new = $argv;
 			$methods = array_splice($new, 3);
 		 	$methods = empty($methods) ? array('foo') : $methods;
-			Generator::mailer($argv[2], $methods);
+			$res = Generator::mailer($argv[2], $methods);
+            if ($res) echo "Wrote Mailer class {$argv[2]} to $res\n";
 			exit();
 		break;
 	

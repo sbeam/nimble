@@ -248,19 +248,24 @@
 		public static function mailer($name, $methods) {
 			$class_name = Inflector::classify($name);
 			$out = "<?php \n";
-			$out .= " /**\n * Templates in " . FileUtils::join('app', 'view', strtolower(Inflector::underscore($class_name))) . "\n */\n";
-			$out .= "	class $class_name extends NimbleMailer { \n";
+			$out .= "/**\n* Templates in " . FileUtils::join('app', 'view', strtolower(Inflector::underscore($class_name))) . "\n */\n";
+			$out .= "class $class_name extends NimbleMailer { \n";
 			foreach($methods as $method) {
 				$out .= self::mailer_method($method);
 				self::mailer_template($class_name, $method);
 			}
-			$out .= " }\n";
-			$out .= "?>";
+			$out .= "}\n";
 			
 			$path_name = FileUtils::join(NIMBLE_ROOT, 'app', 'model', $class_name . '.php');
-			$db = fopen($path_name, "w");
-			fwrite($db, $out);
-			fclose($db);
+
+			if (!is_dir(dirname($path_name))) FileUtils::mkdir_p(dirname($path_name));
+
+			$fh = fopen($path_name, "w");
+            if ($fh) {
+                fwrite($fh, $out);
+                fclose($fh);
+                return $path_name;
+            }
 		}
 		
 		private static function mailer_method($name) {
