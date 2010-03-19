@@ -243,8 +243,8 @@ class NimbleMailer {
             if (!empty($this->_content['html']))
                 $mm->setHTMLBody($this->_content['html']);
 
-            if (!empty($this->_content['text']))
-                $mm->setTXTBody($this->_content['text']);
+            if (!empty($this->_content['txt']))
+                $mm->setTXTBody($this->_content['txt']);
 
             foreach ($this->attachments as $file => $type) {
                 $mm->addAttachment($file, $type);
