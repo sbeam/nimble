@@ -59,6 +59,7 @@ class NimbleMailer {
     protected $returns_to;
     protected $sender;
     protected $recipients;
+    public $subject = '';
 
     protected $EMAIL_FROM_NAME;
     protected $EMAIL_BCC_RECIP;
@@ -200,7 +201,8 @@ class NimbleMailer {
 
         $this->headers = array('From' => "\"$from_name\" <{$this->from}>", 
                                'X-Mailer' => 'php/'.get_class($this),
-                               'X-Sender' => $this->from);
+                               'X-Sender' => $this->from,
+                               'Subject' => $this->subject);
 
         if ($this->returns_to) {
             $this->headers['Return-path'] = $this->returns_to;
