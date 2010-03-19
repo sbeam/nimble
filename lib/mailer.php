@@ -55,13 +55,13 @@ require_once('Mail/mime.php');
 
 class NimbleMailer {
 
-    const EMAIL_FROM_NAME = null;
-    const EMAIL_BCC_RECIP = null;
-
     protected $from;
     protected $returns_to;
     protected $sender;
     protected $recipients;
+
+    protected $EMAIL_FROM_NAME;
+    protected $EMAIL_BCC_RECIP;
 
     // how to send : mail, sendmail or smtp
     protected $mailmethod = 'mail';
@@ -69,10 +69,25 @@ class NimbleMailer {
 
     protected $attachments = array();
 
+    private $_tplvars = array();
+
+
     function __construct() {
       $this->nimble = Nimble::getInstance();
       $this->view_path = $this->nimble->config['view_path'];
     }
+
+
+    /**
+     * attach any given thing $v and make available to templates as var named by $k
+     *
+     * @param $k string
+     * @param $v mixed
+     */
+    public function set_template_var($k, $v) {
+        $this->_tplvars[$k] = $v;
+    }
+
 
     /**
      * overloader simplified from the original static NiceDog version, tho
@@ -127,15 +142,18 @@ class NimbleMailer {
         $class = get_class($this);
         $view_class_folder = strtolower(Inflector::underscore($class));
 
-        $tp_html = FileUtils::join($this->view_path, $view_class_folder, $name . '.php');
+        $file_root = FileUtils::join($this->view_path, $view_class_folder, $name);
+        $tp_html = $file_root . '.php';
         if (file_exists($tp_html)) {
             $this->prep_template($tp_html, 'html');
         }
 
-        $tp_txt = FileUtils::join($this->view_path, $view_class_folder, $name . '.txt');
+        $tp_txt =  $file_root . '.txt';
         if (file_exists($tp_txt)) {
             $this->prep_template($tp_txt, 'txt');
         }
+        if (empty($this->_content))
+            throw new NimbleException("No valid templates found at $file_root");
 
     }
 
@@ -147,24 +165,22 @@ class NimbleMailer {
       * @param string $type type of email template (html|text)
       */
     private function prep_template($name, $type) {
-        $vars = get_object_vars($this);
         ob_start();
-        if (file_exists($name)){
-            if (count($vars)>0) {
-                foreach($vars as $key => $value){
-                    if($key == 'nimble') {continue;}
-                        $$key = $value;
-                }
+        if (file_exists($name)) {
+
+            foreach($this->_tplvars as $key => $value) {
+                $$key = $value;
             }
             require($name);
 
             if (!empty($mail_subject)) {
                 $this->subject = $mail_subject;
             }
-
-        }else if(empty($name)){
+        }
+        elseif (empty($name)) {
             return;
-        } else {
+        } 
+        else {
             throw new NimbleException('View ['.$name.'] Not Found');
         }
         $this->_content[$type] = ob_get_clean();
@@ -178,11 +194,11 @@ class NimbleMailer {
      * @return array
      */
     private function _build_headers() {
-        $from_name = (self::EMAIL_FROM_NAME)? self::EMAIL_FROM_NAME : (isset($_SERVER['HTTP_HOST']))? $_SERVER['HTTP_HOST'] : 'your website';
+        $from_name = ($this->EMAIL_FROM_NAME)? $this->EMAIL_FROM_NAME : ((isset($_SERVER['HTTP_HOST']))? $_SERVER['HTTP_HOST'] : '');
 
         $this->from = preg_replace('/\(\);:<>,\\\"\s/', '', $this->from); // clean out all special chars.
 
-        $this->headers = array('From' => $from_name . "<" . $this->from . ">", 
+        $this->headers = array('From' => "\"$from_name\" <{$this->from}>", 
                                'X-Mailer' => 'php/'.get_class($this),
                                'X-Sender' => $this->from);
 
@@ -192,8 +208,8 @@ class NimbleMailer {
         if ($this->sender) {
             $this->headers['Reply-to'] = $this->sender;
         }
-        if (self::EMAIL_BCC_RECIP) {
-            $this->headers['BCC'] = self::EMAIL_BCC_RECIP;
+        if ($this->EMAIL_BCC_RECIP) {
+            $this->headers['BCC'] = $this->EMAIL_BCC_RECIP;
         }
 
         foreach ($this->headers as $k => $v) { // paranoia against header injection.
@@ -213,7 +229,11 @@ class NimbleMailer {
         $this->_build_headers();
 
         if (empty($this->_content['html']) and empty($this->attachments)) {
-            $this->_mailbody = $this->_content['text'];
+            if (empty($this->_content['txt'])) {
+                trigger_error("No content found for the message", E_USER_WARNING);
+                return;
+            }
+            $this->_mailbody = $this->_content['txt'];
         }
         else {
             $mm = new Mail_mime($crlf);
@@ -236,7 +256,7 @@ class NimbleMailer {
     /**
      * create PEAR::mail object and drop
      */
-    protected function send($name) {
+    protected function send() {
         $mail =& Mail::factory($this->mailmethod, $this->mailparams);
         $mail->send($this->recipients, $this->headers, $this->_mailbody);
     }
