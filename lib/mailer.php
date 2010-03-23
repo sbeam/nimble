@@ -74,8 +74,13 @@ class NimbleMailer {
 
 
     function __construct() {
-      $this->nimble = Nimble::getInstance();
-      $this->view_path = $this->nimble->config['view_path'];
+        $this->nimble = Nimble::getInstance();
+        $this->view_path = $this->nimble->config['view_path'];
+
+        if (defined('NIMBLE_IS_TESTING') && NIMBLE_IS_TESTING && defined('FAKEMAIL_PORT')) {
+            $this->mailmethod = 'smtp';
+            $this->mailparams['port'] = FAKEMAIL_PORT;
+        }
     }
 
 
@@ -260,7 +265,8 @@ class NimbleMailer {
      */
     protected function send() {
         $mail =& Mail::factory($this->mailmethod, $this->mailparams);
-        $mail->send($this->recipients, $this->headers, $this->_mailbody);
+        PEAR::setErrorHandling(PEAR_ERROR_RETURN);
+        return $mail->send($this->recipients, $this->headers, $this->_mailbody);
     }
     
 
