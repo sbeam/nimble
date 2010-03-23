@@ -106,13 +106,14 @@ class Nimble
                 $this->klass->set_layout_template();
                 $this->klass->format = ($conf[4]) ? array_pop($matches) : $this->klass->default_format;
 
+                Nimble::log("dispatching '/{$this->url}' as {$conf[1]}::{$conf[2]} {$conf[3]} {$this->klass->format}", PEAR_LOG_DEBUG);
                 ob_start();
 
                 // call before filters
                 call_user_func(array($this->klass, "run_before_filters"), $conf[2]);
 
                 // call methods on controller class
-                call_user_func_array(array($this->klass , $conf[2]), $matches);
+                call_user_func_array(array($this->klass , $conf[2]), array($matches));
 
                 if(!$this->klass->has_rendered && isset($this->config['view_path'])) {
                     $dir = str_replace('Controller', '', $conf[1]);
@@ -287,6 +288,12 @@ class Nimble
 	}
 	
 	
+    public static function log($msg, $level=PEAR_LOG_DEBUG) { // TODO create proper Log_observer
+        $logger =& Log::singleton('file', SITE_ERROR_LOG_FILE, 'NIMBLE');
+        $loc = (isset($_SERVER['REMOTE_ADDR']))? $_SERVER['REMOTE_ADDR'] : 'local';
+        $msg = "({$loc})\n$msg";
+        $logger->log("$msg\n\n", $level);
+    }
 	
 }
 
