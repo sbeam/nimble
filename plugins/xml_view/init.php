@@ -7,7 +7,9 @@ class XMLview {
     public static function build($rootNode, $vals=null) {
         $xsz = new XML_Serializer(array('rootName' => $rootNode, 'mode' => 'simplexml'));
         $xsz->serialize($vals);
-        return $xsz->getSerializedData();
+        $xml = $xsz->getSerializedData();
+        Nimble::log($xml, PEAR_LOG_DEBUG);
+        return $xml;
     }
 }
 
