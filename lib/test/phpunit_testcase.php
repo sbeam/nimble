@@ -470,23 +470,34 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
 			* @param string $action action you wish to call
 			* @param array $action_params array of arguments to pass to the action method
 			*/
-		private function load_action($action, $action_params) {
-			global $_SESSION, $_POST, $_GET;
-			$nimble = Nimble::getInstance();
-			ob_start();
-			$controller = new $this->controller_name();
-			call_user_func_array(array($controller, $action), $action_params);
-			$path = strtolower(Inflector::underscore(str_replace('Controller', '', $this->controller_name)));
-			$template = FileUtils::join($path, $action . '.php');
-			if ($controller->has_rendered === false) {
-	      if (empty($controller->layout_template) && $controller->layout) {
-	        $controller->set_layout_template();
-	      }
-	      $controller->render($template);
-	    }
-			$this->response = ob_get_clean();
-			$this->controller = $controller;
-		}
+        private function load_action($action, $action_params) {
+            global $_SESSION, $_POST, $_GET;
+            $nimble = Nimble::getInstance();
+            ob_start();
+
+            $controller = new $this->controller_name();
+
+            $controller->format = (!empty($action_params['format'])) ? $action_params['format'] : $controller->default_format;
+
+            call_user_func(array($controller, "run_before_filters"), $action);
+
+            call_user_func_array(array($controller, $action), array($action_params));
+
+            $path = strtolower(Inflector::underscore(str_replace('Controller', '', $this->controller_name)));
+            $template = FileUtils::join($path, $action);
+
+            if ($controller->has_rendered === false) {
+                if (empty($controller->layout_template) && $controller->layout) {
+                    $controller->set_layout_template();
+                }
+                $controller->render($template);
+            }
+
+            call_user_func(array($controller, "run_after_filters"), $action);
+
+            $this->response = ob_get_clean();
+            $this->controller = $controller;
+        }
 
     /**
      * Strip out non-XML entities from a string for XML parsing.
