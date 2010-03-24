@@ -72,6 +72,8 @@ class NimbleMailer {
 
     private $_tplvars = array();
 
+    public $charset = 'iso-8859-1';
+
 
     function __construct() {
         $this->nimble = Nimble::getInstance();
@@ -204,6 +206,9 @@ class NimbleMailer {
 
         $this->from = preg_replace('/\(\);:<>,\\\"\s/', '', $this->from); // clean out all special chars.
 
+        if (strtolower($this->charset) == 'utf-8')
+            $this->subject = "=?UTF-8?B?" . base64_encode($this->subject) . "?=";
+
         $this->headers = array('From' => "\"$from_name\" <{$this->from}>", 
                                'X-Mailer' => 'php/'.get_class($this),
                                'X-Sender' => $this->from,
@@ -240,6 +245,8 @@ class NimbleMailer {
                 trigger_error("No content found for the message", E_USER_WARNING);
                 return;
             }
+
+            $this->headers['Content-type'] = 'text/plain; charset=' . $this->charset;
             $this->_mailbody = $this->_content['txt'];
         }
         else {
@@ -255,7 +262,13 @@ class NimbleMailer {
                 $mm->addAttachment($file, $type);
             }
 
-            $this->_mailbody = $mm->get();
+            $params = array();
+            if ($this->charset != 'iso-8859-1') {
+                $params = array('html_charset'  => $this->charset, 
+                                'text_charset'  => $this->charset, 
+                                'head_charset'  => $this->charset);
+            }
+            $this->_mailbody = $mm->get($params);
             $this->headers = $mm->headers($this->headers);
         }
     }
