@@ -405,6 +405,44 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
 		  }
 		}
 
+
+
+        /**
+         * asset that $this->response equal to the given string
+         *
+         * @param string $str       comparison
+         * @param bool $strip       remove newlines before compare? (default true)
+         */
+        function assertResponseText($str, $strip=true) {
+            $txt = ($strip)? preg_replace('/[\r\n]+/', '', $this->response) : $this->response;
+            $this->assertEquals($str, $txt);
+        }
+
+
+        /**
+         * assert that mail headers contain all the given patterns 
+         *
+         * @param string $headers       Subject: xxxx \n Content-type: text/plain, etc.
+         * @param array $matches        Subject => REGEXP, Content-type: REGEXP, etc.
+         */
+        function assertMailHasHeaders($headers, $matches) {
+            $hdrs = array();
+            foreach (split("\n", $headers) as $hdr) {
+                list($k, $v) = split(':', $hdr);
+                $hdrs[$k] = trim($v);
+            }
+            foreach ($matches as $k => $pat) {
+                $this->assertTrue( !empty($hdrs[$k]) );
+                if ($k == 'Subject') {
+                    if (preg_match('/^\s*=\?UTF-8\?B\?([\w\d]+=*)\?=$/', $hdrs[$k], $m)) { // crazy UTF header match.
+                        $hdrs[$k] = base64_decode($m[1]);
+                    }
+                }
+                $this->assertRegExp($pat, $hdrs[$k]);
+            }
+        }
+
+
 		/**
 			* Returns a controller variable
 			* @param string $var the name of the controller variable
