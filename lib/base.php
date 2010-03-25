@@ -6,6 +6,14 @@ require_once(dirname(__FILE__) . '/route.php');
 require_once(dirname(__FILE__) . '/route/url_builder.php');
 require_once(dirname(__FILE__) . '/support/base.php');
 
+/** * NIMBLE Log level - WARN */
+define('NIMBLE_LOG_WARNING',     5);
+/** * NIMBLE Log level - INFO */
+define('NIMBLE_LOG_INFO',     6);
+/** * Nimble Log level - DEBUG */
+define('NIMBLE_LOG_DEBUG',    7);
+
+
 /**
  * Nimble is the base class in the application.
  * This class provides methods to add & call routes, parse URLs, and load plugins.
@@ -16,8 +24,20 @@ class Nimble
     var $routes = array();
     var $config = array();
     var $plugins = array();
-		var $test_mode = false;
+    var $test_mode = false;
+
     static private $instance = NULL;
+
+    /**
+     * PEAR::Log object
+     */
+    static private $logger = null;
+
+    /**
+     * Whether to enable logging of behaviour
+     */
+    static public $enableLogging = false;
+
 
     function __construct()
     {	
@@ -106,7 +126,7 @@ class Nimble
                 $this->klass->set_layout_template();
                 $this->klass->format = ($conf[4]) ? array_pop($matches) : $this->klass->default_format;
 
-                Nimble::log("dispatching '/{$this->url}' as {$conf[1]}::{$conf[2]} {$conf[3]} {$this->klass->format}", PEAR_LOG_DEBUG);
+                Nimble::log("dispatching '/{$this->url}' as {$conf[1]}::{$conf[2]} {$conf[3]} {$this->klass->format}", NIMBLE_LOG_INFO);
                 ob_start();
 
                 // call before filters
@@ -288,12 +308,76 @@ class Nimble
 	}
 	
 	
-    public static function log($msg, $level=PEAR_LOG_DEBUG) { // TODO create proper Log_observer
-        $logger =& Log::singleton('file', SITE_ERROR_LOG_FILE, 'NIMBLE');
-        $loc = (isset($_SERVER['REMOTE_ADDR']))? $_SERVER['REMOTE_ADDR'] : 'local';
-        $msg = "({$loc})\n$msg";
-        $logger->log("$msg\n\n", $level);
+    /**
+     * Log a message
+     *
+     * @access public
+     * @param string The message to log
+     * @param string The log level to log the message under. See the Log documentation for more info.
+     * @return boolean
+     */
+    public static function log($msg, $level=NIMBLE_LOG_DEBUG) {
+        if (!self::$enableLogging) return false;
+
+        self::_loadLogger();
+
+        return self::$logger->log('NIMBLE: '.$msg, $level);
     }
+
+    /**
+      * Load Log object if not already loaded
+      *
+      * Suspend logger instantiation to make Nimble lighter to use
+      * for calls which do not require logging
+      *
+      * @return bool    True if the logger is loaded, false if the logger
+      *                 is already loaded
+      * @access private
+      */
+    private static function _loadLogger()
+    {
+        if(is_null(self::$logger)) {
+            if (!class_exists('Log')) {
+                include_once 'Log.php';
+            }
+            self::$logger =& Log::singleton('null',
+                    null,
+                    'nimble['.getmypid().']',
+                    array(),
+                    NIMBLE_LOG_DEBUG);
+            return(true);
+        }
+        return(false);
+    }
+
+
+    /**
+     * get a ref to my logger instance.
+     *
+     * @return object       Log
+     */
+    public static function getLogger()
+    {
+        self::_loadLogger();
+        return self::$logger;
+    }
+
+
+    /**
+     * Attach an Observer to the Log Source
+     *
+     * @param object Log_Observer A Log Observer instance
+     * @return boolean
+     */
+    public static function attachLogObserver(&$observer) {
+
+        self::_loadLogger();
+
+        return self::$logger->attach($observer);
+
+    }
+
+
 	
 }
 

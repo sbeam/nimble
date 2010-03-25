@@ -90,11 +90,13 @@ class Controller {
                     switch($matches[2]) {
                     case 'for':
                         if(isset($hash[$method])) {
+                            # Nimble::log("run_filters() -> $_method()", NIMBLE_LOG_DEBUG);
                             call_user_func(array($this, $_method));
                         }
                         break;
                     case 'except':
                         if(!isset($hash[$method])) {
+                            # Nimble::log("run_filters() -> $_method()", NIMBLE_LOG_DEBUG);
                             call_user_func(array($this, $_method));
                         }
                         break;
@@ -103,6 +105,7 @@ class Controller {
                         break;
                     }
                 }else{
+                    # Nimble::log("run_filters() -> $_method()", NIMBLE_LOG_DEBUG);
                     call_user_func(array($this, $_method));
                 }
             }
@@ -138,6 +141,7 @@ class Controller {
         }
 
         $this->template = FileUtils::join(Nimble::getInstance()->config['view_path'], $file);
+        Nimble::log("rendering $file", NIMBLE_LOG_DEBUG);
 
         if ($this->layout==false){
             echo $this->open_template($this->template); 
@@ -202,6 +206,7 @@ class Controller {
      */
     public function redirect($url, $now=false)
     {
+        Nimble::log("redirecting to $url", NIMBLE_LOG_DEBUG);
         if($now && self::nimble()->test_mode == false){
             header("Location: {$url}", true, 302);
             exit();
@@ -240,6 +245,8 @@ class Controller {
     public function respond_to($format, $func=null, $args=array()) {
         if ($this->format() == $format) {
             if (is_callable($func)) {
+                $funcname = (is_array($func))? $func[0].'::'.$func[1] : (string)$funcname;
+                Nimble::log("responding to $format with $funcname", NIMBLE_LOG_DEBUG);
                 echo call_user_func_array($func, $args);
                 $this->has_rendered = true;
                 if (isset($this->headers_by_format[$format])) {
