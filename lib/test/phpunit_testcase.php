@@ -345,19 +345,19 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
 		 * Asserts that a node exists matching the Xpath expression
 		 * @param string $xpath the xpath to match
 		 */
-		public function assertXpath($xpath) {
-		  try {
-  		  $xml = new SimpleXMLElement($this->fix_string_for_xml($this->response));
-  		  $nodes = $xml->xpath($xpath);
-  		  if ($nodes === false) {
-		      $this->assertTrue(false, "Xpath is not valid: " . $xpath);  		    
-  		  } else {
-    		  $this->assertTrue(count($nodes) > 0, "No Xpath nodes found for " . $value);
-  		  }
-		  } catch (Exception $e) {
-		    $this->assertTrue(false, "Response is not valid XML");
-		  }
-		}
+        public function assertXpath($xpath) {
+            try {
+                $xml = new SimpleXMLElement($this->fix_string_for_xml($this->response));
+                $nodes = $xml->xpath($xpath);
+                if ($nodes === false) {
+                    $this->assertTrue(false, "Xpath is not valid: " . $xpath);  		    
+                } else {
+                    $this->assertTrue(count($nodes) > 0, "No Xpath nodes found for " . $value);
+                }
+            } catch (Exception $e) {
+                $this->assertTrue(false, "Response is not valid XML");
+            }
+        }
 		
 		/**
 		 * Asserts that a {n} node(s) exists matching the Xpath expression
@@ -371,7 +371,7 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
   		  if ($nodes === false) {
 		      $this->assertTrue(false, "Xpath is not valid: " . $xpath);
   		  } else {
-    		  $this->assertEquals($number_of_nodes, count($nodes), "No Xpath nodes found for " . $value);  		     
+    		  $this->assertEquals($number_of_nodes, count($nodes), "No Xpath nodes found for " . $xpath);  		     
   		  }
 		  } catch (Exception $e) {
 		    $this->assertTrue(false, "Response is not valid XML");
@@ -383,27 +383,32 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
 		 * @param string $xpath the xpath to match
 		 * @param string|array $value the value or values to match
 		 */
-		public function assertXpathValue($xpath, $value) {
-		  if (!is_array($value)) { $value = array($value); }
-		  try {
-  		  $xml = new SimpleXMLElement($this->fix_string_for_xml($this->response));
-  		  $nodes = $xml->xpath($xpath);
-  		  if ($nodes === false) {
-		      $this->assertTrue(false, "Xpath is not valid: " . $xpath);
-  		  } else {
-  		    if (count($nodes) === count($value)) {
-  		      for ($i = 0, $il = count($nodes); $i < $il; ++$i) {
-  		        $node_value = (string)$nodes[$i]->children()->asXml();
-        		  $this->assertEquals($value[$i], $node_value, sprintf("Node value <%s> does not match expected <%s> at index %d", $node_value, $value[$i], $i));
-  		      }
-  		    } else {
-  		      $this->assertTrue(false, sprintf("Count of nodes found <%d> don't match count of values expected <%d>", count($nodes), count($values)));
-  		    }
-  		  }
-		  } catch (Exception $e) {
-		    $this->assertTrue(false, "Response is not valid XML");
-		  }
-		}
+        public function assertXpathValue($xpath, $value, $is_regexp=false) {
+            if (!is_array($value)) { $value = array($value); }
+
+            try {
+                $xml = new SimpleXMLElement($this->fix_string_for_xml($this->response));
+            } catch (Exception $e) {
+                $this->assertTrue(false, "Response is not valid XML");
+            }
+            $nodes = $xml->xpath($xpath);
+
+            if ($nodes === false) {
+                $this->assertTrue(false, "Xpath is not valid: " . $xpath);
+            } else {
+                if (count($nodes) === count($value)) {
+                    for ($i = 0, $il = count($nodes); $i < $il; ++$i) {
+                        $txt = preg_replace('#^<(\w[\w\d]*)\b[^>]*>(.*?)</\1>#i', '\\2', (string)$nodes[$i]->asXML());
+                        if ($is_regexp)
+                            $this->assertRegExp($value[$i], $txt, sprintf("Node value <%s> does not match pattern <%s> at index %d", $txt, $value[$i], $i));
+                        else
+                            $this->assertEquals($value[$i], $txt, sprintf("Node value <%s> does not match expected <%s> at index %d", $txt, $value[$i], $i));
+                    }
+                } else {
+                    $this->assertTrue(false, sprintf("Count of nodes found <%d> doesn't match count of values expected <%d>", count($nodes), count($value)));
+                }
+            }
+        }
 
 
 
@@ -542,12 +547,13 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
      * @param string the string to process
      * @return string the repaired string
      */ 
-    private function fix_string_for_xml($string) {
-      if (is_string($string)) {
-        return preg_replace_callback('#&[^\;]+;#', array($this, 'fix_xml_tags_callback'), $string);
-      }
-      return $string;
-    }
+        private function fix_string_for_xml($string) {
+            if (is_string($string)) {
+                $string = str_replace('xmlns=', 'ns=', $string); // simpleXML wont work with simple xpaths unless this is done.
+                return preg_replace_callback('#&[^\;]+;#', array($this, 'fix_xml_tags_callback'), $string);
+            }
+            return $string;
+        }
     
     /**
      * Callback for fix_string_for_xml
