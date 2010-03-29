@@ -39,10 +39,24 @@ class Controller {
      */
     public function set_layout_template($template ='') {
 
-        if(!empty($template) && file_exists($template)) 
+        if (empty($template)) {
+            if (!empty($this->layout_template))
+                $template = $this->layout_template;
+            else 
+                $template = $this->nimble()->config['default_layout'];
+        }
+            
+        if (file_exists($template)) {
             $this->layout_template = $template;
-        elseif (empty($this->layout_template))
-            $this->layout_template = $this->nimble()->config['default_layout'];
+        } else {
+            $template = FileUtils::join(Nimble::getInstance()->config['view_path'], 'layout', $template .'.php');
+            if (file_exists($template)) {
+                $this->layout_template = $template;
+            }
+            else {
+                throw new NimbleException("Could not find layout template '$template'");
+            }
+        }
 
         return $this->layout_template;
     }
