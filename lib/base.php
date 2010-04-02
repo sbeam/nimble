@@ -138,7 +138,8 @@ class Nimble
                 if(!$this->klass->has_rendered && isset($this->config['view_path'])) {
                     $dir = str_replace('Controller', '', $conf[1]);
                     $dir = strtolower(Inflector::underscore($dir));
-                    $view = FileUtils::join($dir, $conf[2]);
+                    $tpl = (empty($this->klass->template))? $conf[2] : $this->klass->template;
+                    $view = FileUtils::join($dir, $tpl);
                     $this->klass->render($view);
                 }
 
