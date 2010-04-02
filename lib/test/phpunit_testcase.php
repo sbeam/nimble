@@ -179,6 +179,7 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
 			$_GET = $params;
 			$_SESSION = $session;
 			$_POST['_method'] = 'GET';
+            $_SERVER['REQUEST_METHOD'] = 'GET';
 			$this->load_action($action, $action_params);
 		}
 
@@ -195,6 +196,7 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
 			$_POST = $_GET = $params;
 			$_SESSION = $session;
 			$_POST['_method'] = 'POST';
+            $_SERVER['REQUEST_METHOD'] = 'POST';
 			$this->load_action($action, $action_params);
 		}
 
@@ -211,6 +213,7 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
 			$_POST = $_GET = $params;
 			$_SESSION = $session;
 			$_POST['_method'] = 'PUT';
+            $_SERVER['REQUEST_METHOD'] = 'POST';
 			$this->load_action($action, $action_params);
 		}
 		
@@ -227,6 +230,7 @@ abstract class NimblePHPUnitTestCase extends PHPUnit_Framework_TestCase {
 			$_POST = $_GET = $params;
 			$_SESSION = $session;
 			$_POST['_method'] = 'DELETE';
+            $_SERVER['REQUEST_METHOD'] = 'POST';
 			$this->load_action($action, $action_params);
 		}
 		
